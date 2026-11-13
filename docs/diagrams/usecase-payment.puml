@@ -1,0 +1,30 @@
+@startuml usecase-payment
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Khách hàng\n(Customer)" as Customer
+actor "Mock Payment Gateway" as Gateway <<External Service>>
+
+rectangle "Phân hệ Thanh toán & Xác nhận đơn (BrewLite)" {
+  usecase "UC-01.1: Chọn phương thức thanh toán\n(Ví MoMo / VNPay / Thẻ)" as UC_SelectMethod
+  usecase "UC-01.2: Xác nhận thanh toán không tiền mặt" as UC_Pay
+  usecase "UC-01.3: Trừ tiền qua cổng thanh toán" as UC_Charge
+  usecase "UC-01.4: Kiểm tra khóa Idempotency" as UC_Idempotency
+  usecase "UC-01.5: Xem màn hình xác nhận đơn\n(Mã #ORD-..., trạng thái PAID)" as UC_Confirm
+  usecase "UC-01.6: Xử lý lỗi thanh toán & Thử lại" as UC_Retry
+  usecase "UC-01.7: Sao chép mã đơn hàng" as UC_CopyCode
+}
+
+Customer --> UC_SelectMethod
+Customer --> UC_Pay
+Customer --> UC_Confirm
+Customer --> UC_Retry
+Customer --> UC_CopyCode
+
+UC_Pay ..> UC_Idempotency : <<include>>
+UC_Pay ..> UC_Charge : <<include>>
+UC_Charge --> Gateway
+UC_Retry ..> UC_Pay : <<extend>>
+UC_Confirm ..> UC_CopyCode : <<include>>
+
+@enduml

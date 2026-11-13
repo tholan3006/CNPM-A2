@@ -1,0 +1,42 @@
+@startuml deployment-payment
+skinparam node {
+  backgroundColor LightYellow
+  borderColor DarkSlateGray
+}
+skinparam component {
+  backgroundColor White
+  borderColor Black
+}
+
+node "Client Device\n<<device: Smartphone / Desktop>>" as client_dev {
+  artifact "Web Browser / PWA\n<<Next.js Client Application>>\n[Routes: /checkout, /order-success]" as web_app
+}
+
+node "Production Host / VPS\n<<platform: Docker Engine>>" as docker_host {
+  node "Container: brewlite-web\n<<Next.js 14 Standalone>>" as cont_web {
+    component "Frontend Server\n[Port: 3000]" as srv_web
+  }
+
+  node "Container: brewlite-api\n<<NestJS 10 Runtime>>" as cont_api {
+    component "PaymentsController\n[POST /payments]" as ctrl_pay
+    component "PaymentProcessorService\n[Idempotency & State Machine]" as proc_pay
+  }
+
+  node "Container: brewlite-db\n<<PostgreSQL 16>>" as cont_db {
+    database "BrewLite Database\n[Tables: orders, payments, users]" as db_data
+    storage "Named Volume\n[brewlite_pgdata]" as vol_db
+  }
+}
+
+node "External System\n<<third-party>>" as ext_gw {
+  component "Mock Payment Gateway\n<<MoMo / VNPay Simulator>>\n[HTTPS REST API]" as gw_service
+}
+
+web_app --> srv_web : HTTPS (Port 443)
+srv_web --> ctrl_pay : Internal Proxy / Fetch (Port 4000)
+ctrl_pay --> proc_pay : Local Call
+proc_pay --> gw_service : HTTPS (Secret / Key Auth)
+proc_pay --> db_data : Prisma TCP Pool (Port 5432)
+db_data ..> vol_db : Persistent Storage
+
+@enduml
