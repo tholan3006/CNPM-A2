@@ -1,0 +1,116 @@
+@startuml class-product-category
+' Đồ án: Công nghệ Phần mềm - ĐH Sài Gòn (SGU)
+' Tác giả: Trần Vĩnh Thọ Lân - MSSV: 3124560049
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam roundcorner 6
+
+title Sơ đồ Lớp Lĩnh vực (Domain Class Diagram) – Lớp Product & Category
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  OUT_OF_STOCK
+}
+
+enum ProductSize {
+  S
+  M
+  L
+}
+
+class Category {
+  - id: UUID
+  - name: String
+  - slug: String
+  - description: String
+  - displayOrder: Integer
+  - isActive: Boolean
+  - createdAt: DateTime
+  - updatedAt: DateTime
+  --
+  + getId(): UUID
+  + getName(): String
+  + getSlug(): String
+  + getDisplayOrder(): Integer
+  + isCategoryActive(): Boolean
+  + getActiveProducts(): List<Product>
+  + addProduct(product: Product): void
+  + removeProduct(product: Product): void
+}
+
+class Product {
+  - id: UUID
+  - categoryId: UUID
+  - name: String
+  - description: String
+  - price: Decimal
+  - imageUrl: String
+  - stock: Integer
+  - version: Integer
+  - status: ProductStatus
+  - isActive: Boolean
+  - createdAt: DateTime
+  - updatedAt: DateTime
+  --
+  + getId(): UUID
+  + getName(): String
+  + getBasePrice(): Decimal
+  + getImageUrl(): String
+  + getStock(): Integer
+  + getVersion(): Integer
+  + isAvailable(): Boolean
+  + hasSufficientStock(requestedQty: Integer): Boolean
+  + reduceStock(quantity: Integer): Boolean
+  + restoreStock(quantity: Integer): void
+  + calculatePriceForSize(size: ProductSize): Decimal
+  + formatVNDPrice(): String
+  + updateDetails(name: String, price: Decimal, desc: String): void
+}
+
+class ProductResponseDto {
+  + id: String
+  + name: String
+  + description: String
+  + price: Number
+  + imageUrl: String
+  + stock: Number
+  + category: String
+  + isAvailable: Boolean
+}
+
+class CategoryResponseDto {
+  + id: String
+  + name: String
+  + slug: String
+  + displayOrder: Number
+  + productCount: Number
+}
+
+' Mối quan hệ giữa Category và Product
+Category "1" o-- "0..*" Product : contains >
+Product " * " --> "1" Category : belongs to >
+
+' Quan hệ phụ thuộc với Enum và DTO
+Product ..> ProductStatus : uses
+Product ..> ProductSize : calculates with
+Product ..> ProductResponseDto : transforms to
+Category ..> CategoryResponseDto : transforms to
+
+note right of Product
+  <b>Ràng buộc nghiệp vụ (Invariants):</b>
+  - price >= 0 (Đơn giá không âm)
+  - stock >= 0 (Tồn kho không được âm)
+  - version tự tăng khi có cập nhật (Optimistic Locking)
+  - isAvailable() = (isActive == true && stock > 0)
+end note
+
+note left of Category
+  <b>Quy tắc hiển thị:</b>
+  - displayOrder dùng để sắp xếp thứ tự các Tab
+    trên giao diện người dùng (Ascending).
+end note
+
+@enduml

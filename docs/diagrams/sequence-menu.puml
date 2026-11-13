@@ -1,0 +1,93 @@
+@startuml sequence-menu
+' Đồ án: Công nghệ Phần mềm - ĐH Sài Gòn (SGU)
+' Tác giả: Trần Vĩnh Thọ Lân - MSSV: 3124560049
+!theme plain
+autonumber "<b>[00]</b>"
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam roundcorner 6
+
+title Sơ đồ Tuần tự (Sequence Diagram) – Lấy Danh sách Menu Đồ uống (GET /products)
+
+actor "Khách hàng\n(Customer)" as User
+boundary "Next.js UI\n(MenuPage)" as UI
+control "ProductsController\n(NestJS)" as Controller
+participant "ProductsService\n(NestJS)" as Service
+database "Prisma ORM /\nPostgreSQL" as DB
+
+== Khởi tạo và Tải dữ liệu Thực đơn ==
+
+User -> UI: Mở trang chủ Thực đơn (/ hoặc /menu)
+activate UI
+
+UI -> UI: setState(isLoading: true)\nHiển thị Loading Skeleton
+UI -> Controller: HTTP GET /products?search=&category=
+activate Controller
+
+note over Controller
+  Xác thực tham số Query (nếu có):
+  - sanitize string
+  - category filter
+end note
+
+Controller -> Service: findAll(searchQuery, category)
+activate Service
+
+Service -> DB: prisma.product.findMany({\n  where: { isActive: true },\n  include: { category: true },\n  orderBy: { createdAt: 'asc' }\n})
+activate DB
+
+alt Trường hợp Database hoạt động bình thường (Success Path)
+    DB --> Service: Trả về mảng Product records (kèm Category)
+    
+    Service -> Service: Format dữ liệu:\n- Convert Decimal price sang Number\n- Chuẩn hóa Category và Stock
+    Service --> Controller: Danh sách ProductResponseDto[]
+    
+    Controller --> UI: HTTP 200 OK\n[ { id, name, price, imageUrl, category, stock }, ... ]
+    deactivate Controller
+    
+    UI -> UI: setState({\n  products: response.data,\n  isLoading: false,\n  error: null\n})
+    UI -> UI: Render lưới danh mục & Thẻ sản phẩm
+    UI --> User: Hiển thị giao diện Thực đơn đầy đủ
+    
+else Trường hợp CSDL lỗi hoặc Mất kết nối (Database Failure)
+    DB --> Service: Ném lỗi Database Connection Timeout / Query Error
+    deactivate DB
+    
+    Service --> Controller: Ném InternalServerErrorException
+    activate Controller
+    
+    Controller --> UI: HTTP 500 Internal Server Error\n{ "statusCode": 500, "message": "Database query failure" }
+    deactivate Controller
+    deactivate Service
+    
+    UI -> UI: setState({\n  isLoading: false,\n  error: "Không thể tải thực đơn. Vui lòng thử lại!"\n})
+    UI --> User: Hiển thị Error Alert kèm nút "Thử lại" (Retry)
+end
+
+== Lọc thực đơn theo Danh mục (Client-side / API Filter) ==
+
+User -> UI: Chọn tab Danh mục (vd: "Trà hoa quả")
+UI -> UI: setFilterCategory("Trà hoa quả")
+
+alt Lọc trực tiếp trên Local State (Cached List)
+    UI -> UI: filtered = products.filter(p => p.category === "Trà hoa quả")
+    UI --> User: Cập nhật lưới sản phẩm hiển thị theo danh mục đã chọn
+else Có từ khóa tìm kiếm mới hoặc Refetch
+    UI -> Controller: HTTP GET /products?search=dao
+    activate Controller
+    Controller -> Service: findAll("dao", undefined)
+    activate Service
+    Service -> DB: prisma.product.findMany({ where: { name: { contains: 'dao' } } })
+    activate DB
+    DB --> Service: Trả về kết quả tìm kiếm
+    deactivate DB
+    Service --> Controller: Danh sách phù hợp
+    deactivate Service
+    Controller --> UI: HTTP 200 OK (Danh sách kết quả)
+    deactivate Controller
+    UI --> User: Hiển thị các món chứa từ khóa "dao"
+end
+
+deactivate UI
+
+@enduml

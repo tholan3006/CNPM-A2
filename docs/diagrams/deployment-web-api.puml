@@ -1,0 +1,95 @@
+@startuml deployment-web-api
+' Đồ án: Công nghệ Phần mềm - ĐH Sài Gòn (SGU)
+' Tác giả: Trần Vĩnh Thọ Lân - MSSV: 3124560049
+!theme plain
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam roundcorner 6
+
+title Sơ đồ Triển khai (UML Deployment Diagram) – Nút Web Frontend & Nút API Server
+
+node "<<device>> Thiết bị người dùng\n(User Mobile / Desktop Device)" as ClientDevice {
+    node "<<execution environment>> Trình duyệt Web\n(Modern Web Browser / PWA Client)" as Browser {
+        artifact "BrewLite PWA Frontend\n(HTML5 / CSS3 / React 18)" as PWAArtifact
+        artifact "Service Worker & Local Cache\n(Zustand Cart State, Tokens)" as LocalStorage
+    }
+}
+
+cloud "Hạ tầng Đám mây / Mạng Internet (Public Internet)" as CloudNet {
+    node "<<service>> Cloudflare / Edge CDN & Ingress" as Ingress {
+        component "SSL / TLS Termination (HTTPS - Port 443)" as SSLComp
+        component "Static Asset Caching (Images, JS Bundles)" as CDNCache
+    }
+}
+
+node "<<system>> Máy chủ Ứng dụng & Triển khai (PaaS: Render / Railway / VPS Docker)" as AppServer {
+    
+    node "<<container>> Nút Web Frontend\n(Container: brewlite_web)" as WebNode {
+        node "<<execution environment>> Node.js v20 Runtime" as WebRuntime {
+            component "Next.js 14 App Router\n(SSR / CSR Hybrid Server)" as NextServer
+            portin "Port 3000" as WebPort
+        }
+    }
+
+    node "<<container>> Nút API Server\n(Container: brewlite_api)" as ApiNode {
+        node "<<execution environment>> Node.js v20 / NestJS Framework" as ApiRuntime {
+            component "REST API Controllers\n(ProductsController, Auth, Orders)" as NestControllers
+            component "Business Services & Lifecycle\n(ProductsService, OrdersService)" as NestServices
+            component "Prisma Client (ORM & Query Engine)" as PrismaEngine
+            component "Health Check Endpoint\n(GET /health)" as HealthCheck
+            component "Swagger API Docs\n(/api/docs)" as SwaggerDocs
+            portin "Port 4000" as ApiPort
+        }
+    }
+
+    node "<<container>> Nút Cơ sở Dữ liệu\n(Container: brewlite_postgres)" as DbNode {
+        node "<<database engine>> PostgreSQL 16 Alpine" as PostgresDB {
+            database "Database: brewlite\n(Tables: products, categories, orders...)" as RelationalData
+            portin "Port 5432" as DbPort
+        }
+        storage "<<volume>> postgres_data\n(Persistent Storage)" as DbStorage
+    }
+
+    queue "Docker Internal Bridge Network\n(172.28.0.0/16 - brewlite_network)" as InternalNet
+}
+
+cloud "Hệ thống Ngoại vi (External Services)" as ExternalCloud {
+    node "<<external system>> Cổng thanh toán giả lập\n(Mock Payment Gateway)" as MockPaymentNode {
+        component "Payment Webhook & Callback API\n(HTTPS Port 443)" as PaymentAPI
+    }
+}
+
+' Kết nối và luồng giao tiếp
+ClientDevice -- CloudNet : HTTPS (Port 443)\nTLS 1.3
+CloudNet -- WebPort : Proxy to Next.js Web
+CloudNet -- ApiPort : Proxy to NestJS API
+
+WebNode ..> ApiPort : RESTful API Requests (JSON over HTTP)\nhttp://api:4000
+PrismaEngine --> DbPort : TCP Connection Pooling\n(postgresql://...:5432)
+PostgresDB -- DbStorage : Ghi dữ liệu bền vững (File I/O)
+
+ApiNode ..> MockPaymentNode : HTTPS POST /payments\n(Idempotency-Key Header)
+
+note right of WebNode
+  <b>Cấu hình Môi trường Web:</b>
+  - NODE_ENV=production
+  - PORT=3000
+  - NEXT_PUBLIC_API_URL=https://api.brewlite.shop
+end note
+
+note right of ApiNode
+  <b>Cấu hình Môi trường API:</b>
+  - NODE_ENV=production
+  - PORT=4000
+  - DATABASE_URL=postgresql://...
+  - JWT_SECRET=*****
+  - Health check định kỳ mỗi 30s
+end note
+
+note bottom of DbNode
+  <b>Lưu trữ an toàn:</b>
+  - Cổng 5432 chỉ mở nội bộ trong Docker Network.
+  - Không expose trực tiếp ra ngoài Internet.
+end note
+
+@enduml

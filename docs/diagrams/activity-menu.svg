@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 860" width="1000" height="860" style="background:#ffffff; font-family:Arial, Helvetica, sans-serif;">
+  <defs>
+    <marker id="act-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#1e293b"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="500" y="28" text-anchor="middle" font-size="18" font-weight="bold" fill="#0f172a">Sơ đồ Hoạt động (Activity Diagram) – Luồng Xem &amp; Lọc Menu Sản phẩm</text>
+  <text x="500" y="46" text-anchor="middle" font-size="12" fill="#64748b">Phân luồng với 4 Swimlanes: Khách hàng | Frontend Next.js | Backend NestJS | PostgreSQL Database</text>
+
+  <!-- Swimlane Headers (Clean, professional neutral headers) -->
+  <rect x="40" y="60" width="230" height="32" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="155" y="81" text-anchor="middle" font-size="12" font-weight="bold" fill="#0f172a">Khách hàng (Customer)</text>
+
+  <rect x="270" y="60" width="250" height="32" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="395" y="81" text-anchor="middle" font-size="12" font-weight="bold" fill="#0f172a">Frontend (Next.js PWA)</text>
+
+  <rect x="520" y="60" width="240" height="32" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="640" y="81" text-anchor="middle" font-size="12" font-weight="bold" fill="#0f172a">Backend API (NestJS)</text>
+
+  <rect x="760" y="60" width="200" height="32" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="860" y="81" text-anchor="middle" font-size="12" font-weight="bold" fill="#0f172a">Database (PostgreSQL)</text>
+
+  <!-- Swimlane Columns Separators -->
+  <rect x="40" y="92" width="230" height="750" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <rect x="270" y="92" width="250" height="750" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <rect x="520" y="92" width="240" height="750" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <rect x="760" y="92" width="200" height="750" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+
+  <!-- Start Node -->
+  <circle cx="155" cy="120" r="10" fill="#1e293b"/>
+  
+  <!-- Flow 1: Customer opens app -->
+  <rect x="80" y="150" width="150" height="36" rx="5" fill="#ffffff" stroke="#1e293b" stroke-width="1.4"/>
+  <text x="155" y="173" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">Mở ứng dụng BrewLite</text>
+  <line x1="155" y1="130" x2="155" y2="150" stroke="#1e293b" stroke-width="1.3" marker-end="url(#act-arrow)"/>
+
+  <!-- Flow 2: Frontend skeleton & call API -->
+  <line x1="230" y1="168" x2="310" y2="168" stroke="#1e293b" stroke-width="1.3" marker-end="url(#act-arrow)"/>
+  <rect x="310" y="150" width="170" height="40" rx="5" fill="#ffffff" stroke="#1e293b" stroke-width="1.4"/>
+  <text x="395" y="167" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">Hiển thị Skeleton &amp;</text>
+  <text x="395" y="181" text-anchor="middle" font-size="10" fill="#475569">Gửi GET /products</text>
+
+  <!-- Flow 3: Backend receive & query -->
+  <line x1="480" y1="168" x2="550" y2="168" stroke="#1e293b" stroke-width="1.3" marker-end="url(#act-arrow)"/>
+  <rect x="550" y="150" width="180" height="40" rx="5" fill="#ffffff" stroke="#1e293b" stroke-width="1.4"/>
+  <text x="640" y="167" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">ProductsController &amp;</text>
+  <text x="640" y="181" text-anchor="middle" font-size="10" fill="#475569">ProductsService</text>
+
+  <!-- Flow 4: DB query -->
+  <line x1="730" y1="168" x2="785" y2="168" stroke="#1e293b" stroke-width="1.3" marker-end="url(#act-arrow)"/>
+  <rect x="785" y="150" width="150" height="40" rx="5" fill="#ffffff" stroke="#1e293b" stroke-width="1.4"/>
+  <text x="860" y="167" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">SELECT * FROM</text>
+  <text x="860" y="181" text-anchor="middle" font-size="10" fill="#475569">categories, products</text>
+
+  <!-- DB Decision (Success or Error) -->
+  <line x1="860" y1="190" x2="860" y2="215" stroke="#1e293b" stroke-width="1.3" marker-end="url(#act-arrow)"/>
+  <polygon points="860,215 895,230 860,245 825,230" fill="#ffffff" stroke="#1e293b" stroke-width="1.4"/>
+  <text x="860" y="233" text-anchor="middle" font-size="9" font-weight="bold" fill="#0f172a">DB OK?</text>
+
+  <!-- Flow Success: DB -> API DTO -->
+  <line x1="825" y1="230" x2="730" y2="230" stroke="#1e293b" stroke-width="1.3" marker-end="url(#act-arrow)"/>
+  <text x="770" y="222" font-size="9" fill="#166534">Có</text>
+  <rect x="550" y="210" width="180" height="40" rx="5" fill="#ffffff" stroke="#1e293b" stroke-width="1.4"/>
+  <text x="640" y="227" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">Format DTO &amp;</text>
+  <text x="640" y="241" text-anchor="middle" font-size="10" fill="#475569">Trả về 200 OK</text>
+
+  <!-- Flow Success: API -> Frontend Render -->
+  <line x1="550" y1="230" x2="480" y2="230" stroke="#1e293b" stroke-width="1.3" marker-end="url(#act-arrow)"/>
+  <rect x="310" y="210" width="170" height="40" rx="5" fill="#ffffff" stroke="#1e293b" stroke-width="1.4"/>
+  <text x="395" y="227" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">Ẩn Skeleton &amp;</text>
+  <text x="395" y="241" text-anchor="middle" font-size="10" fill="#475569">Render Menu &amp; Tabs</text>
+
+  <!-- Flow Error: DB -> 500 Error State -->
+  <line x1="860" y1="245" x2="860" y2="280" stroke="#1e293b" stroke-width="1.3"/>
+  <text x="865" y="260" font-size="9" fill="#b91c1c">Lỗi 500</text>
+  <line x1="860" y1="280" x2="450" y2="280" stroke="#1e293b" stroke-width="1.3" marker-end="url(#act-arrow)"/>
+  <rect x="310" y="265" width="140" height="32" rx="5" fill="#ffffff" stroke="#b91c1c" stroke-width="1.4"/>
+  <text x="380" y="285" text-anchor="middle" font-size="10" font-weight="bold" fill="#b91c1c">Hiện Error State</text>
+
+  <!-- Customer browses menu -->
+  <line x1="395" y1="250" x2="395" y2="330" stroke="#1e293b" stroke-width="1.3"/>
+  <line x1="395" y1="330" x2="230" y2="330" stroke="#1e293b" stroke-width="1.3" marker-end="url(#act-arrow)"/>
+  <rect x="80" y="315" width="150" height="35" rx="5" fill="#ffffff" stroke="#1e293b" stroke-width="1.4"/>
+  <text x="155" y="337" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">Lướt duyệt danh sách</text>
+
+  <!-- Decision: Filter by tab or search -->
+  <line x1="155" y1="350" x2="155" y2="375" stroke="#1e293b" stroke-width="1.3" marker-end="url(#act-arrow)"/>
+  <polygon points="155,375 200,392 155,410 110,392" fill="#ffffff" stroke="#1e293b" stroke-width="1.4"/>
+  <text x="155" y="395" text-anchor="middle" font-size="9" font-weight="bold" fill="#0f172a">Thao tác?</text>
+
+  <!-- Branch 1: Click Tab Category -->
+  <line x1="200" y1="392" x2="310" y2="392" stroke="#1e293b" stroke-width="1.3" marker-end="url(#act-arrow)"/>
+  <text x="245" y="385" font-size="9" fill="#0f172a">Chọn Tab</text>
+  <rect x="310" y="375" width="170" height="34" rx="5" fill="#ffffff" stroke="#1e293b" stroke-width="1.4"/>
+  <text x="395" y="396" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">Lọc theo categoryId</text>
+
+  <!-- Branch 2: Search Input -->
+  <line x1="155" y1="410" x2="155" y2="445" stroke="#1e293b" stroke-width="1.3"/>
+  <line x1="155" y1="445" x2="310" y2="445" stroke="#1e293b" stroke-width="1.3" marker-end="url(#act-arrow)"/>
+  <text x="210" y="438" font-size="9" fill="#0f172a">Nhập Search</text>
+  <rect x="310" y="430" width="170" height="34" rx="5" fill="#ffffff" stroke="#1e293b" stroke-width="1.4"/>
+  <text x="395" y="451" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">Lọc theo từ khóa</text>
+
+  <!-- Decision: Has items matching filter? -->
+  <line x1="395" y1="409" x2="395" y2="490" stroke="#1e293b" stroke-width="1.3"/>
+  <line x1="395" y1="464" x2="395" y2="490" stroke="#1e293b" stroke-width="1.3"/>
+  <polygon points="395,490 440,507 395,525 350,507" fill="#ffffff" stroke="#1e293b" stroke-width="1.4"/>
+  <text x="395" y="510" text-anchor="middle" font-size="9" font-weight="bold" fill="#0f172a">Có món?</text>
+
+  <!-- Empty state branch -->
+  <line x1="440" y1="507" x2="570" y2="507" stroke="#1e293b" stroke-width="1.3" marker-end="url(#act-arrow)"/>
+  <text x="490" y="500" font-size="9" fill="#475569">Không</text>
+  <rect x="570" y="490" width="160" height="34" rx="5" fill="#ffffff" stroke="#1e293b" stroke-width="1.4"/>
+  <text x="650" y="511" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">Hiện Empty State</text>
+
+  <!-- Matching items branch -> Customer pick item -->
+  <line x1="350" y1="507" x2="230" y2="507" stroke="#1e293b" stroke-width="1.3"/>
+  <line x1="230" y1="507" x2="155" y2="507" stroke="#1e293b" stroke-width="1.3"/>
+  <line x1="155" y1="507" x2="155" y2="560" stroke="#1e293b" stroke-width="1.3" marker-end="url(#act-arrow)"/>
+  <text x="240" y="500" font-size="9" fill="#166534">Có món</text>
+  <rect x="80" y="560" width="150" height="35" rx="5" fill="#ffffff" stroke="#1e293b" stroke-width="1.4"/>
+  <text x="155" y="582" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">Nhấp chọn 1 món</text>
+
+  <!-- Stock verification decision -->
+  <line x1="230" y1="577" x2="350" y2="577" stroke="#1e293b" stroke-width="1.3" marker-end="url(#act-arrow)"/>
+  <polygon points="395,560 440,577 395,595 350,577" fill="#ffffff" stroke="#1e293b" stroke-width="1.4"/>
+  <text x="395" y="580" text-anchor="middle" font-size="9" font-weight="bold" fill="#0f172a">Stock &gt; 0?</text>
+
+  <!-- Out of Stock branch -->
+  <line x1="395" y1="560" x2="395" y2="540" stroke="#1e293b" stroke-width="1.3"/>
+  <line x1="395" y1="540" x2="570" y2="540" stroke="#1e293b" stroke-width="1.3" marker-end="url(#act-arrow)"/>
+  <text x="460" y="535" font-size="9" fill="#b91c1c">Hết hàng (0)</text>
+  <rect x="570" y="530" width="160" height="30" rx="5" fill="#ffffff" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="650" y="550" text-anchor="middle" font-size="10" fill="#64748b">Làm mờ &amp; Khóa nút</text>
+
+  <!-- In Stock branch -> Navigate to Detail Modal -->
+  <line x1="395" y1="595" x2="395" y2="640" stroke="#1e293b" stroke-width="1.3" marker-end="url(#act-arrow)"/>
+  <text x="405" y="618" font-size="9" fill="#166534">Còn hàng</text>
+  <rect x="310" y="640" width="170" height="42" rx="5" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+  <text x="395" y="658" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">Mở Modal Chi tiết</text>
+  <text x="395" y="673" text-anchor="middle" font-size="9" fill="#475569">(Xem Size &amp; Topping)</text>
+
+  <!-- Final Node (Bullseye) -->
+  <line x1="395" y1="682" x2="395" y2="720" stroke="#1e293b" stroke-width="1.3" marker-end="url(#act-arrow)"/>
+  <circle cx="395" cy="735" r="14" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+  <circle cx="395" cy="735" r="8" fill="#1e293b"/>
+</svg>

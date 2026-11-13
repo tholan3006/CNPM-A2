@@ -1,0 +1,48 @@
+@startuml usecase-menu
+' Đồ án: Công nghệ Phần mềm - ĐH Sài Gòn (SGU)
+' Tác giả: Trần Vĩnh Thọ Lân - MSSV: 3124560049
+!theme plain
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam roundcorner 8
+skinparam actorStyle awesome
+
+title Sơ đồ Use Case Chi tiết Phân hệ "Xem Menu Đồ uống"
+
+actor "Khách hàng\n(Customer)" as Customer <<Primary Actor>>
+
+rectangle "Phân hệ Menu Sản phẩm (Product Menu Subsystem)" {
+    usecase "UC-MENU-01\nXem Danh sách Đồ uống\n(Browse Product Menu)" as UC_BrowseMenu
+    usecase "UC-MENU-02\nLấy danh mục sản phẩm\n(Fetch Categories)" as UC_FetchCategories
+    usecase "UC-MENU-03\nLọc đồ uống theo danh mục\n(Filter by Category)" as UC_FilterCat
+    usecase "UC-MENU-04\nTìm kiếm đồ uống theo từ khóa\n(Search Drinks by Keyword)" as UC_Search
+    usecase "UC-MENU-05\nXem trạng thái còn hàng / hết hàng\n(View Stock Availability)" as UC_ViewStock
+    usecase "UC-MENU-06\nXem thông tin tóm tắt món\n(Ảnh, Tên, Giá gốc)" as UC_ViewCard
+    
+    usecase "UC-DETAIL-01\nXem chi tiết & Tùy biến món\n(Navigate to Detail Modal)" as UC_Detail
+}
+
+' Liên kết Actor và Use Case chính
+Customer --> UC_BrowseMenu
+
+' Quan hệ Include
+UC_BrowseMenu ..> UC_FetchCategories : <<include>>
+UC_BrowseMenu ..> UC_ViewStock : <<include>>
+UC_BrowseMenu ..> UC_ViewCard : <<include>>
+
+' Quan hệ Extend
+UC_FilterCat ..> UC_BrowseMenu : <<extend>>\n(khi người dùng bấm chọn Tab danh mục)
+UC_Search ..> UC_BrowseMenu : <<extend>>\n(khi người dùng gõ từ khóa tìm kiếm)
+UC_Detail ..> UC_BrowseMenu : <<extend>>\n(khi người dùng nhấp vào Card món)
+
+note right of UC_BrowseMenu
+  <b>Tiền điều kiện:</b>
+  - Người dùng truy cập ứng dụng BrewLite (PWA / Web).
+  - Thiết bị có kết nối mạng tới API Server.
+  <b>Hậu điều kiện:</b>
+  - Danh sách đồ uống hiển thị phân nhóm theo danh mục.
+  - Phản hồi thời gian tải danh sách < 500ms.
+end note
+
+@enduml
