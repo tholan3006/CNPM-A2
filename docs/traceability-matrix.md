@@ -1,4 +1,4 @@
-# Ma trận truy vết yêu cầu (Traceability Matrix - Phân hệ Thành viên 4)
+# Ma trận truy vết yêu cầu (Traceability Matrix - Phan Vũ Việt Quang / viet_quang)
 
 | Mã yêu cầu | Use-case / User Story | Thiết kế / Sơ đồ | Mã nguồn / API | Ca kiểm thử (Test Cases) |
 | :--- | :--- | :--- | :--- | :--- |

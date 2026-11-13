@@ -46,7 +46,7 @@
 	\end{tabular}  
 }
 \fancyfoot{}
-\fancyfoot[L]{\scriptsize \ttfamily Báo cáo Cá nhân: Thành viên 4 -- Hệ thống Cà phê BrewLite}
+\fancyfoot[L]{\scriptsize \ttfamily Báo cáo Cá nhân: Phan Vũ Việt Quang (viet\_quang) -- Hệ thống Cà phê BrewLite}
 \fancyfoot[R]{\scriptsize \ttfamily Trang {\thepage}/\pageref{LastPage}}
 \renewcommand{\headrulewidth}{0.3pt}
 \renewcommand{\footrulewidth}{0.3pt}
@@ -100,7 +100,7 @@ Khoa Công Nghệ Thông Tin \\
 	\multicolumn{1}{l}{\textbf{{\Large ASSIGNMENT 2: REQUIREMENTS TO DEPLOYMENT}}}\\
 	\\
 	\textbf{{\LARGE HỆ THỐNG CÀ PHÊ BREWLITE}}\\
-	\textbf{{\Large BÁO CÁO CÁ NHÂN: THÀNH VIÊN 4}}\\
+	\textbf{{\Large BÁO CÁO CÁ NHÂN: PHAN VŨ VIỆT QUANG (viet\_quang)}}\\
 	\textbf{{\normalsize Màn hình \& Luồng nghiệp vụ: "Thanh toán \& Xác nhận đơn"}}\\
 	\\
 	\hline
@@ -112,7 +112,7 @@ Khoa Công Nghệ Thông Tin \\
 \begin{table}[h]
 \begin{tabular}{rrl}
 \hspace{3.5 cm} & GVHD: & [Điền tên Giảng viên hướng dẫn]\\
-& SV thực hiện: & Phan Vũ Việt Quang (Thành viên 4) \\
+& SV thực hiện: & Phan Vũ Việt Quang (viet\_quang) \\
 & MSSV: & 3124560072\\
 & Lớp: & DKP1242\\
 & Học kỳ: & I -- Năm học 2026--2027 \\
@@ -133,7 +133,7 @@ Khoa Công Nghệ Thông Tin \\
 \section{Tổng quan bối cảnh, Phân công nhiệm vụ và Đặc tả Use-Case trọng tâm (Task 1.3)}
 
 \subsection{Bối cảnh phân hệ Thanh toán \& Xác nhận đơn trong BrewLite}
-Trong chuỗi giá trị bán lẻ cà phê hiện đại của dự án \textbf{BrewLite}, thanh toán là mắt xích sống còn quyết định tỷ lệ hoàn tất đơn hàng (conversion rate) và sự hài lòng của khách hàng. Phân hệ \textbf{"Thanh toán \& Xác nhận đơn"} do \textbf{Thành viên 4} phụ trách giải quyết các bài toán kỹ thuật và nghiệp vụ cốt lõi:
+Trong chuỗi giá trị bán lẻ cà phê hiện đại của dự án \textbf{BrewLite}, thanh toán là mắt xích sống còn quyết định tỷ lệ hoàn tất đơn hàng (conversion rate) và sự hài lòng của khách hàng. Phân hệ \textbf{"Thanh toán \& Xác nhận đơn"} do \textbf{Phan Vũ Việt Quang (viet\_quang)} phụ trách giải quyết các bài toán kỹ thuật và nghiệp vụ cốt lõi:
 \begin{itemize}
     \item \textbf{Thanh toán không tiền mặt đa dạng:} Hỗ trợ ví điện tử (MoMo, VNPay) và thẻ ngân hàng (Visa, Mastercard, NAPAS), giảm thiểu thời gian xếp hàng tại quầy.
     \item \textbf{Đảm bảo tính toàn vẹn (Idempotency):} Trong môi trường mạng di động không ổn định, khách hàng có thể vô tình bấm nút thanh toán nhiều lần hoặc đường truyền bị ngắt kết nối. Cơ chế Idempotency với khóa \texttt{Idempotency-Key} đảm bảo giao dịch chỉ được trừ tiền và xử lý đúng một lần duy nhất.
@@ -141,8 +141,8 @@ Trong chuỗi giá trị bán lẻ cà phê hiện đại của dự án \textbf
     \item \textbf{Xác nhận đơn hàng tức thời:} Cung cấp màn hình xác nhận với mã đơn hàng định danh (\texttt{\#ORD-XXXXXX}), trạng thái \texttt{PAID}, mã tham chiếu giao dịch và thời gian tạo đơn rõ ràng.
 \end{itemize}
 
-\subsection{Phân công nhiệm vụ nhóm và Trách nhiệm của Thành viên 4}
-Bảng phân công trách nhiệm 5 thành viên trong Assignment 2:
+\subsection{Phân công nhiệm vụ nhóm và Trách nhiệm của Phan Vũ Việt Quang (viet\_quang)}
+Bảng phân công trách nhiệm các thành viên trong Assignment 2:
 \begin{table}[h!]
 \centering
 \small
@@ -152,13 +152,13 @@ Bảng phân công trách nhiệm 5 thành viên trong Assignment 2:
 1 & Thành viên 1 & Menu sản phẩm & Task 1.1 Context \& Scope, API GET /products \\ \hline
 2 & Thành viên 2 & Chi tiết sản phẩm & SRS Options, Size/Topping, GET /products/:id \\ \hline
 3 & Thành viên 3 & Giỏ hàng & Quản lý State giỏ hàng, POST /orders \\ \hline
-\textbf{4} & \textbf{Thành viên 4 (Bản thân)} & \textbf{Thanh toán \& Xác nhận đơn} & \textbf{Task 1.3 Use-case trọng tâm, POST /payments} \\ \hline
+\textbf{4} & \textbf{Phan Vũ Việt Quang (viet\_quang)} & \textbf{Thanh toán \& Xác nhận đơn} & \textbf{Task 1.3 Use-case trọng tâm, POST /payments} \\ \hline
 5 & Thành viên 5 & Đăng ký \& Đăng nhập & Auth Module, JWT Guard, POST /auth/login \\ \hline
 \end{tabular}
-\caption{Bảng phân công nhiệm vụ nhóm và định vị trách nhiệm Thành viên 4}
+\caption{Bảng phân công nhiệm vụ nhóm và định vị trách nhiệm của viet\_quang}
 \end{table}
 
-Trách nhiệm cụ thể của \textbf{Thành viên 4}:
+Trách nhiệm cụ thể của \textbf{Phan Vũ Việt Quang (viet\_quang)}:
 \begin{enumerate}
     \item \textbf{Viết tài liệu đặc tả Use-Case trọng tâm (Task 1.3 theo đề bài PDF):} Đặc tả toàn diện use-case \textbf{"Đặt và thanh toán đơn hàng"}.
     \item \textbf{Thiết kế 5 sơ đồ UML chuyên sâu:} Use Case Diagram phân hệ thanh toán, Activity Diagram luồng thanh toán rẽ nhánh, Sequence Diagram gọi API Idempotent, Class Diagram mô hình Payment, và Deployment Diagram tích hợp Mock Payment Gateway.
@@ -171,7 +171,7 @@ Trách nhiệm cụ thể của \textbf{Thành viên 4}:
 \end{enumerate}
 
 \subsection{Đặc tả Use-case trọng tâm: "Đặt và thanh toán đơn hàng" (Task 1.3)}
-Theo đúng yêu cầu tại \textbf{Mục 3.3 của Đề bài Assignment 2}, Thành viên 4 thực hiện đặc tả chi tiết use-case cốt lõi của toàn bộ hệ thống:
+Theo đúng yêu cầu tại \textbf{Mục 3.3 của Đề bài Assignment 2}, Phan Vũ Việt Quang (viet\_quang) thực hiện đặc tả chi tiết use-case cốt lõi của toàn bộ hệ thống:
 
 \begin{table}[h!]
 \centering
@@ -242,7 +242,7 @@ Theo đúng yêu cầu tại \textbf{Mục 3.3 của Đề bài Assignment 2}, T
 \section{Đặc tả yêu cầu phần mềm phân hệ "Thanh toán \& Xác nhận đơn"}
 
 \subsection{Yêu cầu chức năng (Functional Requirements)}
-Các yêu cầu chức năng do Thành viên 4 đảm trách:
+Các yêu cầu chức năng do Phan Vũ Việt Quang (viet\_quang) đảm trách:
 
 \begin{table}[h!]
 \centering
@@ -273,7 +273,7 @@ Các yêu cầu chức năng do Thành viên 4 đảm trách:
 \end{itemize}
 
 \newpage
-\section{Mô hình hóa hệ thống: 5 Sơ đồ UML (Thành viên 4)}
+\section{Mô hình hóa hệ thống: 5 Sơ đồ UML (Phan Vũ Việt Quang - viet\_quang)}
 
 \subsection{Sơ đồ 1: Use Case Diagram (Phân hệ Thanh toán \& Xác nhận đơn)}
 Sơ đồ thể hiện sự tương tác của Actor \textbf{Khách hàng (Customer)} và Actor ngoài \textbf{Mock Payment Gateway} với các ca sử dụng thuộc phân hệ:
@@ -618,8 +618,8 @@ Sơ đồ triển khai thể hiện các thành phần runtime, container và n�
 \end{figure}
 
 \newpage
-\section{Ma trận truy vết yêu cầu (Traceability Matrix - Thành viên 4)}
-Bảng truy vết bắt buộc theo \textbf{Mục 8.1} của đề bài Assignment 2 đối với phân hệ của Thành viên 4:
+\section{Ma trận truy vết yêu cầu (Traceability Matrix - viet\_quang)}
+Bảng truy vết bắt buộc theo \textbf{Mục 8.1} của đề bài Assignment 2 đối với phân hệ của Phan Vũ Việt Quang (viet\_quang):
 
 \begin{table}[h!]
 \centering
@@ -631,10 +631,10 @@ Bảng truy vết bắt buộc theo \textbf{Mục 8.1} của đề bài Assignme
 \textbf{FR-06} & UC-01.5 Xác nhận đơn & Activity-01, Deployment-01 & \texttt{app/order-success/page.tsx}, \newline \texttt{OrderSuccessModal.tsx} & \texttt{CONF-T01} (UI Render verification) \\ \hline
 \textbf{FR-07} & UC-01.6 Thử lại thanh toán & Activity-01, Sequence-01 & \texttt{app/checkout/page.tsx} & \texttt{RETRY-T01} (Giữ giỏ hàng khi fail) \\ \hline
 \end{tabular}
-\caption{Ma trận truy vết phân hệ Thanh toán \& Xác nhận (Thành viên 4)}
+\caption{Ma trận truy vết phân hệ Thanh toán \& Xác nhận (viet\_quang)}
 \end{table}
 
-\section{Hiện thực mã nguồn và Kết quả triển khai (Thành viên 4)}
+\section{Hiện thực mã nguồn và Kết quả triển khai (viet\_quang)}
 
 \subsection{Mã nguồn Frontend: Xử lý Thanh toán và Idempotency (\texttt{checkout/page.tsx})}
 Đoạn mã phía client tạo khóa \texttt{Idempotency-Key} và gọi dịch vụ thanh toán, điều hướng tới trang thành công:
@@ -733,7 +733,7 @@ export class PaymentProcessorService {
 \end{lstlisting}
 
 \section{Kết luận}
-Báo cáo cá nhân của \textbf{Thành viên 4 (Phan Vũ Việt Quang)} đã hoàn thành đầy đủ các hạng mục được giao theo quy chuẩn Assignment 2:
+Báo cáo cá nhân của \textbf{Phan Vũ Việt Quang (viet\_quang)} đã hoàn thành đầy đủ các hạng mục được giao theo quy chuẩn Assignment 2:
 \begin{enumerate}
     \item Đặc tả trọn vẹn \textbf{Use-Case trọng tâm: Đặt và thanh toán đơn hàng (Task 1.3)} với đầy đủ các luồng sự kiện, ngoại lệ, tiền điều kiện và hậu điều kiện.
     \item Thiết kế và chuẩn hóa \textbf{5 sơ đồ UML vector TikZ} chất lượng cao thể hiện đầy đủ cấu trúc nghiệp vụ và kiến trúc phân hệ thanh toán.
