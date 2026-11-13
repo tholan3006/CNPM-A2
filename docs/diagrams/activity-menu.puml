@@ -1,0 +1,112 @@
+@startuml activity-menu
+' Đồ án: Công nghệ Phần mềm - ĐH Sài Gòn (SGU)
+' Tác giả: Trần Vĩnh Thọ Lân - MSSV: 3124560049
+!theme plain
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam roundcorner 6
+skinparam backgroundColor #FFFFFF
+
+skinparam activity {
+    BorderColor #1E293B
+    BackgroundColor #FFFFFF
+    ArrowColor #334155
+}
+
+skinparam swimlane {
+    BorderColor #94A3B8
+    TitleFontColor #0F172A
+}
+
+title Sơ đồ Hoạt động (Activity Diagram) – Luồng Xem & Lọc Menu Sản phẩm
+
+|Khách hàng (Customer)|
+|Frontend (Next.js PWA)|
+|Backend API (NestJS)|
+|Database (PostgreSQL)|
+
+|Khách hàng (Customer)|
+start
+:Mở ứng dụng BrewLite trên thiết bị;
+
+|Frontend (Next.js PWA)|
+:Hiển thị màn hình Loading Skeleton;
+:Gửi yêu cầu HTTP GET /products;
+
+|Backend API (NestJS)|
+:Tiếp nhận GET /products;
+:Truy vấn danh mục và sản phẩm đang kích hoạt (isActive = true);
+
+|Database (PostgreSQL)|
+:Thực thi SELECT * FROM categories JOIN products;
+if (Truy vấn CSDL thành công?) then (Có)
+    :Trả về tập kết quả dữ liệu (Records);
+    |Backend API (NestJS)|
+    :Chuyển đổi dữ liệu sang Product DTO (format giá, nhóm danh mục);
+    :Trả về HTTP 200 OK kèm danh sách JSON;
+    |Frontend (Next.js PWA)|
+    :Ẩn Skeleton, lưu danh sách vào State bộ nhớ;
+else (Lỗi kết nối CSDL / 500)
+    :Báo lỗi Database Connection Error;
+    |Backend API (NestJS)|
+    :Trả về HTTP 500 Internal Server Error;
+    |Frontend (Next.js PWA)|
+    :Hiển thị màn hình báo lỗi (Error State);
+    |Khách hàng (Customer)|
+    :Bấm nút "Thử lại" (Retry);
+    detach
+endif
+
+|Frontend (Next.js PWA)|
+:Render danh sách Danh mục Tabs (Tất cả, Cà phê truyền thống, Espresso, Trà...);
+:Render danh sách Thẻ sản phẩm (Product Cards);
+
+|Khách hàng (Customer)|
+repeat
+    :Lướt duyệt danh sách thực đơn đồ uống;
+    
+    if (Khách hàng thực hiện thao tác?) then (Chọn Tab Danh mục)
+        |Khách hàng (Customer)|
+        :Bấm vào Tab danh mục mong muốn;
+        |Frontend (Next.js PWA)|
+        :Lọc danh sách theo categoryId/name tương ứng;
+    else if (Nhập từ khóa tìm kiếm) then (Tìm kiếm)
+        |Khách hàng (Customer)|
+        :Gõ tên món vào ô tìm kiếm;
+        |Frontend (Next.js PWA)|
+        :Lọc sản phẩm chứa từ khóa (case-insensitive);
+    else (Xem toàn bộ)
+        |Frontend (Next.js PWA)|
+        :Giữ nguyên hiển thị toàn bộ menu;
+    endif
+
+    |Frontend (Next.js PWA)|
+    if (Có sản phẩm thỏa mãn điều kiện lọc?) then (Có sản phẩm)
+        :Hiển thị danh sách sản phẩm kết quả;
+    else (Không có sản phẩm)
+        :Hiển thị trạng thái rỗng (Empty State:\n"Không tìm thấy món phù hợp");
+    endif
+
+|Khách hàng (Customer)|
+repeat while (Tiếp tục tìm kiếm hoặc đổi danh mục?) is (Tiếp tục)
+-> (Chọn được món);
+
+|Khách hàng (Customer)|
+:Nhấp chọn 1 món đồ uống cụ thể;
+
+|Frontend (Next.js PWA)|
+if (Kiểm tra tồn kho: stock > 0?) then (Còn hàng)
+    :Kích hoạt chuyển tiếp sang Modal Chi tiết món;
+    |Khách hàng (Customer)|
+    :Chuyển sang màn hình tùy biến Size và Topping;
+    stop
+else (Hết hàng / stock = 0)
+    |Frontend (Next.js PWA)|
+    :Hiển thị nhãn mờ "Hết hàng" (Out of Stock Badge);
+    :Vô hiệu hóa nút chọn món;
+    |Khách hàng (Customer)|
+    :Tiếp tục chọn món khác trên menu;
+    stop
+endif
+
+@enduml

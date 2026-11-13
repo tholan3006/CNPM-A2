@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 760" width="960" height="760" style="background:#ffffff; font-family:Arial, Helvetica, sans-serif;">
+  <defs>
+    <marker id="seq-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#1e293b"/>
+    </marker>
+    <marker id="seq-dash-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9" fill="none" stroke="#1e293b" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-err-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9" fill="none" stroke="#b91c1c" stroke-width="1.4"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="480" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#0f172a">Sơ đồ Tuần tự (Sequence Diagram) – Lấy Danh sách Menu (GET /products)</text>
+  <text x="480" y="48" text-anchor="middle" font-size="12" fill="#64748b">Lifelines: Khách hàng -&gt; Next.js UI -&gt; NestJS Controller -&gt; Service -&gt; PostgreSQL</text>
+
+  <!-- Lifeline Headers (Uniform, professional neutral styling) -->
+  <!-- 1. Customer -->
+  <g transform="translate(60, 70)">
+    <rect x="-45" y="0" width="90" height="34" rx="4" fill="#f8fafc" stroke="#1e293b" stroke-width="1.4"/>
+    <text x="0" y="16" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">Khách hàng</text>
+    <text x="0" y="28" text-anchor="middle" font-size="9" fill="#475569">Actor</text>
+    <line x1="0" y1="34" x2="0" y2="650" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,4"/>
+  </g>
+
+  <!-- 2. Next.js UI -->
+  <g transform="translate(240, 70)">
+    <rect x="-60" y="0" width="120" height="34" rx="4" fill="#f8fafc" stroke="#1e293b" stroke-width="1.4"/>
+    <text x="0" y="16" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">Next.js UI</text>
+    <text x="0" y="28" text-anchor="middle" font-size="9" fill="#475569">MenuPage (Client)</text>
+    <line x1="0" y1="34" x2="0" y2="650" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,4"/>
+  </g>
+
+  <!-- 3. NestJS Controller -->
+  <g transform="translate(450, 70)">
+    <rect x="-70" y="0" width="140" height="34" rx="4" fill="#f8fafc" stroke="#1e293b" stroke-width="1.4"/>
+    <text x="0" y="16" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">ProductsController</text>
+    <text x="0" y="28" text-anchor="middle" font-size="9" fill="#475569">NestJS Controller</text>
+    <line x1="0" y1="34" x2="0" y2="650" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,4"/>
+  </g>
+
+  <!-- 4. ProductsService -->
+  <g transform="translate(670, 70)">
+    <rect x="-65" y="0" width="130" height="34" rx="4" fill="#f8fafc" stroke="#1e293b" stroke-width="1.4"/>
+    <text x="0" y="16" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">ProductsService</text>
+    <text x="0" y="28" text-anchor="middle" font-size="9" fill="#475569">NestJS Service</text>
+    <line x1="0" y1="34" x2="0" y2="650" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,4"/>
+  </g>
+
+  <!-- 5. PostgreSQL -->
+  <g transform="translate(870, 70)">
+    <rect x="-60" y="0" width="120" height="34" rx="4" fill="#f8fafc" stroke="#1e293b" stroke-width="1.4"/>
+    <text x="0" y="16" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">PostgreSQL</text>
+    <text x="0" y="28" text-anchor="middle" font-size="9" fill="#475569">Prisma ORM / DB</text>
+    <line x1="0" y1="34" x2="0" y2="650" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,4"/>
+  </g>
+
+  <!-- Activation boxes (Clean neutral gray/white) -->
+  <rect x="233" y="125" width="14" height="500" fill="#f1f5f9" stroke="#1e293b" stroke-width="1.2"/>
+  <rect x="443" y="170" width="14" height="280" fill="#f1f5f9" stroke="#1e293b" stroke-width="1.2"/>
+  <rect x="663" y="210" width="14" height="210" fill="#f1f5f9" stroke="#1e293b" stroke-width="1.2"/>
+  <rect x="863" y="245" width="14" height="90" fill="#f1f5f9" stroke="#1e293b" stroke-width="1.2"/>
+
+  <!-- Messages -->
+  <!-- 1. Customer opens page -->
+  <line x1="60" y1="135" x2="233" y2="135" stroke="#1e293b" stroke-width="1.3" marker-end="url(#seq-arrow)"/>
+  <text x="145" y="128" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">[1] Mở trang thực đơn (/)</text>
+
+  <!-- 2. UI Self: Skeleton loading -->
+  <path d="M 247 145 L 275 145 L 275 160 L 247 160" fill="none" stroke="#1e293b" stroke-width="1.2" marker-end="url(#seq-arrow)"/>
+  <text x="282" y="156" font-size="9" fill="#475569">setState(loading: true)</text>
+
+  <!-- 3. UI calls API GET /products -->
+  <line x1="247" y1="180" x2="443" y2="180" stroke="#1e293b" stroke-width="1.3" marker-end="url(#seq-arrow)"/>
+  <text x="345" y="174" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">[2] HTTP GET /products</text>
+
+  <!-- 4. Controller calls Service -->
+  <line x1="457" y1="220" x2="663" y2="220" stroke="#1e293b" stroke-width="1.3" marker-end="url(#seq-arrow)"/>
+  <text x="560" y="214" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">[3] findAll(search, category)</text>
+
+  <!-- 5. Service queries DB -->
+  <line x1="677" y1="255" x2="863" y2="255" stroke="#1e293b" stroke-width="1.3" marker-end="url(#seq-arrow)"/>
+  <text x="770" y="249" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">[4] prisma.product.findMany()</text>
+
+  <!-- Combined Fragment: alt box -->
+  <rect x="210" y="280" width="700" height="235" fill="none" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,4"/>
+  <polygon points="210,280 250,280 260,295 210,295" fill="#f1f5f9" stroke="#64748b" stroke-width="1.2"/>
+  <text x="230" y="291" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e293b">alt</text>
+  <text x="270" y="292" font-size="10" font-weight="bold" fill="#166534">[CSDL phản hồi thành công (Success Path)]</text>
+
+  <!-- Success Path -->
+  <!-- 6. DB returns records -->
+  <line x1="863" y1="315" x2="677" y2="315" stroke="#1e293b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#seq-dash-arrow)"/>
+  <text x="770" y="309" text-anchor="middle" font-size="10" fill="#0f172a">[5] Return Product[] records</text>
+
+  <!-- 7. Service formats DTO -->
+  <path d="M 677 325 L 705 325 L 705 340 L 677 340" fill="none" stroke="#1e293b" stroke-width="1.2" marker-end="url(#seq-arrow)"/>
+  <text x="712" y="336" font-size="9" fill="#475569">Format DTO</text>
+
+  <!-- 8. Service returns DTO to Controller -->
+  <line x1="663" y1="355" x2="457" y2="355" stroke="#1e293b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#seq-dash-arrow)"/>
+  <text x="560" y="349" text-anchor="middle" font-size="10" fill="#0f172a">[6] ProductResponseDto[]</text>
+
+  <!-- 9. Controller returns 200 to UI -->
+  <line x1="443" y1="380" x2="247" y2="380" stroke="#1e293b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#seq-dash-arrow)"/>
+  <text x="345" y="374" text-anchor="middle" font-size="10" font-weight="bold" fill="#166534">[7] HTTP 200 OK (JSON menu)</text>
+
+  <!-- 10. UI renders menu -->
+  <line x1="233" y1="400" x2="60" y2="400" stroke="#1e293b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#seq-dash-arrow)"/>
+  <text x="145" y="394" text-anchor="middle" font-size="10" fill="#0f172a">[8] Render lưới sản phẩm &amp; Tabs</text>
+
+  <!-- Divider for Alt (Error Path) -->
+  <line x1="210" y1="420" x2="910" y2="420" stroke="#64748b" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="220" y="435" font-size="10" font-weight="bold" fill="#b91c1c">[Lỗi kết nối CSDL / 500 Failure]</text>
+
+  <!-- 11. Controller returns 500 to UI -->
+  <line x1="443" y1="465" x2="247" y2="465" stroke="#b91c1c" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#seq-err-arrow)"/>
+  <text x="345" y="458" text-anchor="middle" font-size="10" font-weight="bold" fill="#b91c1c">[9] HTTP 500 Internal Error</text>
+
+  <!-- 12. UI shows Error State -->
+  <line x1="233" y1="490" x2="60" y2="490" stroke="#b91c1c" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#seq-err-arrow)"/>
+  <text x="145" y="484" text-anchor="middle" font-size="10" fill="#b91c1c">Hiển thị màn hình lỗi (Retry)</text>
+
+  <!-- User filters by Category Tab -->
+  <!-- 13. Customer clicks Tab -->
+  <line x1="60" y1="545" x2="233" y2="545" stroke="#1e293b" stroke-width="1.3" marker-end="url(#seq-arrow)"/>
+  <text x="145" y="538" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">[10] Chọn Tab "Trà hoa quả"</text>
+
+  <!-- 14. UI filters in Client State -->
+  <path d="M 247 555 L 290 555 L 290 575 L 247 575" fill="none" stroke="#1e293b" stroke-width="1.2" marker-end="url(#seq-arrow)"/>
+  <text x="298" y="569" font-size="9" fill="#475569">Lọc State cục bộ</text>
+
+  <!-- 15. UI re-renders -->
+  <line x1="233" y1="600" x2="60" y2="600" stroke="#1e293b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#seq-dash-arrow)"/>
+  <text x="145" y="594" text-anchor="middle" font-size="10" fill="#0f172a">[11] Re-render danh sách theo Tab</text>
+</svg>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 680" width="940" height="680" style="background:#ffffff; font-family:Arial, Helvetica, sans-serif;">
+  <defs>
+    <marker id="diamond" viewBox="0 0 16 10" refX="0" refY="5" markerWidth="14" markerHeight="9" orient="auto">
+      <polygon points="0,5 8,0 16,5 8,10" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+    </marker>
+    <marker id="class-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#1e293b"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="470" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#0f172a">Sơ đồ Lớp Lĩnh vực (Domain Class Diagram) – Lớp Product &amp; Category</text>
+  <text x="470" y="48" text-anchor="middle" font-size="12" fill="#64748b">Thiết kế hướng đối tượng: Thuộc tính, Kiểu dữ liệu, Bội số (Multiplicity) và Nghiệp vụ cốt lõi</text>
+
+  <!-- Enums -->
+  <!-- ProductStatus Enum -->
+  <g transform="translate(60, 90)">
+    <rect x="0" y="0" width="160" height="115" rx="3" fill="#ffffff" stroke="#1e293b" stroke-width="1.4"/>
+    <rect x="0" y="0" width="160" height="28" fill="#f8fafc"/>
+    <text x="80" y="13" text-anchor="middle" font-size="10" fill="#475569">&lt;&lt;enumeration&gt;&gt;</text>
+    <text x="80" y="24" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">ProductStatus</text>
+    <line x1="0" y1="28" x2="160" y2="28" stroke="#1e293b" stroke-width="1"/>
+    <text x="15" y="48" font-size="11" fill="#0f172a">+ ACTIVE</text>
+    <text x="15" y="68" font-size="11" fill="#0f172a">+ INACTIVE</text>
+    <text x="15" y="88" font-size="11" fill="#0f172a">+ OUT_OF_STOCK</text>
+  </g>
+
+  <!-- ProductSize Enum -->
+  <g transform="translate(60, 240)">
+    <rect x="0" y="0" width="160" height="115" rx="3" fill="#ffffff" stroke="#1e293b" stroke-width="1.4"/>
+    <rect x="0" y="0" width="160" height="28" fill="#f8fafc"/>
+    <text x="80" y="13" text-anchor="middle" font-size="10" fill="#475569">&lt;&lt;enumeration&gt;&gt;</text>
+    <text x="80" y="24" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">ProductSize</text>
+    <line x1="0" y1="28" x2="160" y2="28" stroke="#1e293b" stroke-width="1"/>
+    <text x="15" y="48" font-size="11" fill="#0f172a">+ S (Small / Tiêu chuẩn)</text>
+    <text x="15" y="68" font-size="11" fill="#0f172a">+ M (Medium / +5.000đ)</text>
+    <text x="15" y="88" font-size="11" fill="#0f172a">+ L (Large / +10.000đ)</text>
+  </g>
+
+  <!-- Class 1: Category -->
+  <g transform="translate(260, 90)">
+    <rect x="0" y="0" width="250" height="290" rx="3" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+    <rect x="0" y="0" width="250" height="32" fill="#f8fafc"/>
+    <text x="125" y="21" text-anchor="middle" font-size="14" font-weight="bold" fill="#0f172a">Category</text>
+    <line x1="0" y1="32" x2="250" y2="32" stroke="#1e293b" stroke-width="1"/>
+    
+    <!-- Attributes -->
+    <text x="12" y="52" font-size="11" fill="#0f172a">- id: UUID</text>
+    <text x="12" y="70" font-size="11" fill="#0f172a">- name: String</text>
+    <text x="12" y="88" font-size="11" fill="#0f172a">- slug: String</text>
+    <text x="12" y="106" font-size="11" fill="#0f172a">- description: String</text>
+    <text x="12" y="124" font-size="11" fill="#0f172a">- displayOrder: Integer</text>
+    <text x="12" y="142" font-size="11" fill="#0f172a">- isActive: Boolean = true</text>
+    <text x="12" y="160" font-size="11" fill="#0f172a">- createdAt: DateTime</text>
+    <text x="12" y="178" font-size="11" fill="#0f172a">- updatedAt: DateTime</text>
+
+    <line x1="0" y1="192" x2="250" y2="192" stroke="#1e293b" stroke-width="1"/>
+
+    <!-- Methods -->
+    <text x="12" y="212" font-size="11" fill="#0f172a">+ getId(): UUID</text>
+    <text x="12" y="230" font-size="11" fill="#0f172a">+ getName(): String</text>
+    <text x="12" y="248" font-size="11" fill="#0f172a">+ isCategoryActive(): Boolean</text>
+    <text x="12" y="266" font-size="11" fill="#0f172a">+ getActiveProducts(): List</text>
+  </g>
+
+  <!-- Class 2: Product -->
+  <g transform="translate(610, 90)">
+    <rect x="0" y="0" width="280" height="375" rx="3" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+    <rect x="0" y="0" width="280" height="32" fill="#f8fafc"/>
+    <text x="140" y="21" text-anchor="middle" font-size="14" font-weight="bold" fill="#0f172a">Product</text>
+    <line x1="0" y1="32" x2="280" y2="32" stroke="#1e293b" stroke-width="1"/>
+
+    <!-- Attributes -->
+    <text x="12" y="52" font-size="11" fill="#0f172a">- id: UUID</text>
+    <text x="12" y="70" font-size="11" fill="#0f172a">- categoryId: UUID</text>
+    <text x="12" y="88" font-size="11" fill="#0f172a">- name: String</text>
+    <text x="12" y="106" font-size="11" fill="#0f172a">- description: String</text>
+    <text x="12" y="124" font-size="11" fill="#0f172a">- price: Decimal(10, 2)</text>
+    <text x="12" y="142" font-size="11" fill="#0f172a">- imageUrl: String</text>
+    <text x="12" y="160" font-size="11" fill="#0f172a">- stock: Integer = 0</text>
+    <text x="12" y="178" font-size="11" fill="#0f172a">- version: Integer = 1</text>
+    <text x="12" y="196" font-size="11" fill="#0f172a">- status: ProductStatus</text>
+    <text x="12" y="214" font-size="11" fill="#0f172a">- isActive: Boolean = true</text>
+    <text x="12" y="232" font-size="11" fill="#0f172a">- createdAt: DateTime</text>
+
+    <line x1="0" y1="244" x2="280" y2="244" stroke="#1e293b" stroke-width="1"/>
+
+    <!-- Methods -->
+    <text x="12" y="264" font-size="11" fill="#0f172a">+ getId(): UUID</text>
+    <text x="12" y="282" font-size="11" fill="#0f172a">+ getBasePrice(): Decimal</text>
+    <text x="12" y="300" font-size="11" fill="#0f172a">+ isAvailable(): Boolean</text>
+    <text x="12" y="318" font-size="11" fill="#0f172a">+ hasSufficientStock(qty: Int): Boolean</text>
+    <text x="12" y="336" font-size="11" fill="#0f172a">+ reduceStock(qty: Int): Boolean</text>
+    <text x="12" y="354" font-size="11" fill="#0f172a">+ calculatePrice(size: ProductSize): Decimal</text>
+  </g>
+
+  <!-- Association: Category (1) -> (*) Product -->
+  <line x1="510" y1="200" x2="610" y2="200" stroke="#1e293b" stroke-width="1.5" marker-end="url(#class-arrow)"/>
+  <text x="522" y="192" font-size="11" font-weight="bold" fill="#0f172a">1</text>
+  <text x="585" y="192" font-size="11" font-weight="bold" fill="#0f172a">0..*</text>
+  <text x="560" y="215" text-anchor="middle" font-size="10" fill="#475569">chứa danh mục</text>
+
+  <!-- Dependency to Enums -->
+  <line x1="610" y1="280" x2="220" y2="150" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,4"/>
+  <line x1="610" y1="350" x2="220" y2="300" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,4"/>
+
+  <!-- DTO Box (Bottom Right) -->
+  <g transform="translate(260, 420)">
+    <rect x="0" y="0" width="310" height="210" rx="3" fill="#ffffff" stroke="#1e293b" stroke-width="1.4"/>
+    <rect x="0" y="0" width="310" height="30" fill="#f8fafc"/>
+    <text x="155" y="14" text-anchor="middle" font-size="10" fill="#475569">&lt;&lt;data transfer object&gt;&gt;</text>
+    <text x="155" y="25" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">ProductResponseDto</text>
+    <line x1="0" y1="30" x2="310" y2="30" stroke="#1e293b" stroke-width="1"/>
+    
+    <text x="12" y="50" font-size="11" fill="#0f172a">+ id: String</text>
+    <text x="12" y="68" font-size="11" fill="#0f172a">+ name: String</text>
+    <text x="12" y="86" font-size="11" fill="#0f172a">+ description: String</text>
+    <text x="12" y="104" font-size="11" fill="#0f172a">+ price: Number</text>
+    <text x="12" y="122" font-size="11" fill="#0f172a">+ imageUrl: String</text>
+    <text x="12" y="140" font-size="11" fill="#0f172a">+ categoryName: String</text>
+    <text x="12" y="158" font-size="11" fill="#0f172a">+ isOutOfStock: Boolean</text>
+    <text x="12" y="176" font-size="11" fill="#0f172a">+ availableToppings: List&lt;ToppingDto&gt;</text>
+  </g>
+</svg>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1020 720" width="1020" height="720" style="background:#ffffff; font-family:Arial, Helvetica, sans-serif;">
+  <defs>
+    <marker id="dep-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#1e293b"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="510" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#0f172a">Sơ đồ Triển khai (UML Deployment Diagram) – Nút Web Frontend &amp; Nút API Server</text>
+  <text x="510" y="48" text-anchor="middle" font-size="12" fill="#64748b">Cấu trúc phân bổ Nút Production: Web Next.js PWA, NestJS REST API, PostgreSQL và Network Ingress</text>
+
+  <!-- Client Device Node -->
+  <g transform="translate(50, 95)">
+    <rect x="0" y="0" width="220" height="260" rx="4" fill="#fafafa" stroke="#1e293b" stroke-width="1.5"/>
+    <rect x="0" y="0" width="220" height="28" fill="#f1f5f9"/>
+    <text x="110" y="19" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">&lt;&lt;device&gt;&gt; User Client Device</text>
+    <text x="110" y="48" text-anchor="middle" font-size="10" fill="#475569">(Mobile Phone / Laptop)</text>
+
+    <!-- Browser execution environment -->
+    <rect x="15" y="65" width="190" height="175" rx="3" fill="#ffffff" stroke="#334155" stroke-width="1.2"/>
+    <text x="110" y="85" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">&lt;&lt;execution env&gt;&gt; Web Browser</text>
+
+    <!-- Artifact 1 -->
+    <rect x="25" y="100" width="170" height="55" rx="2" fill="#f8fafc" stroke="#64748b" stroke-width="1"/>
+    <text x="110" y="118" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">&lt;&lt;artifact&gt;&gt;</text>
+    <text x="110" y="132" text-anchor="middle" font-size="10" fill="#0f172a">BrewLite PWA Application</text>
+    <text x="110" y="145" text-anchor="middle" font-size="9" fill="#475569">(Next.js PWA / React 18)</text>
+
+    <!-- Artifact 2 -->
+    <rect x="25" y="165" width="170" height="60" rx="2" fill="#f8fafc" stroke="#64748b" stroke-width="1"/>
+    <text x="110" y="183" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">&lt;&lt;artifact&gt;&gt;</text>
+    <text x="110" y="197" text-anchor="middle" font-size="10" fill="#0f172a">Service Worker &amp; Cache</text>
+    <text x="110" y="210" text-anchor="middle" font-size="9" fill="#475569">(Offline cache, Menu state)</text>
+  </g>
+
+  <!-- Ingress / Edge CDN Cloud -->
+  <g transform="translate(315, 95)">
+    <rect x="0" y="0" width="190" height="260" rx="4" fill="#fafafa" stroke="#1e293b" stroke-width="1.5"/>
+    <rect x="0" y="0" width="190" height="28" fill="#f1f5f9"/>
+    <text x="95" y="19" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">&lt;&lt;cloud&gt;&gt; Cloudflare / Edge CDN</text>
+
+    <rect x="15" y="55" width="160" height="80" rx="3" fill="#ffffff" stroke="#334155" stroke-width="1.2"/>
+    <text x="95" y="75" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">&lt;&lt;service&gt;&gt;</text>
+    <text x="95" y="93" text-anchor="middle" font-size="10" fill="#0f172a">SSL/TLS Termination</text>
+    <text x="95" y="108" text-anchor="middle" font-size="9" fill="#475569">(HTTPS Port 443 / TLS 1.3)</text>
+
+    <rect x="15" y="150" width="160" height="90" rx="3" fill="#ffffff" stroke="#334155" stroke-width="1.2"/>
+    <text x="95" y="172" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">&lt;&lt;service&gt;&gt;</text>
+    <text x="95" y="190" text-anchor="middle" font-size="10" fill="#0f172a">Static Asset Cache</text>
+    <text x="95" y="205" text-anchor="middle" font-size="9" fill="#475569">Images, Next.js Bundles</text>
+    <text x="95" y="218" text-anchor="middle" font-size="8" fill="#64748b">(Global Edge Network)</text>
+  </g>
+
+  <!-- Cloud App Server Box (Production Docker Host) -->
+  <g transform="translate(545, 70)">
+    <rect x="0" y="0" width="440" height="610" rx="4" fill="#fafafa" stroke="#1e293b" stroke-width="1.5"/>
+    <rect x="0" y="0" width="440" height="30" fill="#f1f5f9"/>
+    <text x="220" y="20" text-anchor="middle" font-size="12" font-weight="bold" fill="#0f172a">&lt;&lt;server&gt;&gt; Production Host (Docker Compose Host)</text>
+
+    <!-- Internal Bridge Network note -->
+    <rect x="20" y="45" width="400" height="24" rx="2" fill="#ffffff" stroke="#94a3b8" stroke-dasharray="3,3"/>
+    <text x="220" y="61" text-anchor="middle" font-size="9" fill="#475569">Docker Bridge Network: brewlite_network (172.28.0.0/16)</text>
+
+    <!-- Web Container Node -->
+    <g transform="translate(20, 80)">
+      <rect x="0" y="0" width="400" height="150" rx="3" fill="#ffffff" stroke="#334155" stroke-width="1.3"/>
+      <rect x="0" y="0" width="400" height="25" fill="#f8fafc"/>
+      <text x="200" y="17" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">&lt;&lt;container&gt;&gt; brewlite_web (Port 3000)</text>
+
+      <rect x="15" y="38" width="370" height="98" rx="2" fill="#fafafa" stroke="#64748b" stroke-width="1"/>
+      <text x="200" y="56" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">&lt;&lt;runtime&gt;&gt; Node.js v20 / Next.js 14 Standalone</text>
+      <text x="30" y="78" font-size="10" fill="#0f172a">• Page Router &amp; SSR Server (Menu Page: /)</text>
+      <text x="30" y="96" font-size="10" fill="#0f172a">• Dynamic Category Tabs &amp; Search Filter UI</text>
+      <text x="30" y="114" font-size="10" fill="#0f172a">• Skeleton Loading, Empty State, Error Recovery</text>
+    </g>
+
+    <!-- API Container Node -->
+    <g transform="translate(20, 245)">
+      <rect x="0" y="0" width="400" height="185" rx="3" fill="#ffffff" stroke="#334155" stroke-width="1.3"/>
+      <rect x="0" y="0" width="400" height="25" fill="#f8fafc"/>
+      <text x="200" y="17" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">&lt;&lt;container&gt;&gt; brewlite_api (Port 4000)</text>
+
+      <rect x="15" y="35" width="370" height="135" rx="2" fill="#fafafa" stroke="#64748b" stroke-width="1"/>
+      <text x="200" y="53" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">&lt;&lt;runtime&gt;&gt; Node.js v20 / NestJS Framework</text>
+      <text x="30" y="74" font-size="10" fill="#0f172a">• ProductsController: GET /products, GET /products/:id</text>
+      <text x="30" y="92" font-size="10" fill="#0f172a">• ProductsService: InMemory/Prisma ORM Query Engine</text>
+      <text x="30" y="110" font-size="10" fill="#0f172a">• Health Check Endpoint: GET /health (Status, DB connectivity)</text>
+      <text x="30" y="128" font-size="10" fill="#0f172a">• Swagger OpenAPI Docs (/api/docs)</text>
+      <text x="30" y="146" font-size="10" fill="#0f172a">• Global ValidationPipe, CORS, Helmet Security</text>
+    </g>
+
+    <!-- DB Container Node -->
+    <g transform="translate(20, 445)">
+      <rect x="0" y="0" width="400" height="145" rx="3" fill="#ffffff" stroke="#334155" stroke-width="1.3"/>
+      <rect x="0" y="0" width="400" height="25" fill="#f8fafc"/>
+      <text x="200" y="17" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">&lt;&lt;container&gt;&gt; brewlite_db (Port 5432)</text>
+
+      <rect x="15" y="35" width="220" height="95" rx="2" fill="#fafafa" stroke="#64748b" stroke-width="1"/>
+      <text x="125" y="55" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">&lt;&lt;database&gt;&gt; PostgreSQL 16</text>
+      <text x="30" y="78" font-size="9" fill="#0f172a">• Database: brewlite</text>
+      <text x="30" y="95" font-size="9" fill="#0f172a">• Tables: categories, products</text>
+      <text x="30" y="112" font-size="9" fill="#0f172a">• Index: categoryId, name</text>
+
+      <!-- Persistent Volume -->
+      <rect x="250" y="35" width="135" height="95" rx="2" fill="#fafafa" stroke="#64748b" stroke-dasharray="3,3"/>
+      <text x="317" y="55" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">&lt;&lt;volume&gt;&gt;</text>
+      <text x="317" y="75" text-anchor="middle" font-size="9" fill="#0f172a">brewlite_pgdata</text>
+      <text x="317" y="95" text-anchor="middle" font-size="8" fill="#475569">Mount: /var/lib/</text>
+      <text x="317" y="108" text-anchor="middle" font-size="8" fill="#475569">postgresql/data</text>
+    </g>
+  </g>
+
+  <!-- External Payment Gateway (Bottom Left) -->
+  <g transform="translate(50, 480)">
+    <rect x="0" y="0" width="220" height="150" rx="4" fill="#fafafa" stroke="#1e293b" stroke-width="1.5"/>
+    <rect x="0" y="0" width="220" height="28" fill="#f1f5f9"/>
+    <text x="110" y="19" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">&lt;&lt;external&gt;&gt; Payment GW</text>
+
+    <rect x="15" y="45" width="190" height="85" rx="2" fill="#ffffff" stroke="#64748b" stroke-width="1"/>
+    <text x="110" y="68" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">Mock Gateway API</text>
+    <text x="25" y="90" font-size="9" fill="#0f172a">• HTTPS Webhook / Callback</text>
+    <text x="25" y="108" font-size="9" fill="#0f172a">• Idempotency Verification</text>
+  </g>
+
+  <!-- Communication Links -->
+  <!-- 1. Client to CDN -->
+  <line x1="270" y1="210" x2="315" y2="210" stroke="#1e293b" stroke-width="1.5" marker-end="url(#dep-arrow)"/>
+  <text x="292" y="200" text-anchor="middle" font-size="9" font-weight="bold" fill="#0f172a">HTTPS</text>
+
+  <!-- 2. CDN to Host Web -->
+  <line x1="505" y1="210" x2="565" y2="210" stroke="#1e293b" stroke-width="1.5" marker-end="url(#dep-arrow)"/>
+  <text x="535" y="200" text-anchor="middle" font-size="9" font-weight="bold" fill="#0f172a">Port 3000</text>
+
+  <!-- 3. Web to API -->
+  <line x1="765" y1="230" x2="765" y2="245" stroke="#1e293b" stroke-width="1.5" marker-end="url(#dep-arrow)"/>
+  <text x="805" y="240" font-size="9" font-weight="bold" fill="#0f172a">HTTP:4000</text>
+
+  <!-- 4. API to DB -->
+  <line x1="765" y1="430" x2="765" y2="445" stroke="#1e293b" stroke-width="1.5" marker-end="url(#dep-arrow)"/>
+  <text x="805" y="440" font-size="9" font-weight="bold" fill="#0f172a">TCP:5432</text>
+
+  <!-- 5. API to Mock Gateway -->
+  <line x1="565" y1="360" x2="270" y2="520" stroke="#1e293b" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#dep-arrow)"/>
+  <text x="380" y="430" font-size="9" font-weight="bold" fill="#0f172a">HTTPS:443 (Idempotent)</text>
+</svg>

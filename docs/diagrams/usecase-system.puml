@@ -1,0 +1,82 @@
+@startuml usecase-system
+' Đồ án: Công nghệ Phần mềm - ĐH Sài Gòn (SGU)
+' Tác giả: Trần Vĩnh Thọ Lân - MSSV: 3124560049
+!theme plain
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam roundcorner 6
+skinparam backgroundColor #FFFFFF
+
+skinparam actor {
+    BorderColor #1E293B
+    BackgroundColor #F8FAFC
+}
+
+skinparam usecase {
+    BorderColor #1E293B
+    BackgroundColor #FFFFFF
+    ArrowColor #334155
+}
+
+skinparam rectangle {
+    BorderColor #334155
+    BackgroundColor #FAFAFA
+}
+
+title Sơ đồ Use Case Tổng quan Hệ thống BrewLite (System Overview)
+
+actor "Khách hàng\n(Customer)" as Customer <<Primary>>
+actor "Nhân viên quầy\n(Barista)" as Barista <<Secondary>>
+actor "Quản lý cửa hàng\n(Store Manager/PO)" as Manager <<Secondary>>
+actor "Cổng thanh toán\n(Mock Payment Gateway)" as PaymentGateway <<External System>>
+
+rectangle "Hệ thống BrewLite (BrewLite System)" {
+    ' Nhóm Menu & Sản phẩm
+    usecase "UC01: Xem thực đơn đồ uống\n(Browse Menu)" as UC_Menu
+    usecase "UC02: Lọc & Tìm kiếm sản phẩm" as UC_SearchFilter
+    usecase "UC03: Xem chi tiết & Tùy chọn món\n(Size, Topping)" as UC_DetailOption
+    
+    ' Nhóm Giỏ hàng & Đặt hàng
+    usecase "UC04: Quản lý giỏ hàng\n(Thêm/Sửa/Xóa)" as UC_Cart
+    usecase "UC05: Đặt đơn hàng (Create Order)" as UC_CreateOrder
+    
+    ' Nhóm Xác thực tài khoản
+    usecase "UC06: Đăng ký / Đăng nhập (JWT Auth)" as UC_Auth
+    
+    ' Nhóm Thanh toán & Xác nhận
+    usecase "UC07: Thanh toán không tiền mặt\n(Ví / Thẻ)" as UC_Payment
+    usecase "UC08: Xem mã đơn & Biên lai xác nhận" as UC_Confirmation
+    usecase "UC09: Tra cứu lịch sử đơn hàng" as UC_History
+    
+    ' Nghiệp vụ Quầy & Quản lý
+    usecase "UC10: Tiếp nhận & Cập nhật pha chế\n(PREPARING -> READY)" as UC_Barista
+    usecase "UC11: Quản lý danh mục & Tồn kho" as UC_Manager
+}
+
+' Quan hệ Khách hàng
+Customer --> UC_Menu
+Customer --> UC_SearchFilter
+Customer --> UC_DetailOption
+Customer --> UC_Cart
+Customer --> UC_CreateOrder
+Customer --> UC_Auth
+Customer --> UC_Payment
+Customer --> UC_Confirmation
+Customer --> UC_History
+
+' Include / Extend
+UC_Menu <.. UC_SearchFilter : <<extend>>
+UC_Menu <.. UC_DetailOption : <<extend>>
+UC_CreateOrder ..> UC_Cart : <<include>>
+UC_CreateOrder ..> UC_Auth : <<include>>
+UC_Payment ..> UC_CreateOrder : <<include>>
+UC_Payment ..> UC_Confirmation : <<include>>
+
+' External Payment Gateway
+PaymentGateway <-- UC_Payment : <<integrate>>
+
+' Barista & Manager
+Barista --> UC_Barista
+Manager --> UC_Manager
+
+@enduml
