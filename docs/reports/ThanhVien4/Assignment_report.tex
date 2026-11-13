@@ -1,0 +1,744 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{vntex}
+\usepackage{a4wide,amssymb,epsfig,latexsym,multicol,array,hhline,fancyhdr}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{lastpage}
+\usepackage[lined,boxed,commentsnumbered]{algorithm2e}
+\usepackage{enumerate}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{tabularx, caption}
+\usepackage{multirow}
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage{multicol}
+\usepackage{rotating}
+\usepackage{graphics}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{listings}
+\usetikzlibrary{arrows,arrows.meta,shapes.geometric,shapes.misc,positioning,fit,calc}
+\usepackage{hyperref}
+\hypersetup{urlcolor=blue,linkcolor=blue,citecolor=black,colorlinks=true} 
+
+\setlength{\headheight}{40pt}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[L]{
+ \begin{tabular}{rl}
+    \begin{picture}(25,15)(0,0)
+    \put(0,-8){\includegraphics[width=8mm, height=8mm]{logoITSGUsmall.png}}
+   \end{picture}&
+	\begin{tabular}{l}
+		\textbf{\bf \ttfamily Trường Đại học Sài Gòn}\\
+		\textbf{\bf \ttfamily Khoa Công Nghệ Thông Tin}
+	\end{tabular} 	
+ \end{tabular}
+}
+\fancyhead[R]{
+	\begin{tabular}{l}
+		\tiny \bf \\
+		\tiny \bf 
+	\end{tabular}  
+}
+\fancyfoot{}
+\fancyfoot[L]{\scriptsize \ttfamily Báo cáo Cá nhân: Thành viên 4 -- Hệ thống Cà phê BrewLite}
+\fancyfoot[R]{\scriptsize \ttfamily Trang {\thepage}/\pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+\lstset{
+  language=Java,
+  basicstyle=\small\ttfamily,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{red},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=8pt,
+  backgroundcolor=\color{white},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  frame=single,
+  tabsize=2,
+  captionpos=b,
+  breaklines=true,
+  breakatwhitespace=false,
+  escapeinside={\%*}{*)}
+}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+Trường Đại học Sài Gòn \\
+Khoa Công Nghệ Thông Tin \\
+\textbf{\large BỘ MÔN CÔNG NGHỆ PHẦN MỀM} \\
+------o0o------
+\end{center}
+
+\vspace{1cm}
+
+\begin{center}
+\includegraphics[scale=0.4]{logoITSGU.png}
+\end{center}
+
+\vspace{1cm}
+
+\begin{center}
+\begin{tabular}{c}
+	\multicolumn{1}{l}{\textbf{{\Large BÀI TẬP LỚN: CÔNG NGHỆ PHẦN MỀM}}}\\
+	~~\\
+	\hline
+	\\
+	\multicolumn{1}{l}{\textbf{{\Large ASSIGNMENT 2: REQUIREMENTS TO DEPLOYMENT}}}\\
+	\\
+	\textbf{{\LARGE HỆ THỐNG CÀ PHÊ BREWLITE}}\\
+	\textbf{{\Large BÁO CÁO CÁ NHÂN: THÀNH VIÊN 4}}\\
+	\textbf{{\normalsize Màn hình \& Luồng nghiệp vụ: "Thanh toán \& Xác nhận đơn"}}\\
+	\\
+	\hline
+\end{tabular}
+\end{center}
+
+\vspace{1.8cm}
+
+\begin{table}[h]
+\begin{tabular}{rrl}
+\hspace{3.5 cm} & GVHD: & [Điền tên Giảng viên hướng dẫn]\\
+& SV thực hiện: & Phan Vũ Việt Quang (Thành viên 4) \\
+& MSSV: & 3124560072\\
+& Lớp: & DKP1242\\
+& Học kỳ: & I -- Năm học 2026--2027 \\
+\end{tabular}
+\end{table}
+
+\vfill
+\begin{center}
+{\footnotesize TP. HỒ CHÍ MINH, THÁNG 11/2026}
+\end{center}
+\end{titlepage}
+
+\thispagestyle{empty}
+\newpage
+\tableofcontents
+\newpage
+
+\section{Tổng quan bối cảnh, Phân công nhiệm vụ và Đặc tả Use-Case trọng tâm (Task 1.3)}
+
+\subsection{Bối cảnh phân hệ Thanh toán \& Xác nhận đơn trong BrewLite}
+Trong chuỗi giá trị bán lẻ cà phê hiện đại của dự án \textbf{BrewLite}, thanh toán là mắt xích sống còn quyết định tỷ lệ hoàn tất đơn hàng (conversion rate) và sự hài lòng của khách hàng. Phân hệ \textbf{"Thanh toán \& Xác nhận đơn"} do \textbf{Thành viên 4} phụ trách giải quyết các bài toán kỹ thuật và nghiệp vụ cốt lõi:
+\begin{itemize}
+    \item \textbf{Thanh toán không tiền mặt đa dạng:} Hỗ trợ ví điện tử (MoMo, VNPay) và thẻ ngân hàng (Visa, Mastercard, NAPAS), giảm thiểu thời gian xếp hàng tại quầy.
+    \item \textbf{Đảm bảo tính toàn vẹn (Idempotency):} Trong môi trường mạng di động không ổn định, khách hàng có thể vô tình bấm nút thanh toán nhiều lần hoặc đường truyền bị ngắt kết nối. Cơ chế Idempotency với khóa \texttt{Idempotency-Key} đảm bảo giao dịch chỉ được trừ tiền và xử lý đúng một lần duy nhất.
+    \item \textbf{Bảo toàn dữ liệu khi có sự cố thanh toán:} Khi giao dịch thanh toán thất bại (tài khoản không đủ số dư, hủy giao dịch), đơn hàng được chuyển sang trạng thái \texttt{PAYMENT\_FAILED} nhưng \textbf{giữ nguyên giỏ hàng}, giúp khách hàng không phải chọn lại món từ đầu mà có thể đổi phương thức và thử lại ngay lập tức.
+    \item \textbf{Xác nhận đơn hàng tức thời:} Cung cấp màn hình xác nhận với mã đơn hàng định danh (\texttt{\#ORD-XXXXXX}), trạng thái \texttt{PAID}, mã tham chiếu giao dịch và thời gian tạo đơn rõ ràng.
+\end{itemize}
+
+\subsection{Phân công nhiệm vụ nhóm và Trách nhiệm của Thành viên 4}
+Bảng phân công trách nhiệm 5 thành viên trong Assignment 2:
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{|c|l|l|c|}
+\hline
+\textbf{STT} & \textbf{Thành viên} & \textbf{Luồng / Màn hình chính phụ trách} & \textbf{Vai trò cốt lõi} \\ \hline
+1 & Thành viên 1 & Menu sản phẩm & Task 1.1 Context \& Scope, API GET /products \\ \hline
+2 & Thành viên 2 & Chi tiết sản phẩm & SRS Options, Size/Topping, GET /products/:id \\ \hline
+3 & Thành viên 3 & Giỏ hàng & Quản lý State giỏ hàng, POST /orders \\ \hline
+\textbf{4} & \textbf{Thành viên 4 (Bản thân)} & \textbf{Thanh toán \& Xác nhận đơn} & \textbf{Task 1.3 Use-case trọng tâm, POST /payments} \\ \hline
+5 & Thành viên 5 & Đăng ký \& Đăng nhập & Auth Module, JWT Guard, POST /auth/login \\ \hline
+\end{tabular}
+\caption{Bảng phân công nhiệm vụ nhóm và định vị trách nhiệm Thành viên 4}
+\end{table}
+
+Trách nhiệm cụ thể của \textbf{Thành viên 4}:
+\begin{enumerate}
+    \item \textbf{Viết tài liệu đặc tả Use-Case trọng tâm (Task 1.3 theo đề bài PDF):} Đặc tả toàn diện use-case \textbf{"Đặt và thanh toán đơn hàng"}.
+    \item \textbf{Thiết kế 5 sơ đồ UML chuyên sâu:} Use Case Diagram phân hệ thanh toán, Activity Diagram luồng thanh toán rẽ nhánh, Sequence Diagram gọi API Idempotent, Class Diagram mô hình Payment, và Deployment Diagram tích hợp Mock Payment Gateway.
+    \item \textbf{Hiện thực mã nguồn:}
+    \begin{itemize}
+        \item Frontend Next.js: Màn hình Checkout (\texttt{apps/web/src/app/checkout/page.tsx}) và Màn hình Xác nhận đơn thành công (\texttt{apps/web/src/app/order-success/page.tsx}).
+        \item Backend NestJS: API \texttt{POST /payments}, Controller, Service và Service kiểm soát Idempotency (\texttt{PaymentProcessorService}).
+    \end{itemize}
+    \item \textbf{Xây dựng Ma trận truy vết (Traceability Matrix):} Liên kết chặt chẽ yêu cầu FR-05, FR-06 với thiết kế, mã nguồn và ca kiểm thử.
+\end{enumerate}
+
+\subsection{Đặc tả Use-case trọng tâm: "Đặt và thanh toán đơn hàng" (Task 1.3)}
+Theo đúng yêu cầu tại \textbf{Mục 3.3 của Đề bài Assignment 2}, Thành viên 4 thực hiện đặc tả chi tiết use-case cốt lõi của toàn bộ hệ thống:
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{|p{3.5cm}|p{11.5cm}|}
+\hline
+\textbf{Mã Use Case} & \textbf{UC-01: Đặt và thanh toán đơn hàng} \\ \hline
+\textbf{Tên Use Case} & Đặt món và thực hiện thanh toán không tiền mặt \\ \hline
+\textbf{Tác nhân (Actor)} & Khách hàng (Customer), Cổng thanh toán giả lập (Mock Payment Gateway) \\ \hline
+\textbf{Mô tả tóm tắt} & Khách hàng kiểm tra đơn hàng, chọn phương thức thanh toán không tiền mặt (MoMo, VNPay, Thẻ), hệ thống thực hiện trừ tiền an toàn thông qua khóa Idempotency và chuyển đổi trạng thái đơn sang \texttt{PAID}. \\ \hline
+\textbf{Kích hoạt (Trigger)} & Khách hàng nhấn nút "Tiến hành thanh toán" trên màn hình Giỏ hàng hoặc Modal Đặt hàng. \\ \hline
+\textbf{Tiền điều kiện (Preconditions)} & 
+\begin{enumerate}
+    \vspace{-0.2cm}
+    \item Khách hàng đã đăng nhập tài khoản hợp lệ (có JWT Token).
+    \item Giỏ hàng có ít nhất một món sản phẩm.
+    \item Đơn hàng đã được khởi tạo tạm ở trạng thái \texttt{PENDING}.
+    \vspace{-0.2cm}
+\end{enumerate} \\ \hline
+\textbf{Hậu điều kiện (Postconditions)} & 
+\begin{enumerate}
+    \vspace{-0.2cm}
+    \item Đơn hàng chuyển sang trạng thái \texttt{PAID}.
+    \item Bản ghi giao dịch \texttt{Payment} được lưu thành công với mã tham chiếu.
+    \item Giỏ hàng của khách hàng được xóa rỗng.
+    \item Màn hình xác nhận hiển thị mã đơn hàng dạng \texttt{\#ORD-XXXXXX}.
+    \vspace{-0.2cm}
+\end{enumerate} \\ \hline
+\textbf{Luồng sự kiện chính (Happy Path)} & 
+\begin{enumerate}
+    \vspace{-0.2cm}
+    \item Khách hàng điều hướng đến màn hình Checkout, xem lại tổng tiền và số lượng món.
+    \item Khách hàng chọn phương thức thanh toán (\textit{Ví MoMo / VNPay / Thẻ ngân hàng}) và nhập thông tin (SĐT, số bàn/ghi chú).
+    \item Khách hàng bấm nút "Thanh toán ngay".
+    \item Client sinh khóa duy nhất \texttt{idempotencyKey} (UUIDv4) và gửi \texttt{POST /payments} kèm header \texttt{Idempotency-Key} và Bearer Token.
+    \item Backend xác thực token, kiểm tra khóa idempotency trong CSDL.
+    \item Backend gọi Cổng thanh toán giả lập xử lý trừ tiền.
+    \item Cổng thanh toán phản hồi giao dịch thành công kèm mã tham chiếu \texttt{transactionRef}.
+    \item Backend mở CSDL Transaction: cập nhật \texttt{Order.status = PAID}, tạo bản ghi \texttt{Payment(SUCCESS)}, tích lũy điểm thưởng khách hàng.
+    \item Backend trả về HTTP 201 Created cùng thông tin đơn hàng và mã giao dịch.
+    \item Client xóa giỏ hàng và điều hướng tới Màn hình Xác nhận Đơn hàng (\texttt{/order-success}).
+    \vspace{-0.2cm}
+\end{enumerate} \\ \hline
+\textbf{Luồng thay thế (Alternative Flows)} & 
+\textbf{Alt-1: Gửi lại yêu cầu với cùng Idempotency Key (Idempotent Replay)}
+\begin{itemize}
+    \item Tại bước 5, Backend phát hiện khóa \texttt{idempotencyKey} đã tồn tại trong CSDL.
+    \item Backend kiểm tra tính khớp nối với đơn hàng cũ và trả về ngay kết quả giao dịch trước đó (HTTP 200 OK, cờ \texttt{idempotentReplay: true}) mà \textbf{không} gọi trừ tiền lại ở Cổng thanh toán.
+\end{itemize} \\ \hline
+\textbf{Luồng ngoại lệ (Exception Flows)} & 
+\textbf{Exc-1: Giao dịch thanh toán thất bại (Số dư không đủ / Thẻ lỗi)}
+\begin{itemize}
+    \item Tại bước 7, Cổng thanh toán trả về thất bại.
+    \item Backend cập nhật đơn hàng thành \texttt{PAYMENT\_FAILED}, ghi nhận giao dịch \texttt{Payment(FAILED)}.
+    \item Backend trả về HTTP 400 Bad Request kèm lý do lỗi.
+    \item Client thông báo lỗi đỏ cho người dùng nhưng \textbf{giữ nguyên toàn bộ giỏ hàng}, cho phép khách đổi phương thức thanh toán và thử lại.
+\end{itemize}
+\textbf{Exc-2: Đơn hàng đang được xử lý bởi một luồng khác (In-flight conflict)}
+\begin{itemize}
+    \item Backend trả về HTTP 409 Conflict, yêu cầu client đợi hoàn tất giao dịch đang chạy.
+\end{itemize} \\ \hline
+\textbf{Mã yêu cầu liên kết} & \textbf{FR-05} (Thanh toán không tiền mặt), \textbf{FR-06} (Xác nhận đơn hàng), \textbf{NFR-03} (Idempotency \& Security). \\ \hline
+\end{tabular}
+\caption{Bảng đặc tả Use-Case trọng tâm UC-01 (Task 1.3)}
+\end{table}
+
+\newpage
+\section{Đặc tả yêu cầu phần mềm phân hệ "Thanh toán \& Xác nhận đơn"}
+
+\subsection{Yêu cầu chức năng (Functional Requirements)}
+Các yêu cầu chức năng do Thành viên 4 đảm trách:
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{|c|l|c|p{8.5cm}|}
+\hline
+\textbf{Mã YC} & \textbf{Tên yêu cầu} & \textbf{MoSCoW} & \textbf{Tiêu chí chấp nhận (Acceptance Criteria)} \\ \hline
+\textbf{FR-05} & Thanh toán không tiền mặt & Must & 
+- Hỗ trợ chọn phương thức: Ví điện tử (MoMo/VNPay) hoặc Thẻ ngân hàng (Visa/Napas). \newline
+- Gửi yêu cầu qua API \texttt{POST /payments} kèm header \texttt{Idempotency-Key}. \newline
+- Khi thanh toán thành công, đơn hàng lập tức chuyển trạng thái sang \texttt{PAID}. \newline
+- Khi thanh toán thất bại, chuyển trạng thái \texttt{PAYMENT\_FAILED} và không xóa giỏ hàng. \\ \hline
+\textbf{FR-06} & Xác nhận và hiển thị mã đơn & Must & 
+- Hiển thị màn hình thành công \texttt{/order-success} ngay sau thanh toán. \newline
+- Hiển thị rõ mã đơn hàng duy nhất (\texttt{\#ORD-XXXXXX}) có nút sao chép nhanh. \newline
+- Hiển thị nhãn trạng thái \texttt{PAID}, tổng tiền thanh toán, hình thức thanh toán và thời gian giao dịch. \\ \hline
+\textbf{FR-07} & Thử lại khi thanh toán thất bại & Should & 
+- Cho phép khách hàng nhấn "Thử lại thanh toán" với phương thức khác mà không phải duyệt lại danh mục món. \\ \hline
+\end{tabular}
+\caption{Bảng yêu cầu chức năng phân hệ Thanh toán \& Xác nhận}
+\end{table}
+
+\subsection{Yêu cầu phi chức năng (Non-Functional Requirements)}
+\begin{itemize}
+    \item \textbf{NFR-03 (Tính Idempotency \& Toàn vẹn dữ liệu):} Đảm bảo dù mạng rớt hoặc người dùng click liên tiếp 5 lần nút thanh toán, CSDL chỉ phát sinh đúng một lệnh trừ tiền duy nhất nhờ ràng buộc \texttt{@unique} trên cột \texttt{idempotencyKey}.
+    \item \textbf{NFR-04 (Bảo mật giao dịch):} Endpoint \texttt{/payments} bắt buộc phải được bảo vệ bởi \texttt{JwtAuthGuard}. Toàn bộ thông tin trao đổi được mã hóa qua HTTPS TLS 1.3.
+    \item \textbf{NFR-05 (Thời gian đáp ứng):} Thời gian xử lý API thanh toán giả lập và trả về kết quả không vượt quá 2.0 giây trong điều kiện mạng tiêu chuẩn.
+\end{itemize}
+
+\newpage
+\section{Mô hình hóa hệ thống: 5 Sơ đồ UML (Thành viên 4)}
+
+\subsection{Sơ đồ 1: Use Case Diagram (Phân hệ Thanh toán \& Xác nhận đơn)}
+Sơ đồ thể hiện sự tương tác của Actor \textbf{Khách hàng (Customer)} và Actor ngoài \textbf{Mock Payment Gateway} với các ca sử dụng thuộc phân hệ:
+
+\begin{figure}[h!]
+\centering
+\resizebox{0.92\textwidth}{!}{
+\begin{tikzpicture}[
+    actor/.style={draw, thick, circle, minimum size=0.8cm, fill=blue!10},
+    usecase/.style={draw, thick, ellipse, fill=yellow!15, minimum width=3.5cm, minimum height=1.0cm, align=center, font=\small},
+    systembox/.style={draw=black!70, dashed, thick, rounded corners=8pt, fill=blue!2}
+]
+    % System boundary
+    \draw[systembox] (-0.8, -6.8) rectangle (10.5, 2.2);
+    \node[anchor=north west, font=\bfseries\sffamily, text=blue!80!black] at (-0.6, 2.0) {Phân hệ Thanh toán \& Xác nhận đơn (BrewLite)};
+    
+    % Actors
+    \node (customer) at (-3.0, -2.5) {};
+    \node[actor, label=below:{\textbf{Khách hàng (Customer)}}] at (-3.0, -2.5) {};
+    
+    \node (gateway) at (12.8, -2.5) {};
+    \node[actor, fill=green!15, label=below:{\textbf{Mock Payment Gateway}}] at (12.8, -2.5) {};
+    
+    % Use Cases
+    \node[usecase] (uc1) at (3.5, 1.2) {UC-01.1: Chọn phương thức\\thanh toán (Ví/Thẻ)};
+    \node[usecase] (uc2) at (3.5, -0.4) {UC-01.2: Xác nhận thanh toán\\không tiền mặt};
+    \node[usecase] (uc3) at (8.0, -1.8) {UC-01.3: Trừ tiền qua cổng\\thanh toán};
+    \node[usecase] (uc4) at (8.0, 0.4) {UC-01.4: Kiểm tra khóa\\Idempotency};
+    \node[usecase] (uc5) at (3.5, -2.4) {UC-01.5: Xem màn hình\\xác nhận đơn (PAID)};
+    \node[usecase] (uc6) at (3.5, -4.2) {UC-01.6: Xử lý lỗi thanh toán\\\& Thử lại};
+    \node[usecase] (uc7) at (3.5, -5.8) {UC-01.7: Sao chép mã đơn\\\#ORD-XXXXXX};
+    
+    % Connections
+    \draw[thick] (-2.2, -2.3) -- (uc1.west);
+    \draw[thick] (-2.2, -2.5) -- (uc2.west);
+    \draw[thick] (-2.2, -2.7) -- (uc5.west);
+    \draw[thick] (-2.2, -2.9) -- (uc6.west);
+    \draw[thick] (-2.2, -3.1) -- (uc7.west);
+    
+    % Gateway connection
+    \draw[thick] (gateway.west) -- (uc3.east);
+    
+    % Include / Extend
+    \draw[dashed, thick, ->] (uc2) -- node[above, font=\footnotesize, sloped] {$\langle\langle include \rangle\rangle$} (uc4);
+    \draw[dashed, thick, ->] (uc2) -- node[below, font=\footnotesize, sloped] {$\langle\langle include \rangle\rangle$} (uc3);
+    \draw[dashed, thick, ->] (uc6) -- node[above, font=\footnotesize, sloped] {$\langle\langle extend \rangle\rangle$} (uc2);
+    \draw[dashed, thick, ->] (uc5) -- node[right, font=\footnotesize] {$\langle\langle include \rangle\rangle$} (uc7);
+\end{tikzpicture}
+}
+\caption{Sơ đồ Use Case phân hệ Thanh toán \& Xác nhận đơn hàng}
+\end{figure}
+
+\subsection{Sơ đồ 2: Activity Diagram (Luồng Thanh toán và Rẽ nhánh kết quả)}
+Sơ đồ hoạt động thể hiện toàn bộ luồng nghiệp vụ từ khi khách hàng chọn phương thức, gửi thanh toán, xử lý idempotency, rẽ nhánh thành công (PAID) hoặc thất bại (PAYMENT\_FAILED):
+
+\begin{figure}[h!]
+\centering
+\resizebox{0.82\textwidth}{!}{
+\begin{tikzpicture}[
+    startstop/.style={circle, fill=black, minimum size=0.5cm},
+    activity/.style={draw, thick, rounded corners=5pt, fill=blue!10, text width=3.8cm, align=center, minimum height=0.8cm, font=\footnotesize},
+    decision/.style={draw, thick, diamond, fill=yellow!20, aspect=1.8, inner sep=2pt, font=\scriptsize, align=center},
+    arrow/.style={thick, ->, >=stealth}
+]
+    % Nodes
+    \node[startstop] (start) at (0, 0) {};
+    \node[activity, below=0.6cm of start] (selectMethod) {Khách chọn phương thức:\\Ví MoMo / VNPay / Thẻ};
+    \node[activity, below=0.6cm of selectMethod] (inputInfo) {Nhập số điện thoại \& ghi chú;\\Bấm "Thanh toán ngay"};
+    \node[activity, below=0.6cm of inputInfo] (genKey) {Client tạo \texttt{idempotencyKey};\\Gửi \texttt{POST /payments}};
+    \node[decision, below=0.6cm of genKey] (checkIdempotent) {Key đã\\tồn tại?};
+    
+    % Branch replay
+    \node[activity, right=2.0cm of checkIdempotent] (replayRes) {Lấy kết quả giao dịch cũ;\\Trả về client (Replay)};
+    
+    % Branch new
+    \node[activity, below=0.8cm of checkIdempotent] (callGateway) {Mở giao dịch CSDL;\\Gọi Mock Payment Gateway};
+    \node[decision, below=0.8cm of callGateway] (checkSuccess) {Trừ tiền\\thành công?};
+    
+    % Success Branch
+    \node[activity, below left=0.8cm and 0.5cm of checkSuccess] (handleSuccess) {Cập nhật \texttt{Order = PAID};\\Ghi nhận \texttt{Payment(SUCCESS)};\\Xóa rỗng giỏ hàng};
+    \node[activity, below=0.6cm of handleSuccess] (showSuccess) {Hiển thị màn hình Xác nhận\\Mã đơn \texttt{\#ORD...} \& Badge PAID};
+    
+    % Failure Branch
+    \node[activity, below right=0.8cm and 0.5cm of checkSuccess] (handleFail) {Cập nhật \texttt{Order = PAYMENT\_FAILED};\\Ghi nhận \texttt{Payment(FAILED)};\\\textbf{Giữ nguyên giỏ hàng}};
+    \node[activity, below=0.6cm of handleFail] (showFail) {Hiển thị thông báo lỗi\\\& Nút "Thử lại thanh toán"};
+    
+    % End
+    \node[startstop, double, below=3.2cm of checkSuccess] (endNode) {};
+    
+    % Connectors
+    \draw[arrow] (start) -- (selectMethod);
+    \draw[arrow] (selectMethod) -- (inputInfo);
+    \draw[arrow] (inputInfo) -- (genKey);
+    \draw[arrow] (genKey) -- (checkIdempotent);
+    
+    \draw[arrow] (checkIdempotent) -- node[above, font=\scriptsize] {Có (Replay)} (replayRes);
+    \draw[arrow] (replayRes) |- (showSuccess);
+    
+    \draw[arrow] (checkIdempotent) -- node[right, font=\scriptsize] {Chưa} (callGateway);
+    \draw[arrow] (callGateway) -- (checkSuccess);
+    
+    \draw[arrow] (checkSuccess) -| node[above left, font=\scriptsize] {Thành công} (handleSuccess);
+    \draw[arrow] (handleSuccess) -- (showSuccess);
+    \draw[arrow] (showSuccess) |- (endNode);
+    
+    \draw[arrow] (checkSuccess) -| node[above right, font=\scriptsize] {Thất bại} (handleFail);
+    \draw[arrow] (handleFail) -- (showFail);
+    \draw[arrow] (showFail) |- (endNode);
+\end{tikzpicture}
+}
+\caption{Sơ đồ Activity thể hiện luồng thanh toán rẽ nhánh có Idempotency}
+\end{figure}
+
+\newpage
+\subsection{Sơ đồ 3: Sequence Diagram (Luồng gọi API Idempotent \texttt{POST /payments})}
+Sơ đồ tuần tự thể hiện sự giao tiếp qua lại giữa các thực thể thành phần khi client gọi API thanh toán với khóa chống lặp:
+
+\begin{figure}[h!]
+\centering
+\resizebox{0.92\textwidth}{!}{
+\begin{tikzpicture}[
+    font=\footnotesize,
+    lifeline/.style={draw=gray!80, dashed, thick},
+    entity/.style={draw, thick, rectangle, rounded corners=3pt, fill=blue!10, minimum height=0.7cm, align=center, inner sep=4pt},
+    msg/.style={thick, ->, >=stealth},
+    ret/.style={thick, dashed, ->, >=stealth}
+]
+    % Entities
+    \node[entity] (c) at (0, 0) {Customer};
+    \node[entity] (ui) at (2.6, 0) {Next.js UI\\(Checkout)};
+    \node[entity] (api) at (5.8, 0) {Payments\\Controller};
+    \node[entity] (svc) at (8.8, 0) {PaymentProcessor\\Service};
+    \node[entity] (gw) at (12.0, 0) {Mock Payment\\Gateway};
+    \node[entity] (db) at (14.6, 0) {PostgreSQL\\Database};
+    
+    % Lifelines
+    \draw[lifeline] (c) -- (0, -9.5);
+    \draw[lifeline] (ui) -- (2.6, -9.5);
+    \draw[lifeline] (api) -- (5.8, -9.5);
+    \draw[lifeline] (svc) -- (8.8, -9.5);
+    \draw[lifeline] (gw) -- (12.0, -9.5);
+    \draw[lifeline] (db) -- (14.6, -9.5);
+    
+    % Messages
+    \draw[msg] (0, -0.8) -- node[above] {1. Bấm "Thanh toán ngay"} (2.6, -0.8);
+    \draw[msg] (2.6, -1.3) -- node[above, align=center] {2. POST /payments\\(Header: Idempotency-Key, Bearer)} (5.8, -1.3);
+    
+    \draw[msg] (5.8, -1.8) -- node[above] {3. Verify JWT \& pass DTO} (8.8, -1.8);
+    \draw[msg] (8.8, -2.3) -- node[above] {4. findUnique(idempotencyKey)} (14.6, -2.3);
+    \draw[ret] (14.6, -2.8) -- node[above] {5. Trả về null (Chưa có key)} (8.8, -2.8);
+    
+    % Lock
+    \draw[msg] (8.8, -3.3) -- node[above] {6. insert Payment(PENDING)} (14.6, -3.3);
+    \draw[ret] (14.6, -3.7) -- node[above] {7. Lock thành công} (8.8, -3.7);
+    
+    % Call gateway
+    \draw[msg] (8.8, -4.3) -- node[above] {8. charge(amount, method)} (12.0, -4.3);
+    \draw[ret] (12.0, -4.9) -- node[above] {9. HTTP 200: \{success: true, ref: 'TXN-99'\} } (8.8, -4.9);
+    
+    % Transaction DB
+    \draw[msg] (8.8, -5.5) -- node[above, align=center] {10. Transaction: Update Order(PAID),\\Payment(SUCCESS, transactionRef)} (14.6, -5.5);
+    \draw[ret] (14.6, -6.1) -- node[above] {11. Commit transaction OK} (8.8, -6.1);
+    
+    % Returns
+    \draw[ret] (8.8, -6.7) -- node[above] {12. Return PaymentResult \& Order} (5.8, -6.7);
+    \draw[ret] (5.8, -7.2) -- node[above] {13. HTTP 201 Created (status: PAID, orderNumber)} (2.6, -7.2);
+    
+    % UI Action
+    \draw[msg] (2.6, -7.7) -- node[above] {14. clearCart() \& redirect} (2.6, -8.2);
+    \draw[ret] (2.6, -8.7) -- node[above] {15. Hiển thị trang Xác nhận đơn hàng} (0, -8.7);
+\end{tikzpicture}
+}
+\caption{Sơ đồ Sequence thể hiện tương tác gọi API thanh toán Idempotent}
+\end{figure}
+
+\subsection{Sơ đồ 4: Class Diagram (Mô hình lớp miền Thanh toán \& Đơn hàng)}
+Sơ đồ thể hiện cấu trúc các thực thể dữ liệu và lớp dịch vụ xử lý thanh toán:
+
+\begin{figure}[h!]
+\centering
+\resizebox{0.92\textwidth}{!}{
+\begin{tikzpicture}[
+    classbox/.style={draw, thick, rectangle, fill=blue!5, font=\footnotesize, text width=5.2cm, rounded corners=2pt},
+    enumbox/.style={draw, thick, rectangle, fill=green!10, font=\footnotesize, text width=3.4cm, rounded corners=2pt}
+]
+    % Payment Class
+    \node[classbox] (payment) at (0, 0) {
+        \textbf{\large Payment} \\
+        \hline
+        + id: String (UUID) \\
+        + orderId: String \\
+        + idempotencyKey: String [Unique] \\
+        + amount: Decimal \\
+        + method: PaymentMethod \\
+        + status: PaymentStatus \\
+        + transactionRef: String \\
+        + createdAt: DateTime \\
+        \hline
+        + isSuccessful(): Boolean
+    };
+    
+    % Order Class
+    \node[classbox] (order) at (7.8, 0) {
+        \textbf{\large Order} \\
+        \hline
+        + id: String (UUID) \\
+        + orderNumber: String [Unique] \\
+        + userId: String \\
+        + status: OrderStatus \\
+        + subtotal: Decimal \\
+        + discountAmount: Decimal \\
+        + total: Decimal \\
+        + notes: String \\
+        + createdAt: DateTime \\
+        \hline
+        + markAsPaid(): void \\
+        + markAsFailed(): void
+    };
+    
+    % Enums
+    \node[enumbox] (pmethod) at (-2.8, -4.5) {
+        \textbf{\textless\textless enumeration\textgreater\textgreater} \\
+        \textbf{PaymentMethod} \\
+        \hline
+        E\_WALLET \\
+        BANK\_CARD
+    };
+    
+    \node[enumbox] (pstatus) at (1.2, -4.5) {
+        \textbf{\textless\textless enumeration\textgreater\textgreater} \\
+        \textbf{PaymentStatus} \\
+        \hline
+        PENDING \\
+        SUCCESS \\
+        FAILED
+    };
+    
+    \node[enumbox] (ostatus) at (7.8, -4.5) {
+        \textbf{\textless\textless enumeration\textgreater\textgreater} \\
+        \textbf{OrderStatus} \\
+        \hline
+        PENDING \\
+        PAID \\
+        PREPARING \\
+        READY \\
+        COMPLETED \\
+        PAYMENT\_FAILED
+    };
+    
+    % Relationships
+    \draw[thick, ->] (payment.south) -- (pstatus.north);
+    \draw[thick, ->] (payment.south west) -- (pmethod.north);
+    \draw[thick, ->] (order.south) -- (ostatus.north);
+    \draw[thick, -{Diamond[open]}] (order.west) -- node[above] {1} node[below] {0..*} (payment.east);
+\end{tikzpicture}
+}
+\caption{Sơ đồ Class Diagram cấu trúc dữ liệu thanh toán và quan hệ thực thể}
+\end{figure}
+
+\newpage
+\subsection{Sơ đồ 5: Deployment Diagram (Tích hợp Nút Mock Payment Gateway)}
+Sơ đồ triển khai thể hiện các thành phần runtime, container và nút giao tiếp bảo mật với Mock Payment Service qua giao thức HTTPS:
+
+\begin{figure}[h!]
+\centering
+\resizebox{0.92\textwidth}{!}{
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    nodeblock/.style={draw=blue!80!black, thick, fill=blue!5, rounded corners=6pt, inner sep=8pt, font=\small},
+    artifact/.style={draw=black!70, fill=white, rounded corners=3pt, font=\footnotesize, align=center, inner sep=4pt}
+]
+    % Client Node
+    \node[nodeblock, text width=4.0cm] (clientNode) at (-1.5, 0) {
+        \textbf{\textless\textless device\textgreater\textgreater} \\
+        \textbf{User Device} \\
+        \textit{(Desktop / Smartphone)} \\
+        \vspace{0.2cm}
+        \begin{tikzpicture}
+            \node[artifact, text width=3.5cm] {
+                \textbf{\textless\textless artifact\textgreater\textgreater} \\
+                Web Browser / PWA \\
+                \texttt{/checkout} \& \texttt{/order-success}
+            };
+        \end{tikzpicture}
+    };
+    
+    % Cloud / Production Server
+    \node[nodeblock, text width=7.2cm] (serverNode) at (5.5, 0) {
+        \textbf{\textless\textless server / cloud\textgreater\textgreater} \\
+        \textbf{Production Host (Docker Host)} \\
+        \vspace{0.2cm}
+        \begin{tikzpicture}
+            % Web Container
+            \node[artifact, text width=6.5cm] (webCont) {
+                \textbf{\textless\textless container\textgreater\textgreater~brewlite-web} \\
+                Next.js 14 Standalone (Port 3000)
+            };
+            % API Container
+            \node[artifact, text width=6.5cm, below=0.4cm of webCont] (apiCont) {
+                \textbf{\textless\textless container\textgreater\textgreater~brewlite-api} \\
+                NestJS API Server (Port 4000) \\
+                \textit{PaymentsController \& PaymentProcessor}
+            };
+        \end{tikzpicture}
+    };
+    
+    % External Payment Gateway Node
+    \node[nodeblock, text width=4.6cm] (mockGateway) at (5.5, -4.8) {
+        \textbf{\textless\textless external service\textgreater\textgreater} \\
+        \textbf{Mock Payment Gateway} \\
+        \textit{(MoMo / VNPay Simulator)} \\
+        \vspace{0.2cm}
+        \begin{tikzpicture}
+            \node[artifact, text width=4.0cm] {
+                \textbf{\textless\textless service\textgreater\textgreater} \\
+                Payment Provider API \\
+                \textit{HTTPS REST Endpoint}
+            };
+        \end{tikzpicture}
+    };
+    
+    % DB Container Node
+    \node[nodeblock, text width=4.0cm] (dbNode) at (-1.5, -4.8) {
+        \textbf{\textless\textless database container\textgreater\textgreater} \\
+        \textbf{brewlite-db (PostgreSQL 16)} \\
+        \vspace{0.2cm}
+        \begin{tikzpicture}
+            \node[artifact, text width=3.4cm] {
+                \textbf{Volume: brewlite\_pgdata} \\
+                Port 5432 (Internal Pool)
+            };
+        \end{tikzpicture}
+    };
+    
+    % Connections
+    \draw[thick, <->] (clientNode.east) -- node[above, font=\footnotesize] {HTTPS (443)} (serverNode.west);
+    \draw[thick, <->] (serverNode.south) -- node[right, font=\footnotesize] {HTTPS (Mock API)} (mockGateway.north);
+    \draw[thick, <->] (serverNode.south west) -- node[above, font=\footnotesize, sloped] {TCP Pool (5432)} (dbNode.north east);
+\end{tikzpicture}
+}
+\caption{Sơ đồ Deployment tích hợp nút Cổng thanh toán giả lập và kiến trúc container}
+\end{figure}
+
+\newpage
+\section{Ma trận truy vết yêu cầu (Traceability Matrix - Thành viên 4)}
+Bảng truy vết bắt buộc theo \textbf{Mục 8.1} của đề bài Assignment 2 đối với phân hệ của Thành viên 4:
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{|c|l|l|l|l|}
+\hline
+\textbf{Mã YC} & \textbf{Use-case / User Story} & \textbf{Thiết kế / Sơ đồ} & \textbf{Mã nguồn / API} & \textbf{Kiểm thử} \\ \hline
+\textbf{FR-05} & UC-01 Thanh toán đơn hàng & Sequence-01, Class-01, Activity-01 & \texttt{POST /payments}, \newline \texttt{PaymentProcessorService} & \texttt{PAY-T01} (Unit test Idempotency), \newline \texttt{PAY-T02} (Integration test) \\ \hline
+\textbf{FR-06} & UC-01.5 Xác nhận đơn & Activity-01, Deployment-01 & \texttt{app/order-success/page.tsx}, \newline \texttt{OrderSuccessModal.tsx} & \texttt{CONF-T01} (UI Render verification) \\ \hline
+\textbf{FR-07} & UC-01.6 Thử lại thanh toán & Activity-01, Sequence-01 & \texttt{app/checkout/page.tsx} & \texttt{RETRY-T01} (Giữ giỏ hàng khi fail) \\ \hline
+\end{tabular}
+\caption{Ma trận truy vết phân hệ Thanh toán \& Xác nhận (Thành viên 4)}
+\end{table}
+
+\section{Hiện thực mã nguồn và Kết quả triển khai (Thành viên 4)}
+
+\subsection{Mã nguồn Frontend: Xử lý Thanh toán và Idempotency (\texttt{checkout/page.tsx})}
+Đoạn mã phía client tạo khóa \texttt{Idempotency-Key} và gọi dịch vụ thanh toán, điều hướng tới trang thành công:
+
+\begin{lstlisting}[caption={Client Checkout Payment Handler with Idempotency Key}]
+// Client payment trigger with idempotent retry handling
+const handleProcessPayment = async () => {
+  setErrorMessage(null);
+  if (!isLoggedIn) {
+    setErrorMessage('Please login before proceeding to payment');
+    return;
+  }
+  setIsProcessing(true);
+  
+  const providerName = paymentMethod === 'E_WALLET' 
+    ? (selectedWallet === 'MOMO' ? 'MoMo E-Wallet' : 'VNPay-QR')
+    : 'Credit/Debit Card';
+
+  const orderId = pendingOrderId || `order-${Date.now()}`;
+  if (!pendingOrderId) setPendingOrderId(orderId);
+
+  try {
+    await executeCheckoutPayment({
+      orderId,
+      paymentMethod,
+      providerName,
+      simulateFailure,
+      notes: combinedNotes,
+    });
+    setPendingOrderId(null);
+    setIsProcessing(false);
+    router.push('/order-success');
+  } catch (err: unknown) {
+    setIsProcessing(false);
+    const msg = err instanceof Error ? err.message : 'Payment error occurred';
+    setErrorMessage(msg);
+  }
+};
+\end{lstlisting}
+
+\subsection{Mã nguồn Backend: Bộ xử lý Idempotency (\texttt{payment-processor.service.ts})}
+Cơ chế kiểm tra khóa trùng lặp trước khi trừ tiền, bảo vệ giao dịch không bị lặp:
+
+\begin{lstlisting}[caption={Idempotency handling in PaymentProcessorService}]
+@Injectable()
+export class PaymentProcessorService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly lifecycle: OrderLifecycleService,
+  ) {}
+
+  async pay(input: PayInput): Promise<PayResult> {
+    const { userId, orderId, method, idempotencyKey, charge } = input;
+    if (!idempotencyKey || !idempotencyKey.trim()) {
+      throw new BadRequestException('Missing header Idempotency-Key');
+    }
+
+    // 1. Key already used -> return previous result immediately (No double charge)
+    const existing = await this.prisma.payment.findUnique({
+      where: { idempotencyKey },
+    });
+    if (existing) return this.replay(existing, userId, orderId);
+
+    // 2. Acquire lock via unique constraint in atomic transaction
+    let payment: Payment;
+    payment = await this.prisma.$transaction(async (tx) => {
+      const order = await tx.order.findUnique({ where: { id: orderId } });
+      if (!order || order.userId !== userId) {
+        throw new NotFoundException('Order not found');
+      }
+      return tx.payment.create({
+        data: {
+          orderId,
+          idempotencyKey,
+          amount: order.total,
+          method,
+          status: 'PENDING',
+        },
+      });
+    });
+
+    // 3. Charge via Mock Payment Gateway exactly once
+    const result = await charge(payment.amount);
+    if (result.success) {
+      await this.prisma.$transaction([
+        this.prisma.order.update({ where: { id: orderId }, data: { status: 'PAID' } }),
+        this.prisma.payment.update({
+          where: { id: payment.id },
+          data: { status: 'SUCCESS', transactionRef: result.transactionRef },
+        }),
+      ]);
+    }
+    return { payment, order: await this.prisma.order.findUnique({ where: { id: orderId } }), replayed: false };
+  }
+}
+\end{lstlisting}
+
+\section{Kết luận}
+Báo cáo cá nhân của \textbf{Thành viên 4 (Phan Vũ Việt Quang)} đã hoàn thành đầy đủ các hạng mục được giao theo quy chuẩn Assignment 2:
+\begin{enumerate}
+    \item Đặc tả trọn vẹn \textbf{Use-Case trọng tâm: Đặt và thanh toán đơn hàng (Task 1.3)} với đầy đủ các luồng sự kiện, ngoại lệ, tiền điều kiện và hậu điều kiện.
+    \item Thiết kế và chuẩn hóa \textbf{5 sơ đồ UML vector TikZ} chất lượng cao thể hiện đầy đủ cấu trúc nghiệp vụ và kiến trúc phân hệ thanh toán.
+    \item Hiện thực hóa mã nguồn giao diện Checkout, Màn hình Xác nhận đơn thành công và dịch vụ thanh toán Idempotent bảo vệ hệ thống tuyệt đối.
+    \item Xây dựng bảng ma trận truy vết (Traceability Matrix) làm tiền đề phục vụ nghiệm thu các Sprint tiếp theo.
+\end{enumerate}
+
+\end{document}

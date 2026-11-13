@@ -1,0 +1,37 @@
+@startuml activity-payment
+skinparam ConditionEndStyle hline
+
+start
+
+:Khách hàng chọn phương thức thanh toán\n(Ví MoMo / VNPay / Thẻ ngân hàng);
+:Nhập thông tin thanh toán, số điện thoại & ghi chú;
+:Bấm nút "Thanh toán ngay";
+
+:Next.js Client sinh khóa **idempotencyKey** (UUIDv4)\nvà gửi **POST /payments** kèm header;
+
+if (Khóa Idempotency đã tồn tại trong CSDL?) then (Đã tồn tại (Replay))
+  :Truy vấn kết quả giao dịch đã lưu trước đó;
+  :Trả về kết quả cũ kèm cờ **idempotentReplay = true**;
+else (Chưa tồn tại)
+  :Mở Database Transaction;\nInsert Payment với trạng thái **PENDING**;
+  :Gọi Mock Payment Gateway xử lý trừ tiền;
+  
+  if (Cổng thanh toán phản hồi thành công?) then (Thành công)
+    :Cập nhật trạng thái **Order.status = PAID**;
+    :Cập nhật **Payment.status = SUCCESS** và lưu **transactionRef**;
+    :Cộng điểm tích lũy thành viên;
+    :Xóa sạch giỏ hàng (**clearCart**);
+    :Chuyển hướng sang màn hình Xác nhận đơn hàng (**order-success**);
+    :Hiển thị mã đơn **#ORD-XXXXXX** và nhãn **PAID**;
+  else (Thất bại)
+    :Cập nhật trạng thái **Order.status = PAYMENT_FAILED**;
+    :Cập nhật **Payment.status = FAILED**;
+    :**Giữ nguyên giỏ hàng** (không xóa món);
+    :Hiển thị thông báo lỗi chi tiết trên màn hình Checkout;
+    :Hiển thị nút "Thử lại thanh toán" để khách đổi phương thức;
+  endif
+endif
+
+stop
+
+@enduml
