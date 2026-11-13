@@ -1,0 +1,66 @@
+@startuml usecase-detail
+' Đồ án: Công nghệ Phần mềm - ĐH Sài Gòn (SGU)
+' Thành viên 2: Màn hình & Luồng "Chi tiết sản phẩm"
+!theme plain
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam roundcorner 8
+skinparam actorStyle awesome
+
+title Sơ đồ Use Case Phân hệ "Chi tiết Sản phẩm & Tùy chọn Món" (Product Detail & Customization)
+
+actor "Khách hàng\n(Customer)" as Customer <<Primary Actor>>
+actor "Quản lý Cửa hàng\n(Store Manager)" as Manager <<Secondary Actor>>
+
+rectangle "Phân hệ Chi tiết Sản phẩm & Tùy chọn (BrewLite Product Customization Subsystem)" {
+    usecase "UC-DET-01\nXem Chi tiết Sản phẩm\n(View Product Detail)" as UC_ViewDetail
+    usecase "UC-DET-02\nChọn Kích cỡ Đồ uống\n(Select Size S/M/L)" as UC_SelectSize
+    usecase "UC-DET-03\nChọn Topping kèm theo\n(Select Add-on Toppings)" as UC_SelectTopping
+    usecase "UC-DET-04\nTùy chỉnh Định lượng\n(Đường & Đá - Sweetness/Ice)" as UC_CustomIceSugar
+    usecase "UC-DET-05\nTự động tính giá tiền tức thời\n(Dynamic Real-time Price Calc)" as UC_CalcPrice
+    usecase "UC-DET-06\nĐiều chỉnh số lượng món\n(Adjust Quantity)" as UC_AdjustQty
+    usecase "UC-DET-07\nThêm món vào Giỏ hàng\n(Add Custom Item to Cart)" as UC_AddToCart
+    usecase "UC-DET-08\nKiểm tra tồn kho Size & Topping\n(Verify Stock Availability)" as UC_CheckStock
+    usecase "UC-DET-09\nQuản lý Cấu hình Tùy chọn món\n(Manage Option Matrix & Pricing)" as UC_ManageOptions
+}
+
+' Liên kết Actor và Use Case
+Customer --> UC_ViewDetail
+Customer --> UC_AddToCart
+Manager --> UC_ManageOptions
+
+' Quan hệ Include (Các thao tác cốt lõi gắn liền với màn hình chi tiết và thêm giỏ hàng)
+UC_ViewDetail ..> UC_CheckStock : <<include>>
+UC_AddToCart ..> UC_CalcPrice : <<include>>
+UC_AddToCart ..> UC_SelectSize : <<include>>
+UC_AddToCart ..> UC_CheckStock : <<include>>
+
+' Quan hệ Extend (Các lựa chọn mở rộng tùy ý)
+UC_SelectSize ..> UC_ViewDetail : <<extend>>\n(mặc định Size M)
+UC_SelectTopping ..> UC_ViewDetail : <<extend>>\n(chọn thêm 0..N topping)
+UC_CustomIceSugar ..> UC_ViewDetail : <<extend>>\n(áp dụng cho món có đá/đường)
+UC_AdjustQty ..> UC_ViewDetail : <<extend>>\n(mặc định Qty = 1)
+UC_CalcPrice ..> UC_SelectSize : <<extend>>\n(khi đổi Size)
+UC_CalcPrice ..> UC_SelectTopping : <<extend>>\n(khi tick chọn/bỏ Topping)
+UC_CalcPrice ..> UC_AdjustQty : <<extend>>\n(khi tăng/giảm Qty)
+
+note bottom of UC_CalcPrice
+  <b>Công thức tính giá tự động (Dynamic Formula):</b>
+  Tổng tiền = (Giá gốc + Phụ thu Size + Tổng tiền Topping) * Số lượng
+  - Size S: -5.000đ hoặc 0đ (tùy món)
+  - Size M: 0đ (Giá tiêu chuẩn)
+  - Size L: +10.000đ
+  - Topping: +5.000đ ~ +12.000đ/phần
+end note
+
+note right of UC_ViewDetail
+  <b>Tiền điều kiện:</b>
+  - Khách hàng nhấp chọn một thẻ sản phẩm từ trang Menu.
+  - Sản phẩm có trạng thái isActive = true.
+  <b>Hậu điều kiện:</b>
+  - Modal chi tiết hiển thị đầy đủ thông tin: Ảnh, tên, mô tả,
+    giá cơ sở, bảng lựa chọn size và danh sách topping khả dụng.
+end note
+
+@enduml

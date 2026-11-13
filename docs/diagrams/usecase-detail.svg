@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" width="1000" height="700" style="background:#ffffff; font-family:Arial, Helvetica, sans-serif;">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#334155"/>
+    </marker>
+    <marker id="arrow-open" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#475569" stroke-width="1.5"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="500" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#0f172a">Sơ đồ Use Case Chi tiết – Phân hệ "Chi tiết Sản phẩm &amp; Tùy chọn Món"</text>
+  <text x="500" y="52" text-anchor="middle" font-size="12" fill="#64748b">Hệ thống BrewLite | Thành viên 2: Luồng Chi tiết món, Size S/M/L, Topping &amp; Tính giá tự động</text>
+
+  <!-- System Boundary -->
+  <rect x="220" y="75" width="560" height="595" rx="10" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.8" stroke-dasharray="6,4"/>
+  <text x="240" y="100" font-size="13" font-weight="bold" fill="#1e293b">Phân hệ Chi tiết Sản phẩm &amp; Tùy chọn (Product Customization Subsystem)</text>
+
+  <!-- ACTORS -->
+  <!-- Customer Actor (Left) -->
+  <g transform="translate(70, 310)">
+    <circle cx="30" cy="18" r="16" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
+    <line x1="30" y1="34" x2="30" y2="82" stroke="#1e293b" stroke-width="2"/>
+    <line x1="5" y1="52" x2="55" y2="52" stroke="#1e293b" stroke-width="2"/>
+    <line x1="30" y1="82" x2="10" y2="125" stroke="#1e293b" stroke-width="2"/>
+    <line x1="30" y1="82" x2="50" y2="125" stroke="#1e293b" stroke-width="2"/>
+    <text x="30" y="148" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">Khách hàng</text>
+    <text x="30" y="164" text-anchor="middle" font-size="11" fill="#64748b">&lt;&lt;Primary Actor&gt;&gt;</text>
+  </g>
+
+  <!-- Store Manager Actor (Right) -->
+  <g transform="translate(870, 310)">
+    <circle cx="30" cy="18" r="16" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
+    <line x1="30" y1="34" x2="30" y2="82" stroke="#1e293b" stroke-width="2"/>
+    <line x1="5" y1="52" x2="55" y2="52" stroke="#1e293b" stroke-width="2"/>
+    <line x1="30" y1="82" x2="10" y2="125" stroke="#1e293b" stroke-width="2"/>
+    <line x1="30" y1="82" x2="50" y2="125" stroke="#1e293b" stroke-width="2"/>
+    <text x="30" y="148" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">Quản lý Cửa hàng</text>
+    <text x="30" y="164" text-anchor="middle" font-size="11" fill="#64748b">&lt;&lt;Secondary Actor&gt;&gt;</text>
+  </g>
+
+  <!-- USE CASES -->
+  <!-- UC-DET-01: Xem chi tiết -->
+  <ellipse cx="370" cy="155" rx="110" ry="26" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+  <text x="370" y="151" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">UC-DET-01: Xem chi tiết món</text>
+  <text x="370" y="166" text-anchor="middle" font-size="10" fill="#475569">(View Product Detail)</text>
+
+  <!-- UC-DET-02: Chọn Size -->
+  <ellipse cx="630" cy="155" rx="105" ry="26" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+  <text x="630" y="151" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">UC-DET-02: Chọn Size (S/M/L)</text>
+  <text x="630" y="166" text-anchor="middle" font-size="10" fill="#475569">(Select Size S/M/L)</text>
+
+  <!-- UC-DET-03: Chọn Topping -->
+  <ellipse cx="630" cy="245" rx="105" ry="26" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+  <text x="630" y="241" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">UC-DET-03: Chọn Topping</text>
+  <text x="630" y="256" text-anchor="middle" font-size="10" fill="#475569">(Add-on Toppings)</text>
+
+  <!-- UC-DET-04: Tùy chỉnh Đường/Đá -->
+  <ellipse cx="630" cy="335" rx="105" ry="26" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+  <text x="630" y="331" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">UC-DET-04: Mức Đường &amp; Đá</text>
+  <text x="630" y="346" text-anchor="middle" font-size="10" fill="#475569">(Sweetness &amp; Ice Level)</text>
+
+  <!-- UC-DET-05: Tính giá tự động -->
+  <ellipse cx="400" cy="390" rx="115" ry="28" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="400" y="386" text-anchor="middle" font-size="11" font-weight="bold" fill="#1d4ed8">UC-DET-05: Tự động tính giá tiền</text>
+  <text x="400" y="401" text-anchor="middle" font-size="10" fill="#3b82f6">(Dynamic Real-time Calc)</text>
+
+  <!-- UC-DET-06: Điều chỉnh số lượng -->
+  <ellipse cx="630" cy="425" rx="105" ry="26" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+  <text x="630" y="421" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">UC-DET-06: Chỉnh số lượng (+/-)</text>
+  <text x="630" y="436" text-anchor="middle" font-size="10" fill="#475569">(Adjust Quantity)</text>
+
+  <!-- UC-DET-07: Thêm vào giỏ -->
+  <ellipse cx="370" cy="495" rx="115" ry="28" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+  <text x="370" y="491" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">UC-DET-07: Thêm vào giỏ hàng</text>
+  <text x="370" y="506" text-anchor="middle" font-size="10" fill="#475569">(Add Custom Item to Cart)</text>
+
+  <!-- UC-DET-08: Kiểm tra tồn kho -->
+  <ellipse cx="370" cy="265" rx="110" ry="26" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+  <text x="370" y="261" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">UC-DET-08: Kiểm tra tồn kho</text>
+  <text x="370" y="276" text-anchor="middle" font-size="10" fill="#475569">(Check Stock &amp; Availability)</text>
+
+  <!-- UC-DET-09: Quản lý cấu hình tùy chọn -->
+  <ellipse cx="630" cy="550" rx="115" ry="28" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+  <text x="630" y="546" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">UC-DET-09: Cấu hình bảng tùy chọn</text>
+  <text x="630" y="561" text-anchor="middle" font-size="10" fill="#475569">(Option Matrix &amp; Prices)</text>
+
+  <!-- ASSOCIATIONS (Actor lines) -->
+  <line x1="125" y1="365" x2="265" y2="165" stroke="#334155" stroke-width="1.3"/>
+  <line x1="125" y1="375" x2="260" y2="490" stroke="#334155" stroke-width="1.3"/>
+  <line x1="875" y1="380" x2="740" y2="540" stroke="#334155" stroke-width="1.3"/>
+
+  <!-- INCLUDE RELATIONS -->
+  <!-- UC01 include UC08 -->
+  <line x1="370" y1="181" x2="370" y2="239" stroke="#475569" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="395" y="215" font-size="9" fill="#475569">&lt;&lt;include&gt;&gt;</text>
+
+  <!-- UC07 include UC05 -->
+  <line x1="385" y1="467" x2="395" y2="418" stroke="#475569" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="408" y="445" font-size="9" fill="#475569">&lt;&lt;include&gt;&gt;</text>
+
+  <!-- UC07 include UC08 -->
+  <path d="M 320 470 C 290 380 290 320 320 280" fill="none" stroke="#475569" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="255" y="375" font-size="9" fill="#475569">&lt;&lt;include&gt;&gt;</text>
+
+  <!-- EXTEND RELATIONS -->
+  <!-- UC02 extend UC01 -->
+  <line x1="525" y1="155" x2="480" y2="155" stroke="#475569" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="502" y="147" text-anchor="middle" font-size="9" fill="#475569">&lt;&lt;extend&gt;&gt;</text>
+
+  <!-- UC03 extend UC01 -->
+  <line x1="535" y1="230" x2="445" y2="175" stroke="#475569" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="500" y="195" font-size="9" fill="#475569">&lt;&lt;extend&gt;&gt;</text>
+
+  <!-- UC04 extend UC01 -->
+  <line x1="535" y1="315" x2="415" y2="180" stroke="#475569" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="480" y="280" font-size="9" fill="#475569">&lt;&lt;extend&gt;&gt;</text>
+
+  <!-- UC06 extend UC05 -->
+  <line x1="530" y1="415" x2="510" y2="405" stroke="#475569" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="535" y="398" font-size="9" fill="#475569">&lt;&lt;extend&gt;&gt;</text>
+
+  <!-- UC05 extend UC02 / UC03 -->
+  <line x1="540" y1="260" x2="465" y2="365" stroke="#475569" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="505" y="315" font-size="9" fill="#475569">&lt;&lt;extend&gt;&gt;</text>
+
+  <!-- Note Box -->
+  <g transform="translate(240, 595)">
+    <rect x="0" y="0" width="520" height="58" rx="4" fill="#fffbeb" stroke="#d97706" stroke-width="1"/>
+    <text x="12" y="18" font-size="10" font-weight="bold" fill="#92400e">Quy tắc tính giá tự động (Real-time Dynamic Pricing Formula):</text>
+    <text x="12" y="34" font-size="10" fill="#78350f">Tổng giá = (Giá cơ bản + Phụ thu Size + Tổng tiền các Topping được chọn) × Số lượng</text>
+    <text x="12" y="48" font-size="10" fill="#78350f">Ví dụ: (35.000đ [Base] + 10.000đ [Size L] + 6.000đ [Thạch] + 10.000đ [Kem mặn]) × 2 = 122.000đ</text>
+  </g>
+</svg>
