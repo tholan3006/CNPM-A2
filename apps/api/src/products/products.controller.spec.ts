@@ -29,10 +29,10 @@ describe('ProductsController (Menu & Product Detail API Tests)', () => {
     });
 
     it('tra ve danh sach menu loc theo search query', async () => {
-      const result = await controller.findAll('Muối');
+      const result = await controller.findAll('sữa');
       expect(result).toBeDefined();
       expect(result.length).toBe(1);
-      expect(result[0].name).toContain('Muối');
+      expect(result[0].name).toContain('sữa');
     });
   });
 

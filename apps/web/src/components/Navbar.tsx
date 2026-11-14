@@ -64,8 +64,13 @@ export const Navbar: React.FC<NavbarProps> = ({
               </svg>
             </div>
             <div>
-              <div className="text-lg font-bold tracking-tight text-[#3D2314] leading-none">
-                BrewLite
+              <div className="flex items-center gap-1.5">
+                <span className="text-lg font-bold tracking-tight text-[#3D2314] leading-none">
+                  BrewLite
+                </span>
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-black tracking-wider uppercase bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 text-white shadow-xs">
+                  A2
+                </span>
               </div>
               <div className="text-[10px] font-semibold tracking-wider text-[#8A5833] uppercase mt-0.5">
                 COFFEE & PAYMENT
