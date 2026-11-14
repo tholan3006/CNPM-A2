@@ -1,12 +1,24 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Optional } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { ProductDetailResponseDto, SizeOptionDto, ToppingDto } from './dto/product-detail.dto';
 import { CalculatePriceRequestDto, PriceBreakdownDto } from './dto/calculate-price.dto';
-import { SizeCode, SweetnessLevel, IceLevel } from './entities/product-option.entity';
+import { SizeCode } from './entities/product-option.entity';
 import { ProductStatus } from './entities/product.entity';
 
 @Injectable()
 export class ProductsService {
-  // In-memory mock database aligned with PostgreSQL seed data
+  constructor(@Optional() private readonly prisma?: PrismaService) {}
+
+  private inferCategory(name: string, description?: string | null): string {
+    const lowerName = name.toLowerCase();
+    if (lowerName.includes('matcha')) return 'Trà & Matcha';
+    if (lowerName.includes('cold brew') || lowerName.includes('coldbrew')) return 'Cold Brew';
+    if (lowerName.includes('trà') || lowerName.includes('đào')) return 'Trà hoa quả';
+    if (lowerName.includes('sữa') || lowerName.includes('muối') || lowerName.includes('trứng')) return 'Cà phê truyền thống';
+    return 'Cà phê Espresso';
+  }
+
+  // Danh mục sản phẩm đồng bộ giữa A1 và A2
   private products = [
     {
       id: 'prod-01',
@@ -64,6 +76,118 @@ export class ProductsService {
       ],
       allowedToppingIds: ['top-01', 'top-03', 'top-05'],
     },
+    {
+      id: 'prod-04',
+      categoryId: 'cat-01',
+      categoryName: 'Cà phê truyền thống',
+      categorySlug: 'ca-phe-truyen-thong',
+      name: 'Cà phê sữa',
+      description: 'Cà phê Robusta truyền thống kết hợp sữa đặc ngọt béo đậm đà chuẩn vị.',
+      basePrice: 35000,
+      imageUrl: '/images/ca-phe-sua.jpg',
+      stock: 50,
+      status: ProductStatus.ACTIVE,
+      isActive: true,
+      sizes: [
+        { id: 's-09', code: SizeCode.S, name: 'Nhỏ (Size S)', extraPrice: -5000, isDefault: false, isAvailable: true },
+        { id: 's-10', code: SizeCode.M, name: 'Vừa (Size M - Chuẩn)', extraPrice: 0, isDefault: true, isAvailable: true },
+        { id: 's-11', code: SizeCode.L, name: 'Lớn (Size L)', extraPrice: 10000, isDefault: false, isAvailable: true },
+      ],
+      allowedToppingIds: ['top-01', 'top-02', 'top-03'],
+    },
+    {
+      id: 'prod-05',
+      categoryId: 'cat-01',
+      categoryName: 'Cà phê Espresso',
+      categorySlug: 'ca-phe-espresso',
+      name: 'Americano',
+      description: 'Espresso đậm vị pha loãng cùng nước tinh khiết thanh nhẹ.',
+      basePrice: 40000,
+      imageUrl: '/images/americano.jpg',
+      stock: 40,
+      status: ProductStatus.ACTIVE,
+      isActive: true,
+      sizes: [
+        { id: 's-12', code: SizeCode.S, name: 'Nhỏ (Size S)', extraPrice: -5000, isDefault: false, isAvailable: true },
+        { id: 's-13', code: SizeCode.M, name: 'Vừa (Size M - Chuẩn)', extraPrice: 0, isDefault: true, isAvailable: true },
+        { id: 's-14', code: SizeCode.L, name: 'Lớn (Size L)', extraPrice: 10000, isDefault: false, isAvailable: true },
+      ],
+      allowedToppingIds: ['top-01', 'top-02'],
+    },
+    {
+      id: 'prod-06',
+      categoryId: 'cat-01',
+      categoryName: 'Cà phê Espresso',
+      categorySlug: 'ca-phe-espresso',
+      name: 'Cappuccino',
+      description: 'Espresso Ý hòa quyện cùng lớp bọt sữa mịn màng bồng bềnh.',
+      basePrice: 45000,
+      imageUrl: '/images/cappuccino.jpg',
+      stock: 35,
+      status: ProductStatus.ACTIVE,
+      isActive: true,
+      sizes: [
+        { id: 's-15', code: SizeCode.S, name: 'Nhỏ (Size S)', extraPrice: -5000, isDefault: false, isAvailable: true },
+        { id: 's-16', code: SizeCode.M, name: 'Vừa (Size M - Chuẩn)', extraPrice: 0, isDefault: true, isAvailable: true },
+        { id: 's-17', code: SizeCode.L, name: 'Lớn (Size L)', extraPrice: 10000, isDefault: false, isAvailable: true },
+      ],
+      allowedToppingIds: ['top-01', 'top-02'],
+    },
+    {
+      id: 'prod-07',
+      categoryId: 'cat-02',
+      categoryName: 'Trà hoa quả',
+      categorySlug: 'tra-hoa-qua',
+      name: 'Trà đào',
+      description: 'Trà đào thanh mát kết hợp miếng đào tươi giòn ngọt ngào sảng khoái.',
+      basePrice: 39000,
+      imageUrl: '/images/tra-dao.jpg',
+      stock: 60,
+      status: ProductStatus.ACTIVE,
+      isActive: true,
+      sizes: [
+        { id: 's-18', code: SizeCode.M, name: 'Vừa (Size M - Chuẩn)', extraPrice: 0, isDefault: true, isAvailable: true },
+        { id: 's-19', code: SizeCode.L, name: 'Lớn (Size L)', extraPrice: 8000, isDefault: false, isAvailable: true },
+      ],
+      allowedToppingIds: ['top-01', 'top-03'],
+    },
+    {
+      id: 'prod-08',
+      categoryId: 'cat-01',
+      categoryName: 'Cold Brew',
+      categorySlug: 'cold-brew',
+      name: 'Cold Brew',
+      description: 'Cà phê ủ lạnh 16 tiếng hương vị êm dịu, mượt mà thanh mát tự nhiên.',
+      basePrice: 45000,
+      imageUrl: '/images/cold-brew.jpg',
+      stock: 50,
+      status: ProductStatus.ACTIVE,
+      isActive: true,
+      sizes: [
+        { id: 's-20', code: SizeCode.M, name: 'Vừa (Size M - Chuẩn)', extraPrice: 0, isDefault: true, isAvailable: true },
+        { id: 's-21', code: SizeCode.L, name: 'Lớn (Size L)', extraPrice: 10000, isDefault: false, isAvailable: true },
+      ],
+      allowedToppingIds: ['top-01', 'top-04'],
+    },
+    {
+      id: 'prod-09',
+      categoryId: 'cat-02',
+      categoryName: 'Trà & Matcha',
+      categorySlug: 'tra-matcha',
+      name: 'Matcha Latte',
+      description: 'Trà xanh Uji Nhật Bản thượng hạng hòa quyện sữa tươi béo ngậy thơm lừng.',
+      basePrice: 48000,
+      imageUrl: '/images/matcha-latte.jpg',
+      stock: 45,
+      status: ProductStatus.ACTIVE,
+      isActive: true,
+      sizes: [
+        { id: 's-22', code: SizeCode.S, name: 'Nhỏ (Size S)', extraPrice: -5000, isDefault: false, isAvailable: true },
+        { id: 's-23', code: SizeCode.M, name: 'Vừa (Size M - Chuẩn)', extraPrice: 0, isDefault: true, isAvailable: true },
+        { id: 's-24', code: SizeCode.L, name: 'Lớn (Size L)', extraPrice: 10000, isDefault: false, isAvailable: true },
+      ],
+      allowedToppingIds: ['top-01', 'top-03'],
+    },
   ];
 
   private toppings: ToppingDto[] = [
@@ -71,10 +195,55 @@ export class ProductsService {
     { id: 'top-02', name: 'Kem mặn phô mai', price: 10000, stock: 35, isAvailable: true },
     { id: 'top-03', name: 'Trân châu hoàng kim', price: 8000, stock: 45, isAvailable: true },
     { id: 'top-04', name: 'Sốt caramel macchiato', price: 8000, stock: 20, isAvailable: true },
-    { id: 'top-05', name: 'Hạt sen tươi ngâm đường', price: 12000, stock: 0, isAvailable: false }, // Out of stock
+    { id: 'top-05', name: 'Hạt sen tươi ngâm đường', price: 12000, stock: 0, isAvailable: false },
   ];
 
   async findAll(searchQuery?: string, categorySlug?: string) {
+    if (this.prisma) {
+      try {
+        const trimmed = searchQuery?.trim();
+        const dbProducts = await this.prisma.product.findMany({
+          where: {
+            isActive: true,
+            ...(trimmed
+              ? {
+                  OR: [
+                    { name: { contains: trimmed, mode: 'insensitive' } },
+                    { description: { contains: trimmed, mode: 'insensitive' } },
+                  ],
+                }
+              : {}),
+          },
+          orderBy: { createdAt: 'asc' },
+        });
+
+        if (dbProducts && dbProducts.length > 0) {
+          let result = dbProducts.map((p) => ({
+            id: p.id,
+            name: p.name,
+            description: p.description,
+            price: Number(p.price),
+            imageUrl: p.imageUrl || '/images/ca-phe-sua.jpg',
+            stock: (p as any).stock ?? 50,
+            category: (p as any).category || this.inferCategory(p.name, p.description),
+            isAvailable: true,
+          }));
+
+          if (categorySlug) {
+            const slugLower = categorySlug.toLowerCase();
+            result = result.filter(
+              (p) =>
+                p.category.toLowerCase().includes(slugLower) ||
+                slugLower.includes(p.category.toLowerCase()),
+            );
+          }
+          return result;
+        }
+      } catch (err) {
+        // Fallback to memory
+      }
+    }
+
     let result = this.products.filter((p) => p.isActive);
     if (searchQuery) {
       const q = searchQuery.toLowerCase().trim();
@@ -96,6 +265,48 @@ export class ProductsService {
   }
 
   async findOne(id: string): Promise<ProductDetailResponseDto> {
+    if (this.prisma) {
+      try {
+        const dbProduct = await this.prisma.product.findUnique({
+          where: { id },
+        });
+        if (dbProduct && dbProduct.isActive) {
+          const dbToppings = await this.prisma.topping.findMany({
+            where: { isAvailable: true },
+          });
+
+          return {
+            id: dbProduct.id,
+            name: dbProduct.name,
+            description: dbProduct.description,
+            basePrice: Number(dbProduct.price),
+            imageUrl: dbProduct.imageUrl || '/images/ca-phe-sua.jpg',
+            stock: (dbProduct as any).stock ?? 50,
+            isAvailable: true,
+            category: {
+              id: (dbProduct as any).categoryId || 'cat-01',
+              name: (dbProduct as any).category || this.inferCategory(dbProduct.name, dbProduct.description),
+              slug: 'ca-phe',
+            },
+            sizes: [
+              { id: 's-01', code: SizeCode.S, name: 'Nhỏ (Size S)', extraPrice: -5000, isDefault: false, isAvailable: true },
+              { id: 's-02', code: SizeCode.M, name: 'Vừa (Size M - Chuẩn)', extraPrice: 0, isDefault: true, isAvailable: true },
+              { id: 's-03', code: SizeCode.L, name: 'Lớn (Size L)', extraPrice: 10000, isDefault: false, isAvailable: true },
+            ],
+            toppings: dbToppings.map((t) => ({
+              id: t.id,
+              name: t.name,
+              price: Number(t.price),
+              isAvailable: t.isAvailable,
+              stock: 99,
+            })),
+          };
+        }
+      } catch (err) {
+        // Fallback to memory
+      }
+    }
+
     const product = this.products.find((p) => p.id === id && p.isActive);
     if (!product) {
       throw new NotFoundException(`Product with ID "${id}" not found`);
@@ -124,6 +335,26 @@ export class ProductsService {
   }
 
   async findAllToppings(availableOnly = true): Promise<ToppingDto[]> {
+    if (this.prisma) {
+      try {
+        const dbToppings = await this.prisma.topping.findMany({
+          where: availableOnly ? { isAvailable: true } : {},
+          orderBy: { price: 'asc' },
+        });
+        if (dbToppings && dbToppings.length > 0) {
+          return dbToppings.map((t) => ({
+            id: t.id,
+            name: t.name,
+            price: Number(t.price),
+            isAvailable: t.isAvailable,
+            stock: 99,
+          }));
+        }
+      } catch (err) {
+        // Fallback to memory
+      }
+    }
+
     if (availableOnly) {
       return this.toppings.filter((t) => t.isAvailable && t.stock > 0);
     }
@@ -144,8 +375,9 @@ export class ProductsService {
     let toppingsSubtotal = 0;
 
     if (dto.toppingIds && dto.toppingIds.length > 0) {
+      const allToppings = await this.findAllToppings(false);
       for (const tId of dto.toppingIds) {
-        const topping = this.toppings.find((t) => t.id === tId);
+        const topping = allToppings.find((t) => t.id === tId);
         if (!topping) {
           throw new BadRequestException(`Topping with ID "${tId}" does not exist`);
         }

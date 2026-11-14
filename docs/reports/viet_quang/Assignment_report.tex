@@ -133,7 +133,7 @@ Khoa Công Nghệ Thông Tin \\
 \section{Tổng quan bối cảnh, Phân công nhiệm vụ và Đặc tả Use-Case trọng tâm (Task 1.3)}
 
 \subsection{Bối cảnh phân hệ Thanh toán \& Xác nhận đơn trong BrewLite}
-Trong chuỗi giá trị bán lẻ cà phê hiện đại của dự án \textbf{BrewLite}, thanh toán là mắt xích sống còn quyết định tỷ lệ hoàn tất đơn hàng (conversion rate) và sự hài lòng của khách hàng. Phân hệ \textbf{"Thanh toán \& Xác nhận đơn"} do \textbf{Phan Vũ Việt Quang (viet\_quang)} phụ trách giải quyết các bài toán kỹ thuật và nghiệp vụ cốt lõi:
+Trong chuỗi giá trị bán lẻ cà phê hiện đại của đồ án \textbf{BrewLite}, thanh toán là mắt xích sống còn quyết định tỷ lệ hoàn tất đơn hàng (conversion rate) và sự hài lòng của khách hàng. Phân hệ \textbf{"Thanh toán \& Xác nhận đơn"} do \textbf{Phan Vũ Việt Quang (viet\_quang)} phụ trách giải quyết các bài toán kỹ thuật và nghiệp vụ cốt lõi:
 \begin{itemize}
     \item \textbf{Thanh toán không tiền mặt đa dạng:} Hỗ trợ ví điện tử (MoMo, VNPay) và thẻ ngân hàng (Visa, Mastercard, NAPAS), giảm thiểu thời gian xếp hàng tại quầy.
     \item \textbf{Đảm bảo tính toàn vẹn (Idempotency):} Trong môi trường mạng di động không ổn định, khách hàng có thể vô tình bấm nút thanh toán nhiều lần hoặc đường truyền bị ngắt kết nối. Cơ chế Idempotency với khóa \texttt{Idempotency-Key} đảm bảo giao dịch chỉ được trừ tiền và xử lý đúng một lần duy nhất.

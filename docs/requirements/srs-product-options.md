@@ -3,7 +3,7 @@
 **Đồ án môn học:** Công nghệ Phần mềm (Software Engineering) – Trường Đại học Sài Gòn (SGU)  
 **Giảng viên hướng dẫn:** ThS. Từ Lãng Phiêu  
 **Học kỳ:** I – Năm học 2026–2027  
-**Dự án:** BrewLite – Hệ thống Đặt đồ uống & Thanh toán không tiền mặt  
+**Đồ án:** BrewLite – Hệ thống Đặt đồ uống & Thanh toán không tiền mặt  
 **Thành viên phụ trách:** **Thành viên 2** (Màn hình & Luồng "Chi tiết sản phẩm")  
 **Mã phân hệ:** `REQ-SRS-02` (Mã yêu cầu: **FR-03**, **NFR-01**, **NFR-02**)  
 **Trạng thái:** Hoàn thành nghiệm thu Sprint 1 & Sprint 2  
