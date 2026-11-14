@@ -323,7 +323,7 @@ Sơ đồ thể hiện sự tương tác của Actor \textbf{Khách hàng (Custo
     \draw[dashed, thick, ->] (uc5) -- node[right, font=\footnotesize] {$\langle\langle include \rangle\rangle$} (uc7);
 \end{tikzpicture}
 }
-\caption{Sơ đồ Use Case phân hệ Thanh toán \& Xác nhận đơn hàng}
+\caption{Sơ đồ Use Case phân hệ Thanh toán \& Xác nhận đơn hàng (Mã nguồn: \nolinkurl{docs/diagrams/usecase-payment.puml})}
 \end{figure}
 
 \subsection{Sơ đồ 2: Activity Diagram (Luồng Thanh toán và Rẽ nhánh kết quả)}
@@ -384,7 +384,7 @@ Sơ đồ hoạt động thể hiện toàn bộ luồng nghiệp vụ từ khi 
     \draw[arrow] (showFail) |- (endNode);
 \end{tikzpicture}
 }
-\caption{Sơ đồ Activity thể hiện luồng thanh toán rẽ nhánh có Idempotency}
+\caption{Sơ đồ Activity thể hiện luồng thanh toán rẽ nhánh có Idempotency (Mã nguồn: \nolinkurl{docs/diagrams/activity-payment.puml})}
 \end{figure}
 
 \newpage
@@ -446,7 +446,7 @@ Sơ đồ tuần tự thể hiện sự giao tiếp qua lại giữa các thực
     \draw[ret] (2.6, -8.7) -- node[above] {15. Hiển thị trang Xác nhận đơn hàng} (0, -8.7);
 \end{tikzpicture}
 }
-\caption{Sơ đồ Sequence thể hiện tương tác gọi API thanh toán Idempotent}
+\caption{Sơ đồ Sequence thể hiện tương tác gọi API thanh toán Idempotent (Mã nguồn: \nolinkurl{docs/diagrams/sequence-payment.puml})}
 \end{figure}
 
 \subsection{Sơ đồ 4: Class Diagram (Mô hình lớp miền Thanh toán \& Đơn hàng)}
@@ -530,7 +530,7 @@ Sơ đồ thể hiện cấu trúc các thực thể dữ liệu và lớp dịc
     \draw[thick, -{Diamond[open]}] (order.west) -- node[above] {1} node[below] {0..*} (payment.east);
 \end{tikzpicture}
 }
-\caption{Sơ đồ Class Diagram cấu trúc dữ liệu thanh toán và quan hệ thực thể}
+\caption{Sơ đồ Class Diagram cấu trúc dữ liệu thanh toán và quan hệ thực thể (Mã nguồn: \nolinkurl{docs/diagrams/class-payment.puml})}
 \end{figure}
 
 \newpage
@@ -614,7 +614,7 @@ Sơ đồ triển khai thể hiện các thành phần runtime, container và n�
     \draw[thick, <->] (serverNode.south west) -- node[above, font=\footnotesize, sloped] {TCP Pool (5432)} (dbNode.north east);
 \end{tikzpicture}
 }
-\caption{Sơ đồ Deployment tích hợp nút Cổng thanh toán giả lập và kiến trúc container}
+\caption{Sơ đồ Deployment tích hợp nút Cổng thanh toán giả lập và kiến trúc container (Mã nguồn: \nolinkurl{docs/diagrams/deployment-payment.puml})}
 \end{figure}
 
 \newpage
