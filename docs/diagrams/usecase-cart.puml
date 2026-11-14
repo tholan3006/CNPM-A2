@@ -1,0 +1,31 @@
+@startuml usecase-cart
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Khách hàng\n(Customer)" as Customer
+actor "Hệ thống CSDL\n(PostgreSQL)" as DB <<Database>>
+
+rectangle "Phân hệ Giỏ hàng & Khởi tạo Đơn hàng (BrewLite)" {
+  usecase "UC-04.1: Xem giỏ hàng & Badge số lượng" as UC_ViewCart
+  usecase "UC-04.2: Thêm món vào giỏ\n(Kèm Size S/M/L & Topping)" as UC_AddToCart
+  usecase "UC-04.3: Điều chỉnh số lượng món (+ / -)" as UC_UpdateQty
+  usecase "UC-04.4: Xóa món khỏi giỏ hàng" as UC_RemoveItem
+  usecase "UC-04.5: Áp dụng mã giảm giá (Coupon)" as UC_ApplyCoupon
+  usecase "UC-04.6: Khởi tạo đơn hàng (POST /orders)\n[Trạng thái PENDING]" as UC_CreateOrder
+  usecase "UC-04.7: Kiểm tra tồn kho & Khóa lạc quan\n(Optimistic Lock)" as UC_CheckStock
+  usecase "UC-04.8: Tính toán tổng tiền bảo mật phía Server" as UC_CalcPrice
+}
+
+Customer --> UC_ViewCart
+Customer --> UC_AddToCart
+Customer --> UC_UpdateQty
+Customer --> UC_RemoveItem
+Customer --> UC_ApplyCoupon
+Customer --> UC_CreateOrder
+
+UC_CreateOrder ..> UC_CheckStock : <<include>>
+UC_CreateOrder ..> UC_CalcPrice : <<include>>
+UC_CreateOrder ..> UC_ApplyCoupon : <<extend>>
+UC_CheckStock --> DB
+
+@enduml

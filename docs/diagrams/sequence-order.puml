@@ -1,0 +1,66 @@
+@startuml sequence-order
+autonumber
+actor "Khách hàng\n(Customer)" as Customer
+participant "Cart UI\n(CartDrawer / Page)" as UI
+participant "Zustand Store\n(cartStore)" as Store
+participant "OrdersController\n(NestJS)" as Controller
+participant "OrdersService\n(Business Logic)" as Service
+database "PostgreSQL\n(Prisma Transaction)" as DB
+
+Customer -> UI : 1. Xem giỏ hàng & bấm "Tiến hành đặt hàng"
+activate UI
+
+UI -> Store : 2. Lấy danh sách items, couponCode, notes
+activate Store
+Store --> UI : 3. Trả về state giỏ hàng
+deactivate Store
+
+UI -> Controller : 4. POST /orders\n[Header: Authorization Bearer <JWT>]\n[Body: CreateOrderDto(items, couponCode, notes)]
+activate Controller
+
+Controller -> Controller : 5. Validate DTO (class-validator)\n[ArrayMinSize(1), ProductSize, qty 1..20]
+
+Controller -> Service : 6. create(userId, dto)
+activate Service
+
+Service -> DB : 7. Bắt đầu $transaction(Isolation Level: Read Committed)
+activate DB
+
+Service -> DB : 8. Truy vấn giá Product & Topping chuẩn từ CSDL\n(Không tin cậy giá client gửi lên)
+DB --> Service : 9. Trả về danh sách Product & Topping
+
+Service -> DB : 10. Kiểm tra tồn kho & Khóa lạc quan (version check)
+alt Tồn kho không đủ (stock < qty)
+  Service --> Controller : 11a. Ném lỗi BadRequestException("Hết hàng")
+  Controller --> UI : 12a. HTTP 400 Bad Request
+  UI -> Customer : 13a. Thông báo món không đủ số lượng tồn
+else Tồn kho hợp lệ
+  Service -> DB : 11b. Giảm tồn kho sản phẩm (stock = stock - qty, version++)
+  
+  opt Có mã giảm giá couponCode
+    Service -> DB : 12b. Kiểm tra Coupon (hạn dùng, minOrder, usageLimit)
+    DB --> Service : 13b. Coupon hợp lệ -> Tính discountAmount
+    Service -> DB : 14b. Tăng lượt dùng Coupon (usedCount++)
+  end
+  
+  Service -> Service : 15b. Tính subtotal, total = subtotal - discount
+  Service -> Service : 16b. Sinh mã đơn tự động (#ORD-XXXXXX)
+  
+  Service -> DB : 17b. tx.order.create({\n  data: { orderNumber, userId, status: PENDING, subtotal, total,\n          orderItems: { create: [...] } }\n})
+  DB --> Service : 18b. Tạo bản ghi Order & OrderItems thành công
+  
+  Service -> DB : 19b. Commit Transaction
+  deactivate DB
+  
+  Service --> Controller : 20b. Trả về đối tượng Order mới tạo
+  deactivate Service
+  
+  Controller --> UI : 21b. HTTP 201 Created\n{ id, orderNumber, status: 'PENDING', total }
+  deactivate Controller
+  
+  UI -> Customer : 22b. Lưu pendingOrderId, chuyển tiếp sang màn hình Thanh toán (/checkout)
+end
+
+deactivate UI
+
+@enduml
