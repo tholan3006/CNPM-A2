@@ -110,7 +110,13 @@ export default function MenuPage() {
       });
       if (!res.ok) throw new Error(`Lỗi server: ${res.status}`);
       const data = await res.json();
-      setProducts(data);
+      // Nếu backend trả về đủ 6 món chuẩn A1 và không còn chứa 3 món mock cũ
+      if (Array.isArray(data) && data.length >= 6 && !data.some((p: any) => p.name?.includes('Muối Biển'))) {
+        setProducts(data);
+      } else {
+        // Tự động dùng 6 món chuẩn A1 đồng bộ nếu backend Render chưa kịp hoàn tất deploy bản mới
+        setProducts(FALLBACK_PRODUCTS);
+      }
     } catch {
       // Dùng dữ liệu mẫu nếu backend chưa bật
       setProducts(FALLBACK_PRODUCTS);
