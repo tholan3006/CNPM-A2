@@ -1,5 +1,7 @@
 'use client';
 
+// BrewLite Web App - Main Menu Screen
+
 import React, { useEffect, useState, useMemo } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';

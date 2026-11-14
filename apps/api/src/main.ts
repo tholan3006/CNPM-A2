@@ -1,3 +1,4 @@
+// BrewLite Backend API - NestJS Application Entrypoint
 import { existsSync } from 'fs';
 import { resolve } from 'path';
 

@@ -1,4 +1,4 @@
-// Định nghĩa kiểu dữ liệu dùng chung toàn bộ Frontend BrewLite
+// Định nghĩa kiểu dữ liệu dùng chung toàn bộ Frontend BrewLite - Assignment 2
 
 export type ProductSize = 'S' | 'M' | 'L';
 
