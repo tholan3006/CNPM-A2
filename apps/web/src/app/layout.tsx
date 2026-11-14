@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'BrewLite - Cà phê & Thanh toán không tiền mặt',
+  title: 'BrewLite A2 - Cà phê & Thanh toán không tiền mặt',
   description: 'Hệ thống đặt cà phê và thanh toán không tiền mặt - Đồ án Công nghệ Phần mềm',
 };
 

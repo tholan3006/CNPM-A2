@@ -30,16 +30,16 @@ describe('ProductsService (Menu & Product Customization Flow)', () => {
     });
 
     it('loc san pham theo tu khoa tim kiem (Search Query)', async () => {
-      const result = await service.findAll('Muối');
+      const result = await service.findAll('sữa');
       expect(result.length).toBe(1);
-      expect(result[0].name).toContain('Muối');
+      expect(result[0].name).toContain('sữa');
     });
 
     it('loc san pham theo slug danh muc (Category Filter)', async () => {
-      const result = await service.findAll(undefined, 'ca-phe-dac-biet');
+      const result = await service.findAll(undefined, 'ca-phe-truyen-thong');
       expect(result.length).toBeGreaterThan(0);
       result.forEach((p) => {
-        expect(p.category).toBe('Cà phê Đặc Biệt');
+        expect(p.category).toBe('Cà phê truyền thống');
       });
     });
   });
@@ -50,12 +50,12 @@ describe('ProductsService (Menu & Product Customization Flow)', () => {
 
       expect(result).toBeDefined();
       expect(result.id).toBe('prod-01');
-      expect(result.name).toBe('Cà phê Muối Biển');
+      expect(result.name).toBe('Cà phê sữa');
       expect(result.basePrice).toBe(35000);
       expect(result.sizes).toHaveLength(3);
       expect(result.sizes.find((s) => s.code === SizeCode.M)?.isDefault).toBe(true);
       expect(result.toppings.length).toBeGreaterThan(0);
-      expect(result.category.name).toBe('Cà phê Đặc Biệt');
+      expect(result.category.name).toBe('Cà phê truyền thống');
     });
 
     it('nem loi NotFoundException neu product id khong ton tai', async () => {
