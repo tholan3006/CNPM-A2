@@ -1,0 +1,640 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{vntex}
+\usepackage{a4wide,amssymb,epsfig,latexsym,multicol,array,hhline,fancyhdr}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{lastpage}
+\usepackage[lined,boxed,commentsnumbered]{algorithm2e}
+\usepackage{enumerate}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{tabularx, caption}
+\usepackage{multirow}
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage{multicol}
+\usepackage{rotating}
+\usepackage{graphics}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{listings}
+\usetikzlibrary{arrows,arrows.meta,shapes.geometric,shapes.misc,positioning,fit,calc}
+\usepackage{hyperref}
+\hypersetup{urlcolor=blue,linkcolor=blue,citecolor=black,colorlinks=true} 
+
+\setlength{\headheight}{40pt}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[L]{
+ \begin{tabular}{rl}
+    \begin{picture}(25,15)(0,0)
+    \put(0,-8){\includegraphics[width=8mm, height=8mm]{logoITSGUsmall.png}}
+   \end{picture}&
+	\begin{tabular}{l}
+		\textbf{\bf \ttfamily Trường Đại học Sài Gòn}\\
+		\textbf{\bf \ttfamily Khoa Công Nghệ Thông Tin}
+	\end{tabular} 	
+ \end{tabular}
+}
+\fancyhead[R]{
+	\begin{tabular}{l}
+		\tiny \bf \\
+		\tiny \bf 
+	\end{tabular}  
+}
+\fancyfoot{}
+\fancyfoot[L]{\scriptsize \ttfamily Báo cáo: Giỏ hàng \& Khởi tạo Đơn hàng -- Phan Vũ Việt Quang}
+\fancyfoot[R]{\scriptsize \ttfamily Trang {\thepage}/\pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+\lstset{
+  language=Java,
+  basicstyle=\small\ttfamily,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{red},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=8pt,
+  backgroundcolor=\color{white},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  frame=single,
+  tabsize=2,
+  captionpos=b,
+  breaklines=true,
+  breakatwhitespace=false,
+  escapeinside={\%*}{*)}
+}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+Trường Đại học Sài Gòn \\
+Khoa Công Nghệ Thông Tin \\
+\textbf{\large BỘ MÔN CÔNG NGHỆ PHẦN MỀM} \\
+------o0o------
+\end{center}
+
+\vspace{1cm}
+
+\begin{center}
+\includegraphics[scale=0.4]{logoITSGU.png}
+\end{center}
+
+\vspace{1cm}
+
+\begin{center}
+\begin{tabular}{c}
+	\multicolumn{1}{l}{\textbf{{\Large BÀI TẬP LỚN: CÔNG NGHỆ PHẦN MỀM}}}\\
+	~~\\
+	\hline
+	\\
+	\multicolumn{1}{l}{\textbf{{\Large ASSIGNMENT 2: REQUIREMENTS TO DEPLOYMENT}}}\\
+	\\
+	\textbf{{\LARGE HỆ THỐNG CÀ PHÊ BREWLITE}}\\
+	\textbf{{\Large BÁO CÁO PHÂN HỆ: THÀNH VIÊN 3}}\\
+	\textbf{{\normalsize Màn hình \& Luồng nghiệp vụ: "Giỏ hàng \& Khởi tạo Đơn hàng"}}\\
+	\\
+	\hline
+\end{tabular}
+\end{center}
+
+\vspace{1.8cm}
+
+\begin{table}[h]
+\begin{tabular}{rrl}
+\hspace{3.5 cm} & GVHD: & ThS. Từ Lãng Phiêu\\
+& SV thực hiện: & Phan Vũ Việt Quang (Đảm nhận hỗ trợ TV3) \\
+& MSSV: & 3124560072\\
+& Lớp: & DKP1242\\
+& Học kỳ: & I -- Năm học 2026--2027 \\
+\end{tabular}
+\end{table}
+
+\vfill
+\begin{center}
+{\footnotesize TP. HỒ CHÍ MINH, THÁNG 11/2026}
+\end{center}
+\end{titlepage}
+
+\thispagestyle{empty}
+\newpage
+\tableofcontents
+\newpage
+
+\section{Tổng quan bối cảnh, Phân công nhiệm vụ và Đặc tả Luồng Giỏ hàng (FR-04)}
+
+\subsection{Bối cảnh phân hệ Giỏ hàng \& Đặt hàng trong BrewLite}
+Trong ứng dụng gọi đồ uống trực tuyến \textbf{BrewLite}, phân hệ \textbf{"Giỏ hàng \& Khởi tạo Đơn hàng"} đóng vai trò then chốt kết nối giữa việc duyệt sản phẩm (Menu) và thực hiện thanh toán (Checkout). Phân hệ đảm nhận các giải pháp kỹ thuật cốt lõi:
+\begin{itemize}
+    \item \textbf{Quản lý trạng thái tức thì (Client-side State):} Sử dụng thư viện Zustand kết hợp đồng bộ hóa với \texttt{localStorage}, đảm bảo giỏ hàng không bị mất khi khách hàng vô tình tải lại trang hoặc đổi thiết bị trong cùng phiên.
+    \item \textbf{Badge số lượng thời gian thực:} Tự động tính toán tổng số món hiển thị trên thanh điều hướng, giúp khách hàng nắm bắt tình trạng giỏ hàng ở bất kỳ màn hình nào.
+    \item \textbf{Tính toán bảo mật phía Máy chủ (Server-side Recalculation):} Khách hàng chỉ gửi danh sách món, kích thước (Size S/M/L) và danh sách Topping. Toàn bộ giá bán gốc, phụ phí kích thước và chiết khấu Coupon được truy vấn và tính toán trực tiếp tại Backend NestJS, loại bỏ hoàn toàn nguy cơ giả mạo giá tiền từ phía máy trạm.
+    \item \textbf{Kiểm soát tồn kho đồng thời (Concurrency Control):} Áp dụng cơ chế Khóa lạc quan (Optimistic Locking) thông qua cột \texttt{version} trong bảng \texttt{Product}, tự động rollback và retry tối đa 5 lần khi có nhiều khách hàng cùng tranh chấp mua những phần đồ uống cuối cùng.
+\end{itemize}
+
+\subsection{Phân công nhiệm vụ nhóm và Trách nhiệm hỗ trợ}
+Do thành viên phụ trách phân hệ 3 tạm ngưng theo học, \textbf{Phan Vũ Việt Quang} chủ động đảm nhận hoàn thiện toàn bộ phân hệ này để đảm bảo tiến độ nghiệm thu tuần tự của đồ án nhóm:
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{|c|l|l|c|}
+\hline
+\textbf{STT} & \textbf{Thành viên} & \textbf{Luồng / Màn hình chính phụ trách} & \textbf{Trạng thái đóng góp} \\ \hline
+1 & Trần Vĩnh Thọ Lân & Menu sản phẩm (Task 1.1 Context, GET /products) & Hoàn thành \\ \hline
+2 & Thành viên 2 & Chi tiết sản phẩm (SRS Options, GET /products/:id) & Đang thực hiện \\ \hline
+\textbf{3} & \textbf{Phan Vũ Việt Quang} & \textbf{Giỏ hàng \& Khởi tạo Đơn hàng (POST /orders)} & \textbf{Hoàn thành (Hỗ trợ TV3)} \\ \hline
+\textbf{4} & \textbf{Phan Vũ Việt Quang} & \textbf{Thanh toán \& Xác nhận (Task 1.3, POST /payments)} & \textbf{Hoàn thành} \\ \hline
+5 & Nguyễn Hữu Chí Công & Đăng ký \& Đăng nhập (JWT, Guard, NFR Security) & Hoàn thành \\ \hline
+\end{tabular}
+\caption{Bảng phân công trách nhiệm nhóm và định vị phần đảm nhận của Phan Vũ Việt Quang}
+\end{table}
+
+\subsection{Đặc tả chi tiết Luồng nghiệp vụ tạo đơn hàng (FR-04)}
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{|p{3.5cm}|p{11.5cm}|}
+\hline
+\textbf{Mã chức năng} & \textbf{FR-04: Quản lý Giỏ hàng và Tạo đơn hàng} \\ \hline
+\textbf{Tác nhân (Actor)} & Khách hàng (Customer), Hệ thống CSDL (PostgreSQL) \\ \hline
+\textbf{Mô tả tóm tắt} & Khách hàng quản lý giỏ hàng (thêm, sửa số lượng, xóa, nhập mã giảm giá) và bấm tạo đơn hàng. Backend kiểm tra tồn kho, áp dụng khóa lạc quan và tạo đơn hàng trạng thái \texttt{PENDING}. \\ \hline
+\textbf{Tiền điều kiện} & 
+\begin{enumerate}
+    \vspace{-0.2cm}
+    \item Giỏ hàng có ít nhất một sản phẩm hợp lệ (\texttt{items.length >= 1}).
+    \item Khách hàng đã đăng nhập tài khoản hợp lệ (JWT Token hợp lệ).
+    \vspace{-0.2cm}
+\end{enumerate} \\ \hline
+\textbf{Hậu điều kiện} & 
+\begin{enumerate}
+    \vspace{-0.2cm}
+    \item Đơn hàng được tạo mới ở trạng thái \texttt{PENDING} với mã định danh \texttt{\#ORD-XXXXXX}.
+    \item Tồn kho sản phẩm được cập nhật an toàn trong transaction CSDL.
+    \item Chuyển tiếp khách hàng sang luồng thanh toán với mã \texttt{pendingOrderId}.
+    \vspace{-0.2cm}
+\end{enumerate} \\ \hline
+\textbf{Luồng sự kiện chính} & 
+\begin{enumerate}
+    \vspace{-0.2cm}
+    \item Khách hàng mở giỏ hàng, kiểm tra danh sách món đồ uống đã chọn.
+    \item Khách hàng điều chỉnh số lượng hoặc áp dụng mã giảm giá Coupon (nếu có).
+    \item Khách hàng bấm nút "Tiến hành đặt hàng".
+    \item Client đóng gói payload \texttt{CreateOrderDto} và gửi request \texttt{POST /orders}.
+    \item Backend xác thực JWT qua \texttt{JwtAuthGuard}, kiểm tra tính hợp lệ của DTO qua \texttt{ValidationPipe}.
+    \item Backend mở CSDL Transaction: nạp giá thực tế từ DB, kiểm tra tồn kho, cập nhật trừ tồn kho theo cơ chế Khóa lạc quan (version check).
+    \item Backend tạo bản ghi \texttt{Order} kèm các \texttt{OrderItem} và \texttt{OrderItemTopping}.
+    \item Commit transaction thành công, Backend trả về HTTP 201 Created cùng mã đơn hàng.
+    \item Client nhận mã đơn và điều hướng sang màn hình Thanh toán.
+    \vspace{-0.2cm}
+\end{enumerate} \\ \hline
+\textbf{Luồng ngoại lệ} & 
+\textbf{Exc-1: Sản phẩm hết hàng (Out of Stock)}: Backend hủy bỏ transaction, trả về HTTP 400 thông báo số lượng tồn kho không đủ. \newline
+\textbf{Exc-2: Xung đột phiên bản (Concurrency Conflict)}: Hệ thống tự động retry tối đa 5 lần. Nếu vượt quá, trả về HTTP 409 yêu cầu thử lại. \\ \hline
+\end{tabular}
+\caption{Bảng đặc tả luồng nghiệp vụ Giỏ hàng & Tạo đơn hàng (FR-04)}
+\end{table}
+
+\newpage
+\section{Mô hình hóa hệ thống: 5 Sơ đồ UML (Phân hệ Giỏ hàng)}
+
+\subsection{Sơ đồ 1: Use Case Diagram (Quản lý Giỏ hàng và Đặt đơn)}
+Sơ đồ mô tả các ca sử dụng thuộc phân hệ Giỏ hàng tương tác với Khách hàng và CSDL:
+
+\begin{figure}[h!]
+\centering
+\resizebox{0.92\textwidth}{!}{
+\begin{tikzpicture}[
+    actor/.style={draw, thick, circle, minimum size=0.8cm, fill=blue!10},
+    usecase/.style={draw, thick, ellipse, fill=yellow!15, minimum width=3.8cm, minimum height=1.0cm, align=center, font=\small},
+    systembox/.style={draw=black!70, dashed, thick, rounded corners=8pt, fill=blue!2}
+]
+    % Boundary
+    \draw[systembox] (-0.8, -6.8) rectangle (11.0, 2.2);
+    \node[anchor=north west, font=\bfseries\sffamily, text=blue!80!black] at (-0.6, 2.0) {Phân hệ Giỏ hàng \& Khởi tạo Đơn hàng (BrewLite)};
+    
+    % Actors
+    \node (customer) at (-3.0, -2.5) {};
+    \node[actor, label=below:{\textbf{Khách hàng (Customer)}}] at (-3.0, -2.5) {};
+    
+    \node (db) at (13.0, -2.5) {};
+    \node[actor, fill=green!15, label=below:{\textbf{PostgreSQL DB}}] at (13.0, -2.5) {};
+    
+    % Use Cases
+    \node[usecase] (uc1) at (3.5, 1.2) {UC-04.1: Xem giỏ hàng\\\& Badge số lượng};
+    \node[usecase] (uc2) at (3.5, -0.4) {UC-04.2: Thêm món vào giỏ\\(Size \& Topping)};
+    \node[usecase] (uc3) at (3.5, -1.8) {UC-04.3: Tăng/giảm số lượng\\\& Xóa món};
+    \node[usecase] (uc4) at (8.5, -0.4) {UC-04.4: Áp dụng mã Coupon};
+    \node[usecase] (uc5) at (3.5, -3.5) {UC-04.5: Khởi tạo đơn hàng\\(POST /orders, PENDING)};
+    \node[usecase] (uc6) at (8.5, -3.5) {UC-04.6: Kiểm tra tồn kho\\\& Khóa lạc quan};
+    \node[usecase] (uc7) at (8.5, -5.2) {UC-04.7: Tính toán tổng tiền\\bảo mật phía Server};
+    
+    % Connections
+    \draw[thick] (-2.2, -2.3) -- (uc1.west);
+    \draw[thick] (-2.2, -2.4) -- (uc2.west);
+    \draw[thick] (-2.2, -2.5) -- (uc3.west);
+    \draw[thick] (-2.2, -2.7) -- (uc5.west);
+    
+    \draw[thick] (db.west) -- (uc6.east);
+    
+    % Includes
+    \draw[dashed, thick, ->] (uc5) -- node[above, font=\footnotesize] {$\langle\langle include \rangle\rangle$} (uc6);
+    \draw[dashed, thick, ->] (uc5) -- node[below, font=\footnotesize, sloped] {$\langle\langle include \rangle\rangle$} (uc7);
+    \draw[dashed, thick, ->] (uc4) -- node[above, font=\footnotesize, sloped] {$\langle\langle extend \rangle\rangle$} (uc5);
+\end{tikzpicture}
+}
+\caption{Sơ đồ Use Case phân hệ Quản lý Giỏ hàng và Khởi tạo Đơn hàng (Mã nguồn: \nolinkurl{docs/diagrams/usecase-cart.puml})}
+\end{figure}
+
+\subsection{Sơ đồ 2: Activity Diagram (Luồng tương tác Giỏ hàng \& Đặt đơn)}
+Sơ đồ hoạt động thể hiện quá trình tương tác của khách hàng từ khi thêm món đến khi đơn hàng \texttt{PENDING} được ghi nhận:
+
+\begin{figure}[h!]
+\centering
+\resizebox{0.82\textwidth}{!}{
+\begin{tikzpicture}[
+    startstop/.style={circle, fill=black, minimum size=0.5cm},
+    activity/.style={draw, thick, rounded corners=5pt, fill=blue!10, text width=4.0cm, align=center, minimum height=0.8cm, font=\footnotesize},
+    decision/.style={draw, thick, diamond, fill=yellow!20, aspect=1.8, inner sep=2pt, font=\scriptsize, align=center},
+    arrow/.style={thick, ->, >=stealth}
+]
+    \node[startstop] (start) at (0, 0) {};
+    \node[activity, below=0.5cm of start] (openCart) {Mở giỏ hàng (CartDrawer);\\Nạp state từ localStorage};
+    \node[activity, below=0.5cm of openCart] (editCart) {Tùy chỉnh giỏ: tăng/giảm SL,\\xóa món, nhập mã giảm giá};
+    \node[activity, below=0.5cm of editCart] (recalc) {Zustand tự động tính lại tổng tiền;\\Cập nhật Badge số lượng};
+    \node[decision, below=0.5cm of recalc] (checkEmpty) {Giỏ hàng\\có rỗng?};
+    
+    \node[activity, right=1.8cm of checkEmpty] (emptyView) {Hiển thị Empty State;\\Nút "Tiếp tục mua hàng"};
+    \node[activity, below=0.8cm of checkEmpty] (checkAuth) {Khách bấm "Đặt hàng";\\Kiểm tra trạng thái đăng nhập};
+    \node[decision, below=0.6cm of checkAuth] (authDecision) {Đã đăng nhập\\(JWT)?};
+    
+    \node[activity, right=1.8cm of authDecision] (showAuth) {Mở AuthModal;\\Khách đăng nhập/đăng ký};
+    \node[activity, below=0.8cm of authDecision] (sendOrder) {Gửi POST /orders (CreateOrderDto);\\Backend mở Transaction};
+    \node[decision, below=0.6cm of sendOrder] (stockDecision) {Tồn kho đủ\\\& Hợp lệ?};
+    
+    \node[activity, below left=0.8cm and 0.3cm of stockDecision] (orderSuccess) {Trừ tồn kho (Optimistic Lock);\\Tạo Order (PENDING);\\Trả về HTTP 201 Created};
+    \node[activity, below right=0.8cm and 0.3cm of stockDecision] (orderFail) {Rollback Transaction;\\Báo lỗi hết hàng (HTTP 400)};
+    \node[startstop, double, below=3.0cm of stockDecision] (endNode) {};
+    
+    \draw[arrow] (start) -- (openCart);
+    \draw[arrow] (openCart) -- (editCart);
+    \draw[arrow] (editCart) -- (recalc);
+    \draw[arrow] (recalc) -- (checkEmpty);
+    \draw[arrow] (checkEmpty) -- node[above, font=\scriptsize] {Có} (emptyView);
+    \draw[arrow] (checkEmpty) -- node[right, font=\scriptsize] {Không} (checkAuth);
+    \draw[arrow] (checkAuth) -- (authDecision);
+    \draw[arrow] (authDecision) -- node[above, font=\scriptsize] {Chưa} (showAuth);
+    \draw[arrow] (showAuth) |- (sendOrder);
+    \draw[arrow] (authDecision) -- node[right, font=\scriptsize] {Đã login} (sendOrder);
+    \draw[arrow] (sendOrder) -- (stockDecision);
+    \draw[arrow] (stockDecision) -| node[above left, font=\scriptsize] {Hợp lệ} (orderSuccess);
+    \draw[arrow] (stockDecision) -| node[above right, font=\scriptsize] {Hết hàng} (orderFail);
+    \draw[arrow] (orderSuccess) |- (endNode);
+    \draw[arrow] (orderFail) |- (endNode);
+\end{tikzpicture}
+}
+\caption{Sơ đồ Activity thể hiện luồng quản lý giỏ hàng và đặt đơn (Mã nguồn: \nolinkurl{docs/diagrams/activity-cart.puml})}
+\end{figure}
+
+\newpage
+\subsection{Sơ đồ 3: Sequence Diagram (Luồng gọi API tạo đơn hàng \texttt{POST /orders})}
+Sơ đồ tuần tự thể hiện việc khởi tạo đơn hàng an toàn qua Database Transaction:
+
+\begin{figure}[h!]
+\centering
+\resizebox{0.92\textwidth}{!}{
+\begin{tikzpicture}[
+    font=\footnotesize,
+    lifeline/.style={draw=gray!80, dashed, thick},
+    entity/.style={draw, thick, rectangle, rounded corners=3pt, fill=blue!10, minimum height=0.7cm, align=center, inner sep=4pt},
+    msg/.style={thick, ->, >=stealth},
+    ret/.style={thick, dashed, ->, >=stealth}
+]
+    % Entities
+    \node[entity] (c) at (0, 0) {Customer};
+    \node[entity] (ui) at (2.6, 0) {Cart UI\\(CartDrawer)};
+    \node[entity] (store) at (5.2, 0) {Zustand\\(cartStore)};
+    \node[entity] (api) at (8.0, 0) {Orders\\Controller};
+    \node[entity] (svc) at (11.0, 0) {Orders\\Service};
+    \node[entity] (db) at (14.2, 0) {PostgreSQL\\(Prisma Tx)};
+    
+    % Lifelines
+    \draw[lifeline] (c) -- (0, -9.5);
+    \draw[lifeline] (ui) -- (2.6, -9.5);
+    \draw[lifeline] (store) -- (5.2, -9.5);
+    \draw[lifeline] (api) -- (8.0, -9.5);
+    \draw[lifeline] (svc) -- (11.0, -9.5);
+    \draw[lifeline] (db) -- (14.2, -9.5);
+    
+    % Messages
+    \draw[msg] (0, -0.8) -- node[above] {1. Bấm "Đặt hàng"} (2.6, -0.8);
+    \draw[msg] (2.6, -1.3) -- node[above] {2. Lấy items, coupon} (5.2, -1.3);
+    \draw[ret] (5.2, -1.7) -- node[above] {3. Trả về state giỏ} (2.6, -1.7);
+    
+    \draw[msg] (2.6, -2.3) -- node[above, align=center] {4. POST /orders\\(Bearer JWT, CreateOrderDto)} (8.0, -2.3);
+    \draw[msg] (8.0, -2.8) -- node[above] {5. Validate DTO pipe} (8.0, -3.2);
+    \draw[msg] (8.0, -3.6) -- node[above] {6. create(userId, dto)} (11.0, -3.6);
+    
+    \draw[msg] (11.0, -4.1) -- node[above] {7. Bắt đầu \$transaction} (14.2, -4.1);
+    \draw[msg] (11.0, -4.6) -- node[above] {8. Nạp Product \& Topping prices} (14.2, -4.6);
+    \draw[ret] (14.2, -5.1) -- node[above] {9. Trả về giá chuẩn từ DB} (11.0, -5.1);
+    
+    \draw[msg] (11.0, -5.7) -- node[above] {10. Trừ tồn kho (Optimistic Lock)} (14.2, -5.7);
+    \draw[msg] (11.0, -6.3) -- node[above, align=center] {11. tx.order.create(PENDING,\\orderNumber, subtotal, total)} (14.2, -6.3);
+    \draw[ret] (14.2, -6.9) -- node[above] {12. Commit Transaction OK} (11.0, -6.9);
+    
+    \draw[ret] (11.0, -7.5) -- node[above] {13. Trả về Order mới} (8.0, -7.5);
+    \draw[ret] (8.0, -8.0) -- node[above] {14. HTTP 201 Created (orderNumber)} (2.6, -8.0);
+    \draw[msg] (2.6, -8.6) -- node[above] {15. Chuyển sang trang Thanh toán} (0, -8.6);
+\end{tikzpicture}
+}
+\caption{Sơ đồ Sequence thể hiện luồng gọi API tạo đơn hàng an toàn (Mã nguồn: \nolinkurl{docs/diagrams/sequence-order.puml})}
+\end{figure}
+
+\subsection{Sơ đồ 4: Class Diagram (Mô hình lớp Giỏ hàng \& Đơn hàng)}
+Sơ đồ lớp thể hiện mối quan hệ giữa trạng thái Client và cấu trúc CSDL Backend:
+
+\begin{figure}[h!]
+\centering
+\resizebox{0.92\textwidth}{!}{
+\begin{tikzpicture}[
+    classbox/.style={draw, thick, rectangle, fill=blue!5, font=\footnotesize, text width=5.0cm, rounded corners=2pt},
+    enumbox/.style={draw, thick, rectangle, fill=green!10, font=\footnotesize, text width=3.2cm, rounded corners=2pt}
+]
+    % CartItem
+    \node[classbox] (cartitem) at (0, 0) {
+        \textbf{\large CartItem} \\
+        \hline
+        + cartItemId: String \\
+        + productId: String \\
+        + name: String \\
+        + size: ProductSize \\
+        + sizePriceOffset: Number \\
+        + quantity: Number \\
+        + unitPrice: Number \\
+        + totalPrice: Number \\
+        \hline
+        + calculateTotal(): Number
+    };
+    
+    % Order
+    \node[classbox] (order) at (7.5, 0) {
+        \textbf{\large Order} \\
+        \hline
+        + id: String (UUID) \\
+        + orderNumber: String [Unique] \\
+        + userId: String \\
+        + status: OrderStatus \\
+        + subtotal: Decimal \\
+        + discountAmount: Decimal \\
+        + total: Decimal \\
+        + notes: String \\
+        + createdAt: DateTime \\
+        \hline
+        + isPending(): Boolean
+    };
+    
+    % OrderItem
+    \node[classbox] (orderitem) at (7.5, -4.5) {
+        \textbf{\large OrderItem} \\
+        \hline
+        + id: String \\
+        + orderId: String \\
+        + productId: String \\
+        + size: ProductSize \\
+        + basePrice: Decimal \\
+        + qty: Int \\
+        + lineTotal: Decimal \\
+        \hline
+    };
+    
+    % Enums
+    \node[enumbox] (psize) at (-2.5, -4.5) {
+        \textbf{\textless\textless enumeration\textgreater\textgreater} \\
+        \textbf{ProductSize} \\
+        \hline
+        S (Offset: 0đ) \\
+        M (Offset: 5.000đ) \\
+        L (Offset: 10.000đ)
+    };
+    
+    \node[enumbox] (ostatus) at (1.5, -4.5) {
+        \textbf{\textless\textless enumeration\textgreater\textgreater} \\
+        \textbf{OrderStatus} \\
+        \hline
+        PENDING \\
+        PAID \\
+        PREPARING \\
+        READY \\
+        COMPLETED
+    };
+    
+    % Relationships
+    \draw[thick, ->] (cartitem.south west) -- (psize.north);
+    \draw[thick, ->] (order.south west) -- (ostatus.north);
+    \draw[thick, -{Diamond[open]}] (order.south) -- node[right] {1..*} (orderitem.north);
+    \draw[thick, ->] (orderitem.west) -- (psize.east);
+    \draw[dashed, thick, ->] (cartitem.east) -- node[above, font=\footnotesize] {transforms to} (order.west);
+\end{tikzpicture}
+}
+\caption{Sơ đồ Class Diagram cấu trúc dữ liệu giỏ hàng và đơn hàng (Mã nguồn: \nolinkurl{docs/diagrams/class-cart-order.puml})}
+\end{figure}
+
+\newpage
+\subsection{Sơ đồ 5: Deployment Diagram (Nút API Container \& DB Transaction)}
+Sơ đồ triển khai thể hiện các thành phần xử lý logic tính toán giỏ hàng và giao dịch CSDL:
+
+\begin{figure}[h!]
+\centering
+\resizebox{0.92\textwidth}{!}{
+\begin{tikzpicture}[
+    nodeblock/.style={draw=blue!80!black, thick, fill=blue!5, rounded corners=6pt, inner sep=8pt, font=\small},
+    artifact/.style={draw=black!70, fill=white, rounded corners=3pt, font=\footnotesize, align=center, inner sep=4pt}
+]
+    % Client Node
+    \node[nodeblock, text width=4.5cm] (clientNode) at (-1.5, 0) {
+        \textbf{\textless\textless device\textgreater\textgreater} \\
+        \textbf{User Device} \\
+        \textit{(Browser / Mobile PWA)} \\
+        \vspace{0.2cm}
+        \begin{tikzpicture}
+            \node[artifact, text width=4.0cm] {
+                \textbf{\textless\textless artifact\textgreater\textgreater} \\
+                CartDrawer \& /cart \\
+                \textit{Zustand Store (localStorage)}
+            };
+        \end{tikzpicture}
+    };
+    
+    % Production Server
+    \node[nodeblock, text width=7.5cm] (serverNode) at (6.0, 0) {
+        \textbf{\textless\textless container\textgreater\textgreater~brewlite-api} \\
+        \textbf{NestJS 10 API Server (Port 4000)} \\
+        \vspace{0.2cm}
+        \begin{tikzpicture}
+            \node[artifact, text width=6.8cm] (valPipe) {
+                \textbf{ValidationPipe (class-validator)} \\
+                Check CreateOrderDto \& Constraints
+            };
+            \node[artifact, text width=6.8cm, below=0.3cm of valPipe] (orderSrv) {
+                \textbf{OrdersService} \\
+                Optimistic Lock \& Price Recalculation
+            };
+        \end{tikzpicture}
+    };
+    
+    % DB Container Node
+    \node[nodeblock, text width=4.5cm] (dbNode) at (6.0, -4.5) {
+        \textbf{\textless\textless database container\textgreater\textgreater} \\
+        \textbf{brewlite-db (PostgreSQL 16)} \\
+        \vspace{0.2cm}
+        \begin{tikzpicture}
+            \node[artifact, text width=3.8cm] {
+                \textbf{Prisma \$transaction} \\
+                Tables: orders, order\_items \\
+                Volume: brewlite\_pgdata
+            };
+        \end{tikzpicture}
+    };
+    
+    % Connections
+    \draw[thick, <->] (clientNode.east) -- node[above, font=\footnotesize] {HTTPS REST (443)} (serverNode.west);
+    \draw[thick, <->] (serverNode.south) -- node[right, font=\footnotesize] {TCP Pool (Port 5432)} (dbNode.north);
+\end{tikzpicture}
+}
+\caption{Sơ đồ Deployment phân hệ Giỏ hàng và Engine Transaction CSDL (Mã nguồn: \nolinkurl{docs/diagrams/deployment-cart.puml})}
+\end{figure}
+
+\newpage
+\section{Ma trận truy vết yêu cầu (Traceability Matrix - Giỏ hàng \& Đặt đơn)}
+Bảng truy vết bắt buộc theo \textbf{Mục 8.1} của đề bài Assignment 2:
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{|c|l|l|l|l|}
+\hline
+\textbf{Mã YC} & \textbf{Use-case / User Story} & \textbf{Thiết kế / Sơ đồ} & \textbf{Mã nguồn / API} & \textbf{Kiểm thử} \\ \hline
+\textbf{FR-04} & US-04: Giỏ hàng \& Khởi tạo Đơn & usecase-cart.puml, \newline sequence-order.puml & \texttt{apps/web/src/cartStore.ts}, \newline \texttt{apps/api/src/orders/} & \texttt{CART-T01} (Zustand test), \newline \texttt{ORDER-T01} (DTO validation), \newline \texttt{ORDER-T02} (Transaction spec) \\ \hline
+\textbf{NFR-01} & Hiệu năng phản hồi đơn $<500$ms & deployment-cart.puml & Prisma Transaction Pool & Benchmark latency tạo đơn \\ \hline
+\end{tabular}
+\caption{Ma trận truy vết phân hệ Giỏ hàng và Tạo đơn hàng}
+\end{table}
+
+\section{Hiện thực mã nguồn và Kết quả triển khai}
+
+\subsection{Mã nguồn Frontend: Quản lý State Giỏ hàng (\texttt{cartStore.ts})}
+State giỏ hàng phía Client được quản lý qua Zustand, hỗ trợ lưu trữ liên tục (\textit{persist}) và tự động tính toán tổng số lượng:
+
+\begin{lstlisting}[caption={Zustand Cart State Store Implementation}]
+// Zustand store managing reactive client cart state
+export const useAppStore = create<AppStore>()(
+  persist(
+    (set, get) => ({
+      items: [],
+      addToCart: (item) => {
+        const { items } = get();
+        const existingIdx = items.findIndex(
+          (i) => i.productId === item.productId && i.size === item.size
+        );
+        if (existingIdx > -1) {
+          const updated = [...items];
+          updated[existingIdx].quantity += item.quantity;
+          updated[existingIdx].totalPrice = updated[existingIdx].unitPrice * updated[existingIdx].quantity;
+          set({ items: updated });
+        } else {
+          set({ items: [...items, item] });
+        }
+      },
+      updateQuantity: (cartItemId, delta) => {
+        set({
+          items: get().items
+            .map((i) => i.cartItemId === cartItemId ? { ...i, quantity: i.quantity + delta } : i)
+            .filter((i) => i.quantity > 0)
+        });
+      },
+      removeFromCart: (cartItemId) => {
+        set({ items: get().items.filter((i) => i.cartItemId !== cartItemId) });
+      },
+      getTotalAmount: () => get().items.reduce((sum, i) => sum + i.totalPrice, 0),
+      getTotalItems: () => get().items.reduce((sum, i) => sum + i.quantity, 0),
+    }),
+    { name: 'brewlite-storage' }
+  )
+);
+\end{lstlisting}
+
+\subsection{Mã nguồn Backend: Engine Tạo đơn hàng (\texttt{orders.service.ts})}
+Backend xác thực tồn kho, áp dụng khóa lạc quan và tạo đơn hàng an toàn:
+
+\begin{lstlisting}[caption={Atomic Order Creation with Optimistic Locking}]
+@Injectable()
+export class OrdersService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(userId: string, dto: CreateOrderDto) {
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        return await this.createOnce(userId, dto);
+      } catch (e) {
+        if (!(e instanceof VersionConflictError)) throw e;
+        if (attempt === MAX_RETRIES) {
+          throw new ConflictException('System busy with concurrent orders, please retry');
+        }
+        await new Promise((r) => setTimeout(r, 20 + Math.random() * 60));
+      }
+    }
+  }
+
+  private createOnce(userId: string, dto: CreateOrderDto) {
+    return this.prisma.$transaction(async (tx) => {
+      // 1. Fetch real product prices from DB (Do not trust client)
+      const products = await tx.product.findMany({
+        where: { id: { in: dto.items.map((i) => i.productId) } },
+      });
+      
+      // 2. Optimistic stock deduction
+      for (const item of dto.items) {
+        const prod = products.find((p) => p.id === item.productId);
+        if (!prod || prod.stock < item.qty) {
+          throw new BadRequestException('Product is out of stock');
+        }
+        await tx.product.update({
+          where: { id: prod.id, version: prod.version },
+          data: { stock: prod.stock - item.qty, version: prod.version + 1 },
+        });
+      }
+
+      // 3. Create Order with PENDING status
+      return tx.order.create({
+        data: {
+          orderNumber: `ORD-${Date.now().toString().slice(-6)}`,
+          userId,
+          status: 'PENDING',
+          subtotal: calculatedSubtotal,
+          total: finalTotal,
+        },
+      });
+    });
+  }
+}
+\end{lstlisting}
+
+\section{Kết luận}
+Báo cáo phân hệ \textbf{"Giỏ hàng \& Khởi tạo Đơn hàng"} do \textbf{Phan Vũ Việt Quang} thực hiện hỗ trợ đã hoàn tất trọn vẹn:
+\begin{enumerate}
+    \item Đặc tả chi tiết luồng nghiệp vụ tạo đơn hàng theo chuẩn \textbf{Task FR-04}, đảm bảo nguyên tắc bảo mật tính giá máy chủ và khóa lạc quan tồn kho.
+    \item Thiết kế và chuẩn hóa \textbf{5 sơ đồ UML vector TikZ} sắc nét phản ánh đúng cấu trúc runtime và CSDL thực tế.
+    \item Hiện thực hóa mã nguồn Zustand giỏ hàng và NestJS OrdersService sẵn sàng cho nghiệm thu các Sprint.
+\end{enumerate}
+
+\end{document}
