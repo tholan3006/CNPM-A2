@@ -1,0 +1,27 @@
+{
+  "name": "brewlite-monorepo",
+  "version": "1.0.0",
+  "description": "BrewLite - Assignment 2 - Next.js + NestJS + PostgreSQL + Docker",
+  "private": true,
+  "scripts": {
+    "install:all": "npm --prefix apps/api install && npm --prefix apps/web install",
+    "dev": "concurrently -n \"API,WEB\" -c \"green.bold,cyan.bold\" \"npm run dev:api\" \"npm run dev:web\"",
+    "dev:api": "npm --prefix apps/api run start:dev",
+    "dev:web": "npm --prefix apps/web run dev",
+    "build": "npm --prefix apps/api run build && npm --prefix apps/web run build",
+    "build:api": "npm --prefix apps/api run build",
+    "build:web": "npm --prefix apps/web run build",
+    "test": "npm --prefix apps/api run test",
+    "test:e2e": "npm --prefix apps/api run test:e2e",
+    "lint": "npm --prefix apps/api run lint && npm --prefix apps/web run lint",
+    "prisma:generate": "npm --prefix apps/api run prisma:generate",
+    "prisma:push": "npm --prefix apps/api run prisma:push",
+    "prisma:seed": "npm --prefix apps/api run prisma:seed",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
