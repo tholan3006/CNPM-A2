@@ -22,3 +22,19 @@
 | **NFR-03** | **Tính Idempotency & Bảo mật thanh toán**<br>Bảo đảm chống duplicate payment và bảo vệ route giao dịch bằng JWT. | `docs/diagrams/sequence-payment.puml`<br>`docs/diagrams/deployment-payment.puml` | `prisma/schema.prisma` (cột `idempotencyKey @unique`)<br>`apps/api/src/auth/guards/jwt-auth.guard.ts` | • **SEC-T01:** Test chặn thanh toán khi thiếu JWT Token hoặc trùng Idempotency-Key | **Phan Vũ Việt Quang** | **Hoàn thành (Passed)** |
 | **FR-08** | **US-06: Đăng ký, Đăng nhập & Quản lý tài khoản (JWT)**<br>Đăng ký tài khoản mới, đăng nhập xác thực mật khẩu, cấp phát JWT và truy vấn hồ sơ cá nhân. | `docs/diagrams/usecase-auth.puml`<br>`docs/diagrams/activity-auth.puml`<br>`docs/diagrams/sequence-auth.puml`<br>`docs/diagrams/class-auth.puml` | **Backend:**<br>`apps/api/src/auth/auth.controller.ts`<br>`apps/api/src/auth/auth.service.ts`<br><br>**Frontend:**<br>`apps/web/src/components/AuthModal.tsx` | • **AUTH-T01:** `auth.service.spec.ts`<br>• **AUTH-T02:** `auth.controller.spec.ts`<br>• **UI-T01:** Real-time 10-digit Phone Validation | **Nguyễn Hữu Chí Công** | **Hoàn thành (Passed)** |
 | **NFR-02** | **Bảo mật mật khẩu Bcrypt, Xác thực JWT & Hạ tầng Docker/CI-CD**<br>Băm mật khẩu một chiều với `bcrypt` (Salt = 10), bảo vệ route nhạy cảm bằng `JwtAuthGuard` và đóng gói Docker/CI. | `docs/diagrams/sequence-auth.puml`<br>`docs/diagrams/class-auth.puml`<br>`docs/diagrams/deployment-auth.puml` | `apps/api/src/auth/strategies/jwt.strategy.ts`<br>`apps/api/src/auth/guards/jwt-auth.guard.ts`<br>`docker-compose.yml`<br>`.github/workflows/ci.yml` | • **SEC-T01:** Unit test băm `bcrypt` & ẩn `passwordHash`<br>• **SEC-T02:** Test `JwtAuthGuard` chặn `POST /orders` khi thiếu JWT (`401`) | **Nguyễn Hữu Chí Công** | **Hoàn thành (Passed)** |
+
+---
+
+## 2. Truy vết Quyết định Kiến trúc & Triển khai (Architecture & Deployment Traceability)
+
+| Mã Quyết định / Nhiệm vụ | Tài liệu Thiết kế & ADR | Phạm vi & Thành phần liên quan | Cơ chế Kiểm chứng (Validation Gate) | Trạng thái |
+|:---|:---|:---|:---|:---:|
+| **Task 3.1 & ADR-001** | `docs/architecture/adr/001-monorepo.md` | Toàn bộ repo: `apps/web`, `apps/api`, `docs/`, `tests/` | Chạy CI Pipeline kiểm thử đồng bộ toàn bộ monorepo | **Đã nghiệm thu (Passed)** |
+| **Task 3.1 & ADR-002** | `docs/architecture/adr/002-frontend-nextjs-pwa.md` | `apps/web/src/app/`, Tailwind CSS, Zustand | Lighthouse Audit PWA Mobile-first, Tải trang $<500$ms | **Đã nghiệm thu (Passed)** |
+| **Task 3.1 & ADR-003** | `docs/architecture/adr/003-backend-nestjs-modular.md` | `apps/api/src/products`, `orders`, `payments`, `auth` | NestJS Module Dependency Injection & Unit/Integration Tests | **Đã nghiệm thu (Passed)** |
+| **Task 3.1 & ADR-004** | `docs/architecture/adr/004-database-postgresql-prisma.md`| `apps/api/prisma/schema.prisma`, `prisma/seed.ts` | Prisma Migration log, Database Seed nạp sẵn 6 món | **Đã nghiệm thu (Passed)** |
+| **Task 3.1 & ADR-005** | `docs/architecture/adr/005-stateless-auth-jwt.md` | `apps/api/src/auth/`, `JwtAuthGuard`, Bcrypt | Unit test chặn token giả mạo, băm mật khẩu 1 chiều | **Đã nghiệm thu (Passed)** |
+| **Task 3.1 & ADR-006** | `docs/architecture/adr/006-payment-mock-idempotency.md` | `apps/api/src/payments/`, CSDL trường `idempotencyKey` | Integration test chống trừ tiền lặp khi gửi trùng key | **Đã nghiệm thu (Passed)** |
+| **Task 3.2 & Task 5.3** | `docs/deployment.md`<br>`docs/diagrams/deployment-web-api.svg` | `docker-compose.yml`, `.github/workflows/cd.yml` | Khởi chạy `docker compose up --build`, Smoke test `GET /health` | **Đã nghiệm thu (Passed)** |
+| **Task 5.2 (E2E Test)** | `tests/e2e-order-flow.spec.ts` | Luồng liên hoàn 7 bước từ Menu đến Xác nhận đơn | Chạy tự động: Menu $\rightarrow$ Detail $\rightarrow$ Cart $\rightarrow$ Order $\rightarrow$ Pay $\rightarrow$ Confirm | **Đã nghiệm thu (Passed)** |
+
