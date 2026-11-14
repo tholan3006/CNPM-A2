@@ -1,130 +1,143 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { PrismaService } from '../prisma/prisma.service';
+import { NotFoundException, BadRequestException } from '@nestjs/common';
+import { SizeCode } from './entities/product-option.entity';
 
-describe('ProductsService (Member 1 - Menu Flow Unit Tests)', () => {
+describe('ProductsService (Menu & Product Customization Flow)', () => {
   let service: ProductsService;
-  let prisma: PrismaService;
-
-  const mockProduct = {
-    id: 'prod-uuid-1',
-    name: 'Cà phê sữa',
-    description: 'Cà phê Robusta truyền thống thơm ngon',
-    price: 35000,
-    imageUrl: '/images/ca-phe-sua.jpg',
-    stock: 50,
-    version: 0,
-    isActive: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-
-  const mockTopping = {
-    id: 'top-uuid-1',
-    name: 'Trân châu trắng',
-    price: 10000,
-    isAvailable: true,
-  };
-
-  const mockPrismaService = {
-    product: {
-      findMany: jest.fn(),
-      findUnique: jest.fn(),
-    },
-    topping: {
-      findMany: jest.fn(),
-    },
-  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        ProductsService,
-        {
-          provide: PrismaService,
-          useValue: mockPrismaService,
-        },
-      ],
+      providers: [ProductsService],
     }).compile();
 
     service = module.get<ProductsService>(ProductsService);
-    prisma = module.get<PrismaService>(PrismaService);
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
+  it('should be defined', () => {
+    expect(service).toBeDefined();
   });
 
-  describe('findAll (GET /products)', () => {
-    it('should return list of active products with numeric price and inferred category', async () => {
-      mockPrismaService.product.findMany.mockResolvedValue([mockProduct]);
-
+  describe('findAll (GET /products - Member 1: Menu Flow)', () => {
+    it('tra ve danh sach menu day du cac san pham dang hoat dong', async () => {
       const result = await service.findAll();
-
-      expect(result).toHaveLength(1);
-      expect(result[0].name).toBe('Cà phê sữa');
-      expect(result[0].price).toBe(35000);
-      expect(result[0].category).toBe('Cà phê truyền thống');
-      expect(mockPrismaService.product.findMany).toHaveBeenCalledWith({
-        where: { isActive: true },
-        orderBy: { createdAt: 'asc' },
-      });
+      expect(result).toBeDefined();
+      expect(result.length).toBeGreaterThan(0);
+      expect(result[0]).toHaveProperty('id');
+      expect(result[0]).toHaveProperty('name');
+      expect(result[0]).toHaveProperty('price');
+      expect(result[0]).toHaveProperty('category');
     });
 
-    it('should filter by search query when search string is provided', async () => {
-      mockPrismaService.product.findMany.mockResolvedValue([mockProduct]);
+    it('loc san pham theo tu khoa tim kiem (Search Query)', async () => {
+      const result = await service.findAll('Muối');
+      expect(result.length).toBe(1);
+      expect(result[0].name).toContain('Muối');
+    });
 
-      const result = await service.findAll('cà phê');
-
-      expect(result).toHaveLength(1);
-      expect(mockPrismaService.product.findMany).toHaveBeenCalledWith({
-        where: {
-          isActive: true,
-          OR: [
-            { name: { contains: 'cà phê', mode: 'insensitive' } },
-            { description: { contains: 'cà phê', mode: 'insensitive' } },
-          ],
-        },
-        orderBy: { createdAt: 'asc' },
+    it('loc san pham theo slug danh muc (Category Filter)', async () => {
+      const result = await service.findAll(undefined, 'ca-phe-dac-biet');
+      expect(result.length).toBeGreaterThan(0);
+      result.forEach((p) => {
+        expect(p.category).toBe('Cà phê Đặc Biệt');
       });
     });
   });
 
-  describe('findOne (GET /products/:id)', () => {
-    it('should return product details including available toppings', async () => {
-      mockPrismaService.product.findUnique.mockResolvedValue(mockProduct);
-      mockPrismaService.topping.findMany.mockResolvedValue([mockTopping]);
+  describe('findOne (GET /products/:id - Member 2: Product Detail)', () => {
+    it('tra ve chi tiet san pham day du kem cac size va topping kha dung', async () => {
+      const result = await service.findOne('prod-01');
 
-      const result = await service.findOne('prod-uuid-1');
-
-      expect(result.id).toBe('prod-uuid-1');
-      expect(result.name).toBe('Cà phê sữa');
-      expect(result.toppings).toHaveLength(1);
-      expect(result.toppings[0].name).toBe('Trân châu trắng');
+      expect(result).toBeDefined();
+      expect(result.id).toBe('prod-01');
+      expect(result.name).toBe('Cà phê Muối Biển');
+      expect(result.basePrice).toBe(35000);
+      expect(result.sizes).toHaveLength(3);
+      expect(result.sizes.find((s) => s.code === SizeCode.M)?.isDefault).toBe(true);
+      expect(result.toppings.length).toBeGreaterThan(0);
+      expect(result.category.name).toBe('Cà phê Đặc Biệt');
     });
 
-    it('should throw NotFoundException if product is not found or inactive', async () => {
-      mockPrismaService.product.findUnique.mockResolvedValue(null);
-
-      await expect(service.findOne('invalid-id')).rejects.toThrow(
+    it('nem loi NotFoundException neu product id khong ton tai', async () => {
+      await expect(service.findOne('invalid-id-999')).rejects.toThrow(
         NotFoundException,
       );
     });
   });
 
-  describe('findAllToppings', () => {
-    it('should return only available toppings', async () => {
-      mockPrismaService.topping.findMany.mockResolvedValue([mockTopping]);
-
-      const result = await service.findAllToppings();
-
-      expect(result).toHaveLength(1);
-      expect(result[0].price).toBe(10000);
-      expect(mockPrismaService.topping.findMany).toHaveBeenCalledWith({
-        where: { isAvailable: true },
-        orderBy: { price: 'asc' },
+  describe('calculateCustomizationPrice (Dynamic Pricing Verification)', () => {
+    it('tinh gia chinh xac voi Size M mac dinh va khong kem topping (1 ly)', async () => {
+      const breakdown = await service.calculateCustomizationPrice({
+        productId: 'prod-01',
+        sizeCode: SizeCode.M,
+        toppingIds: [],
+        quantity: 1,
       });
+
+      expect(breakdown.basePrice).toBe(35000);
+      expect(breakdown.sizeExtraPrice).toBe(0);
+      expect(breakdown.toppingsSubtotal).toBe(0);
+      expect(breakdown.unitPrice).toBe(35000);
+      expect(breakdown.totalPrice).toBe(35000);
+    });
+
+    it('tinh gia tang them khi chon Size L (+10.000d)', async () => {
+      const breakdown = await service.calculateCustomizationPrice({
+        productId: 'prod-01',
+        sizeCode: SizeCode.L,
+        toppingIds: [],
+        quantity: 1,
+      });
+
+      expect(breakdown.basePrice).toBe(35000);
+      expect(breakdown.sizeExtraPrice).toBe(10000);
+      expect(breakdown.unitPrice).toBe(45000);
+      expect(breakdown.totalPrice).toBe(45000);
+    });
+
+    it('tinh tong gia phuc tap: Size L (+10k) + 2 Topping (Thach 6k + Kem man 10k) x 2 ly', async () => {
+      const breakdown = await service.calculateCustomizationPrice({
+        productId: 'prod-01',
+        sizeCode: SizeCode.L,
+        toppingIds: ['top-01', 'top-02'], // 6.000 + 10.000 = 16.000
+        quantity: 2,
+      });
+
+      // UnitPrice = 35.000 (Base) + 10.000 (Size L) + 16.000 (Toppings) = 61.000
+      expect(breakdown.unitPrice).toBe(61000);
+      // Total = 61.000 * 2 = 122.000
+      expect(breakdown.totalPrice).toBe(122000);
+      expect(breakdown.toppings).toHaveLength(2);
+    });
+
+    it('nem loi BadRequestException neu chon topping da het hang', async () => {
+      await expect(
+        service.calculateCustomizationPrice({
+          productId: 'prod-01',
+          sizeCode: SizeCode.M,
+          toppingIds: ['top-05'], // top-05 is out of stock (stock: 0)
+          quantity: 1,
+        }),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('nem loi BadRequestException neu so luong vuot qua ton kho', async () => {
+      await expect(
+        service.calculateCustomizationPrice({
+          productId: 'prod-01',
+          sizeCode: SizeCode.M,
+          toppingIds: [],
+          quantity: 9999, // Stock is 85
+        }),
+      ).rejects.toThrow(BadRequestException);
+    });
+  });
+
+  describe('findAllToppings', () => {
+    it('chi tra ve danh sach topping con hang khi bat availableOnly = true', async () => {
+      const availableToppings = await service.findAllToppings(true);
+      expect(availableToppings.every((t) => t.isAvailable && t.stock > 0)).toBe(true);
+      expect(availableToppings.find((t) => t.id === 'top-05')).toBeUndefined();
     });
   });
 });
