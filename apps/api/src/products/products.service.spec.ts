@@ -3,7 +3,7 @@ import { ProductsService } from './products.service';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { SizeCode } from './entities/product-option.entity';
 
-describe('ProductsService (Product Detail & Customization Flow)', () => {
+describe('ProductsService (Menu & Product Customization Flow)', () => {
   let service: ProductsService;
 
   beforeEach(async () => {
@@ -18,7 +18,33 @@ describe('ProductsService (Product Detail & Customization Flow)', () => {
     expect(service).toBeDefined();
   });
 
-  describe('findOne (GET /products/:id)', () => {
+  describe('findAll (GET /products - Member 1: Menu Flow)', () => {
+    it('tra ve danh sach menu day du cac san pham dang hoat dong', async () => {
+      const result = await service.findAll();
+      expect(result).toBeDefined();
+      expect(result.length).toBeGreaterThan(0);
+      expect(result[0]).toHaveProperty('id');
+      expect(result[0]).toHaveProperty('name');
+      expect(result[0]).toHaveProperty('price');
+      expect(result[0]).toHaveProperty('category');
+    });
+
+    it('loc san pham theo tu khoa tim kiem (Search Query)', async () => {
+      const result = await service.findAll('Muối');
+      expect(result.length).toBe(1);
+      expect(result[0].name).toContain('Muối');
+    });
+
+    it('loc san pham theo slug danh muc (Category Filter)', async () => {
+      const result = await service.findAll(undefined, 'ca-phe-dac-biet');
+      expect(result.length).toBeGreaterThan(0);
+      result.forEach((p) => {
+        expect(p.category).toBe('Cà phê Đặc Biệt');
+      });
+    });
+  });
+
+  describe('findOne (GET /products/:id - Member 2: Product Detail)', () => {
     it('tra ve chi tiet san pham day du kem cac size va topping kha dung', async () => {
       const result = await service.findOne('prod-01');
 

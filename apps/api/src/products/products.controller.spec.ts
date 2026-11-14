@@ -3,7 +3,7 @@ import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
 import { SizeCode } from './entities/product-option.entity';
 
-describe('ProductsController (Product Detail & Customization API)', () => {
+describe('ProductsController (Menu & Product Detail API Tests)', () => {
   let controller: ProductsController;
   let service: ProductsService;
 
@@ -21,7 +21,22 @@ describe('ProductsController (Product Detail & Customization API)', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('GET /products/:id', () => {
+  describe('GET /products (Member 1: Menu List & Filter)', () => {
+    it('tra ve danh sach menu day du', async () => {
+      const result = await controller.findAll();
+      expect(result).toBeDefined();
+      expect(result.length).toBeGreaterThan(0);
+    });
+
+    it('tra ve danh sach menu loc theo search query', async () => {
+      const result = await controller.findAll('Muối');
+      expect(result).toBeDefined();
+      expect(result.length).toBe(1);
+      expect(result[0].name).toContain('Muối');
+    });
+  });
+
+  describe('GET /products/:id (Member 2: Product Detail)', () => {
     it('chuyen tiep loi goi lay chi tiet mon den ProductsService', async () => {
       const result = await controller.findOne('prod-01');
       expect(result).toBeDefined();
@@ -31,7 +46,7 @@ describe('ProductsController (Product Detail & Customization API)', () => {
     });
   });
 
-  describe('GET /products/:id/toppings', () => {
+  describe('GET /products/:id/toppings (Member 2)', () => {
     it('tra ve danh sach toppings danh rieng cho san pham', async () => {
       const toppings = await controller.findProductToppings('prod-01');
       expect(Array.isArray(toppings)).toBe(true);
@@ -39,7 +54,7 @@ describe('ProductsController (Product Detail & Customization API)', () => {
     });
   });
 
-  describe('POST /products/:id/calculate-price', () => {
+  describe('POST /products/:id/calculate-price (Member 2: Dynamic Pricing)', () => {
     it('goi service xac minh tinh toan gia dong', async () => {
       const breakdown = await controller.calculatePrice('prod-01', {
         sizeCode: SizeCode.M,
