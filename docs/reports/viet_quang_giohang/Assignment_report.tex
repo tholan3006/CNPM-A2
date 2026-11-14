@@ -252,7 +252,7 @@ Sơ đồ mô tả các ca sử dụng thuộc phân hệ Giỏ hàng tương t�
     \draw[dashed, thick, ->] (uc4) -- node[above, font=\footnotesize, sloped] {$\langle\langle extend \rangle\rangle$} (uc5);
 \end{tikzpicture}
 }
-\caption{Sơ đồ Use Case phân hệ Quản lý Giỏ hàng và Khởi tạo Đơn hàng}
+\caption{Sơ đồ Use Case phân hệ Quản lý Giỏ hàng và Khởi tạo Đơn hàng (Mã nguồn: \nolinkurl{docs/diagrams/usecase-cart.puml})}
 \end{figure}
 
 \subsection{Sơ đồ 2: Activity Diagram (Luồng tương tác Giỏ hàng \& Đặt đơn)}
@@ -302,7 +302,7 @@ Sơ đồ hoạt động thể hiện quá trình tương tác của khách hàn
     \draw[arrow] (orderFail) |- (endNode);
 \end{tikzpicture}
 }
-\caption{Sơ đồ Activity thể hiện luồng quản lý giỏ hàng và đặt đơn}
+\caption{Sơ đồ Activity thể hiện luồng quản lý giỏ hàng và đặt đơn (Mã nguồn: \nolinkurl{docs/diagrams/activity-cart.puml})}
 \end{figure}
 
 \newpage
@@ -357,7 +357,7 @@ Sơ đồ tuần tự thể hiện việc khởi tạo đơn hàng an toàn qua 
     \draw[msg] (2.6, -8.6) -- node[above] {15. Chuyển sang trang Thanh toán} (0, -8.6);
 \end{tikzpicture}
 }
-\caption{Sơ đồ Sequence thể hiện luồng gọi API tạo đơn hàng an toàn}
+\caption{Sơ đồ Sequence thể hiện luồng gọi API tạo đơn hàng an toàn (Mã nguồn: \nolinkurl{docs/diagrams/sequence-order.puml})}
 \end{figure}
 
 \subsection{Sơ đồ 4: Class Diagram (Mô hình lớp Giỏ hàng \& Đơn hàng)}
@@ -446,7 +446,7 @@ Sơ đồ lớp thể hiện mối quan hệ giữa trạng thái Client và c�
     \draw[dashed, thick, ->] (cartitem.east) -- node[above, font=\footnotesize] {transforms to} (order.west);
 \end{tikzpicture}
 }
-\caption{Sơ đồ Class Diagram cấu trúc dữ liệu giỏ hàng và đơn hàng}
+\caption{Sơ đồ Class Diagram cấu trúc dữ liệu giỏ hàng và đơn hàng (Mã nguồn: \nolinkurl{docs/diagrams/class-cart-order.puml})}
 \end{figure}
 
 \newpage
@@ -511,7 +511,7 @@ Sơ đồ triển khai thể hiện các thành phần xử lý logic tính toá
     \draw[thick, <->] (serverNode.south) -- node[right, font=\footnotesize] {TCP Pool (Port 5432)} (dbNode.north);
 \end{tikzpicture}
 }
-\caption{Sơ đồ Deployment phân hệ Giỏ hàng và Engine Transaction CSDL}
+\caption{Sơ đồ Deployment phân hệ Giỏ hàng và Engine Transaction CSDL (Mã nguồn: \nolinkurl{docs/diagrams/deployment-cart.puml})}
 \end{figure}
 
 \newpage
