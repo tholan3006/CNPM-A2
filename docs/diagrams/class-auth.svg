@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 720" width="1040" height="720" style="background:#ffffff; font-family:Arial, Helvetica, sans-serif;">
+  <defs>
+    <marker id="cls-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9" fill="none" stroke="#1e293b" stroke-width="1.6"/>
+    </marker>
+    <marker id="cls-solid" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#1e293b"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="520" y="28" text-anchor="middle" font-size="18" font-weight="bold" fill="#0f172a">Sơ đồ Lớp Lĩnh vực (Domain Class Diagram) – Lớp User, AuthToken &amp; Phân hệ Xác thực JWT</text>
+  <text x="520" y="46" text-anchor="middle" font-size="12" fill="#64748b">Mô hình thực thể User (Prisma PostgreSQL), AuthToken (JWT HS256), DTOs, AuthService và Passport Guards</text>
+
+  <!-- Class 1: User (Core Domain Entity) -->
+  <g transform="translate(40, 75)">
+    <rect x="0" y="0" width="290" height="275" rx="4" fill="#ffffff" stroke="#0f172a" stroke-width="1.8"/>
+    <rect x="0" y="0" width="290" height="32" fill="#0f172a"/>
+    <text x="145" y="21" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">User &lt;&lt;Entity: users&gt;&gt;</text>
+
+    <!-- Attributes -->
+    <text x="14" y="52" font-size="11" fill="#0f172a">- id: UUID [PK, default(uuid())]</text>
+    <text x="14" y="70" font-size="11" fill="#0f172a">- email: String [@unique, lowercase]</text>
+    <text x="14" y="88" font-size="11" font-weight="bold" fill="#991b1b">- passwordHash: String [Bcrypt Salt=10]</text>
+    <text x="14" y="106" font-size="11" fill="#0f172a">- fullName: String?</text>
+    <text x="14" y="124" font-size="11" fill="#0f172a">- phone: String? [10 digits]</text>
+    <text x="14" y="142" font-size="11" fill="#0f172a">- role: Role = CUSTOMER</text>
+    <text x="14" y="160" font-size="11" fill="#0f172a">- loyaltyPoints: Integer = 0</text>
+    <text x="14" y="178" font-size="11" fill="#0f172a">- createdAt / updatedAt: DateTime</text>
+
+    <line x1="0" y1="190" x2="290" y2="190" stroke="#334155" stroke-width="1.2"/>
+
+    <!-- Methods -->
+    <text x="14" y="210" font-size="11" fill="#1e293b">+ verifyPassword(plain: String): Promise&lt;Boolean&gt;</text>
+    <text x="14" y="228" font-size="11" fill="#1e293b">+ addLoyaltyPoints(points: Integer): void</text>
+    <text x="14" y="246" font-size="11" fill="#1e293b">+ toPublicProfile(): PublicUserDto</text>
+    <text x="14" y="264" font-size="10" fill="#64748b">(Loại bỏ hoàn toàn passwordHash khi trả JSON)</text>
+  </g>
+
+  <!-- Class 2: AuthToken (JWT Value Object) -->
+  <g transform="translate(400, 75)">
+    <rect x="0" y="0" width="280" height="235" rx="4" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.8"/>
+    <rect x="0" y="0" width="280" height="32" fill="#1d4ed8"/>
+    <text x="140" y="21" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">AuthToken &lt;&lt;JWT Payload&gt;&gt;</text>
+
+    <text x="14" y="52" font-size="11" fill="#1e3a8a">- accessToken: String [Signed HS256]</text>
+    <text x="14" y="70" font-size="11" fill="#1e3a8a">- tokenType: String = "Bearer"</text>
+    <text x="14" y="88" font-size="11" font-weight="bold" fill="#0f172a">- sub: UUID [User ID]</text>
+    <text x="14" y="106" font-size="11" fill="#0f172a">- email: String</text>
+    <text x="14" y="124" font-size="11" fill="#0f172a">- role: Role</text>
+    <text x="14" y="142" font-size="11" fill="#0f172a">- iat: Integer [Issued At]</text>
+    <text x="14" y="160" font-size="11" fill="#0f172a">- exp: Integer [Expires In: 7d]</text>
+
+    <line x1="0" y1="172" x2="280" y2="172" stroke="#1d4ed8" stroke-width="1.2"/>
+
+    <text x="14" y="192" font-size="11" fill="#1e3a8a">+ getSub(): UUID</text>
+    <text x="14" y="210" font-size="11" fill="#1e3a8a">+ isExpired(): Boolean</text>
+    <text x="14" y="226" font-size="11" fill="#1e3a8a">+ toAuthorizationHeader(): String</text>
+  </g>
+
+  <!-- Enum: Role -->
+  <g transform="translate(755, 75)">
+    <rect x="0" y="0" width="240" height="130" rx="4" fill="#f0fdf4" stroke="#166534" stroke-width="1.6"/>
+    <rect x="0" y="0" width="240" height="30" fill="#166534"/>
+    <text x="120" y="20" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">&lt;&lt;enumeration&gt;&gt; Role</text>
+
+    <text x="20" y="55" font-size="11" font-weight="bold" fill="#14532d">CUSTOMER (Khách đặt đồ uống)</text>
+    <text x="20" y="80" font-size="11" font-weight="bold" fill="#14532d">BARISTA (Nhân viên pha chế)</text>
+    <text x="20" y="105" font-size="11" font-weight="bold" fill="#14532d">ADMIN (Quản trị viên hệ thống)</text>
+  </g>
+
+  <!-- DTOs: RegisterDto & LoginDto -->
+  <g transform="translate(755, 230)">
+    <rect x="0" y="0" width="240" height="165" rx="4" fill="#fafafa" stroke="#334155" stroke-width="1.5"/>
+    <rect x="0" y="0" width="240" height="28" fill="#334155"/>
+    <text x="120" y="19" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">RegisterDto &amp; LoginDto</text>
+
+    <text x="14" y="48" font-size="11" fill="#0f172a">+ email: String [@IsEmail()]</text>
+    <text x="14" y="68" font-size="11" fill="#0f172a">+ password: String [@MinLength(6)]</text>
+    <text x="14" y="88" font-size="11" fill="#0f172a">+ fullName?: String [@IsOptional()]</text>
+    <text x="14" y="108" font-size="11" fill="#0f172a">+ phone?: String [10 chữ số]</text>
+    <line x1="0" y1="120" x2="240" y2="120" stroke="#cbd5e1" stroke-width="1"/>
+    <text x="14" y="140" font-size="10" fill="#475569">Validate bằng class-validator &amp;</text>
+    <text x="14" y="154" font-size="10" fill="#475569">Global ValidationPipe (whitelist: true)</text>
+  </g>
+
+  <!-- Class 3: AuthService -->
+  <g transform="translate(40, 435)">
+    <rect x="0" y="0" width="310" height="210" rx="4" fill="#ffffff" stroke="#1e293b" stroke-width="1.6"/>
+    <rect x="0" y="0" width="310" height="30" fill="#334155"/>
+    <text x="155" y="20" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">AuthService &lt;&lt;NestJS Injectable&gt;&gt;</text>
+
+    <text x="14" y="50" font-size="11" fill="#0f172a">- prisma: PrismaService</text>
+    <text x="14" y="68" font-size="11" fill="#0f172a">- jwtService: JwtService</text>
+    <line x1="0" y1="80" x2="310" y2="80" stroke="#334155" stroke-width="1.2"/>
+
+    <text x="14" y="102" font-size="11" font-weight="bold" fill="#0f172a">+ register(dto: RegisterDto): Promise&lt;AuthRes&gt;</text>
+    <text x="14" y="122" font-size="11" font-weight="bold" fill="#0f172a">+ login(dto: LoginDto): Promise&lt;AuthRes&gt;</text>
+    <text x="14" y="142" font-size="11" fill="#0f172a">+ getProfile(userId: String): Promise&lt;PublicUser&gt;</text>
+    <text x="14" y="164" font-size="10" fill="#166534">- bcrypt.hash(password, 10)</text>
+    <text x="14" y="182" font-size="10" fill="#166534">- bcrypt.compare(password, passwordHash)</text>
+    <text x="14" y="198" font-size="10" fill="#1d4ed8">- jwtService.signAsync({ sub, email, role })</text>
+  </g>
+
+  <!-- Class 4: AuthController -->
+  <g transform="translate(400, 435)">
+    <rect x="0" y="0" width="280" height="210" rx="4" fill="#ffffff" stroke="#1e293b" stroke-width="1.6"/>
+    <rect x="0" y="0" width="280" height="30" fill="#334155"/>
+    <text x="140" y="20" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">AuthController &lt;&lt;/auth&gt;&gt;</text>
+
+    <text x="14" y="50" font-size="11" fill="#0f172a">- authService: AuthService</text>
+    <line x1="0" y1="64" x2="280" y2="64" stroke="#334155" stroke-width="1.2"/>
+
+    <text x="14" y="88" font-size="11" font-weight="bold" fill="#0f172a">+ @Post('register') register(dto)</text>
+    <text x="24" y="104" font-size="10" fill="#475569">-&gt; HTTP 201 Created | 409 Conflict</text>
+    <text x="14" y="128" font-size="11" font-weight="bold" fill="#0f172a">+ @Post('login') login(dto)</text>
+    <text x="24" y="144" font-size="10" fill="#475569">-&gt; HTTP 200 OK | 401 Unauthorized</text>
+    <text x="14" y="168" font-size="11" font-weight="bold" fill="#0f172a">+ @Get(['me', 'profile']) getProfile()</text>
+    <text x="24" y="184" font-size="10" fill="#1d4ed8">-&gt; @UseGuards(JwtAuthGuard)</text>
+  </g>
+
+  <!-- Class 5: JwtStrategy & Guards -->
+  <g transform="translate(735, 435)">
+    <rect x="0" y="0" width="265" height="210" rx="4" fill="#fffbeb" stroke="#d97706" stroke-width="1.6"/>
+    <rect x="0" y="0" width="265" height="30" fill="#d97706"/>
+    <text x="132" y="20" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">JwtStrategy &amp; Guards</text>
+
+    <text x="12" y="52" font-size="11" font-weight="bold" fill="#92400e">JwtStrategy (PassportStrategy):</text>
+    <text x="16" y="70" font-size="10" fill="#78350f">• ExtractJwt.fromAuthHeaderAsBearerToken()</text>
+    <text x="16" y="86" font-size="10" fill="#78350f">• secretOrKey: getJwtSecret()</text>
+    <text x="16" y="102" font-size="10" fill="#78350f">+ validate(payload): Check User in DB</text>
+
+    <line x1="0" y1="115" x2="265" y2="115" stroke="#d97706" stroke-width="1"/>
+
+    <text x="12" y="136" font-size="11" font-weight="bold" fill="#92400e">JwtAuthGuard &amp; RolesGuard:</text>
+    <text x="16" y="154" font-size="10" fill="#78350f">+ canActivate(context: ExecutionContext)</text>
+    <text x="16" y="172" font-size="10" fill="#78350f">• Bảo vệ POST /orders &amp; POST /payments</text>
+    <text x="16" y="190" font-size="10" fill="#78350f">• Kiểm tra @Roles(BARISTA, ADMIN)</text>
+  </g>
+
+  <!-- Relationships -->
+  <!-- User -> AuthToken -->
+  <line x1="330" y1="175" x2="400" y2="175" stroke="#1d4ed8" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#cls-arrow)"/>
+  <text x="365" y="167" text-anchor="middle" font-size="10" font-weight="bold" fill="#1d4ed8">issues &gt;</text>
+
+  <!-- AuthToken -> Role -->
+  <line x1="680" y1="140" x2="755" y2="140" stroke="#166534" stroke-width="1.5" marker-end="url(#cls-solid)"/>
+  <text x="717" y="132" text-anchor="middle" font-size="10" fill="#166534">has role</text>
+
+  <!-- AuthService -> User -->
+  <line x1="185" y1="435" x2="185" y2="350" stroke="#1e293b" stroke-width="1.5" marker-end="url(#cls-solid)"/>
+  <text x="235" y="395" text-anchor="middle" font-size="10" fill="#0f172a">manages via Prisma</text>
+
+  <!-- AuthService -> AuthToken -->
+  <line x1="310" y1="435" x2="465" y2="310" stroke="#1d4ed8" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#cls-arrow)"/>
+  <text x="365" y="365" text-anchor="middle" font-size="10" fill="#1d4ed8">signs JWT</text>
+
+  <!-- AuthController -> AuthService -->
+  <line x1="400" y1="540" x2="350" y2="540" stroke="#1e293b" stroke-width="1.5" marker-end="url(#cls-solid)"/>
+  <text x="375" y="532" text-anchor="middle" font-size="10" fill="#0f172a">calls</text>
+
+  <!-- AuthController -> DTO -->
+  <line x1="640" y1="435" x2="775" y2="395" stroke="#475569" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#cls-arrow)"/>
+  <text x="685" y="408" text-anchor="middle" font-size="10" fill="#475569">validates</text>
+
+  <!-- AuthController -> Guards -->
+  <line x1="680" y1="540" x2="735" y2="540" stroke="#d97706" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#cls-arrow)"/>
+  <text x="707" y="532" text-anchor="middle" font-size="10" fill="#92400e">uses</text>
+
+  <!-- JwtStrategy -> AuthToken -->
+  <line x1="810" y1="435" x2="620" y2="310" stroke="#d97706" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#cls-arrow)"/>
+  <text x="750" y="370" text-anchor="middle" font-size="10" fill="#92400e">verifies HS256</text>
+</svg>

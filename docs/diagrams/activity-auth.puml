@@ -1,0 +1,107 @@
+@startuml activity-auth
+' Đồ án: Công nghệ Phần mềm - ĐH Sài Gòn (SGU)
+' Tác giả: Nguyễn Hữu Chí Công - MSSV: 3124720010 (Thành viên 5)
+!theme plain
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam roundcorner 6
+skinparam backgroundColor #FFFFFF
+
+skinparam activity {
+    BorderColor #1E293B
+    BackgroundColor #FFFFFF
+    ArrowColor #334155
+}
+
+skinparam swimlane {
+    BorderColor #94A3B8
+    TitleFontColor #0F172A
+}
+
+title Sơ đồ Hoạt động (Activity Diagram) – Luồng Nhập thông tin Tài khoản, Xác thực Mật khẩu & Lưu JWT Token
+
+|Người dùng (User)|
+|Frontend (Next.js AuthModal & Store)|
+|Backend API (NestJS AuthService & JWT)|
+|Database (PostgreSQL)|
+
+|Người dùng (User)|
+start
+:Nhấn nút "Đăng nhập / Đăng ký" trên Navbar\n(hoặc bấm Đặt hàng khi chưa đăng nhập);
+
+|Frontend (Next.js AuthModal & Store)|
+:Hiển thị hộp thoại **AuthModal**;
+
+|Người dùng (User)|
+if (Chọn chế độ xác thực?) then (Tab "Đăng ký mới")
+    :Nhập Họ tên, Số điện thoại (10 chữ số),\nEmail và Mật khẩu (>= 6 ký tự);
+    |Frontend (Next.js AuthModal & Store)|
+    :Kiểm tra định dạng SĐT thời gian thực\n(handlePhoneKeyDown & handlePhoneChange);
+    if (SĐT đúng 10 chữ số & Email hợp lệ?) then (Không hợp lệ)
+        :Hiển thị cảnh báo lỗi đỏ dưới ô nhập liệu\n("Số điện thoại phải đủ 10 chữ số");
+        stop
+    else (Hợp lệ)
+        :Gửi yêu cầu **HTTP POST /auth/register**\n{ email, password, fullName, phone };
+    endif
+
+    |Backend API (NestJS AuthService & JWT)|
+    :ValidationPipe kiểm tra RegisterDto\n& chuẩn hóa email.trim().toLowerCase();
+
+    |Database (PostgreSQL)|
+    :Truy vấn SELECT * FROM users WHERE email = ?;
+    if (Email đã tồn tại trong CSDL?) then (Đã tồn tại)
+        |Backend API (NestJS AuthService & JWT)|
+        :Ném lỗi **409 ConflictException**\n("Email is already registered");
+        |Frontend (Next.js AuthModal & Store)|
+        :Hiển thị hộp cảnh báo lỗi trên AuthModal;
+        stop
+    else (Chưa tồn tại)
+        |Backend API (NestJS AuthService & JWT)|
+        :Băm mật khẩu một chiều bằng Bcrypt:\n**passwordHash = bcrypt.hash(password, 10)**;
+        |Database (PostgreSQL)|
+        :Thực thi INSERT INTO users\n(email, passwordHash, role='CUSTOMER', loyaltyPoints=0);
+    endif
+
+else (Tab "Đăng nhập")
+    |Người dùng (User)|
+    :Nhập Email và Mật khẩu;
+    |Frontend (Next.js AuthModal & Store)|
+    :Gửi yêu cầu **HTTP POST /auth/login**\n{ email, password };
+
+    |Backend API (NestJS AuthService & JWT)|
+    :ValidationPipe kiểm tra LoginDto\n& chuẩn hóa email.trim().toLowerCase();
+
+    |Database (PostgreSQL)|
+    :Truy vấn SELECT * FROM users WHERE email = ?;
+    |Backend API (NestJS AuthService & JWT)|
+    if (Tìm thấy User & bcrypt.compare(password, passwordHash) == true?) then (Xác thực thành công)
+        :Xác nhận thông tin định danh hợp lệ;
+    else (Sai Email hoặc Mật khẩu)
+        :Ném lỗi **401 UnauthorizedException**\n("Invalid email or password");
+        |Frontend (Next.js AuthModal & Store)|
+        :Hiển thị thông báo lỗi đỏ trên AuthModal;
+        stop
+    endif
+endif
+
+|Backend API (NestJS AuthService & JWT)|
+:Khởi tạo JWT Payload:\n**{ sub: user.id, email: user.email, role: user.role }**;
+:Ký số **access_token** bằng **JWT_SECRET** (HS256, expiresIn: 7d);
+:Loại bỏ trường **passwordHash** khỏi đối tượng trả về;
+:Trả về HTTP 200/201 kèm **{ access_token, user }**;
+
+|Frontend (Next.js AuthModal & Store)|
+:Gọi **setAuth(user, access_token)** lưu vào Zustand Persist (**localStorage**);
+:Cập nhật Navbar hiển thị Tên & Điểm tích lũy (**loyaltyPoints**);
+
+if (Kiểm tra vai trò user.role?) then (role == 'BARISTA')
+    :Tự động điều hướng **router.push('/orders')**\nđến màn hình Quản lý pha chế;
+else (role == 'CUSTOMER' / 'ADMIN')
+    :Đóng AuthModal & Mở khóa tính năng\nĐặt đơn (POST /orders) / Thanh toán (POST /payments);
+endif
+
+|Người dùng (User)|
+:Hoàn tất xác thực và tiếp tục sử dụng hệ thống;
+stop
+
+@enduml

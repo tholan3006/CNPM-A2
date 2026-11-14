@@ -1,0 +1,55 @@
+@startuml usecase-auth
+' Đồ án: Công nghệ Phần mềm - ĐH Sài Gòn (SGU)
+' Tác giả: Nguyễn Hữu Chí Công - MSSV: 3124720010 (Thành viên 5)
+!theme plain
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam roundcorner 8
+skinparam actorStyle awesome
+
+title Sơ đồ Use Case Chi tiết – Phân hệ "Đăng nhập, Đăng ký & Quản lý Tài khoản (JWT)"
+
+actor "Khách vãng lai\n(Guest User)" as Guest <<Primary Actor>>
+actor "Người dùng Đã xác thực\n(Customer / Barista / Admin)" as AuthUser <<Authenticated Actor>>
+
+rectangle "Phân hệ Xác thực & Phân quyền (Auth & JWT Subsystem)" {
+    usecase "UC-AUTH-01\nĐăng ký tài khoản mới\n(POST /auth/register)" as UC_Register
+    usecase "UC-AUTH-02\nKiểm tra trùng Email & Định dạng SĐT\n(Email Uniqueness & 10-Digit Phone)" as UC_ValidateInput
+    usecase "UC-AUTH-03\nBăm mật khẩu một chiều với Bcrypt\n(bcrypt.hash, Salt Rounds = 10)" as UC_HashPassword
+    usecase "UC-AUTH-04\nĐăng nhập hệ thống\n(POST /auth/login)" as UC_Login
+    usecase "UC-AUTH-05\nĐối chiếu mật khẩu Bcrypt\n(bcrypt.compare)" as UC_ComparePassword
+    usecase "UC-AUTH-06\nCấp phát & Lưu trữ JWT Access Token\n(HS256, Payload: sub, email, role)" as UC_IssueJWT
+    usecase "UC-AUTH-07\nXem hồ sơ cá nhân & Điểm thưởng\n(GET /auth/me)" as UC_GetProfile
+    usecase "UC-AUTH-08\nBảo vệ Route Đặt đơn & Thanh toán\n(JwtAuthGuard & RolesGuard)" as UC_GuardRoute
+    usecase "UC-AUTH-09\nĐăng xuất & Xóa phiên làm việc\n(Clear LocalStorage Token)" as UC_Logout
+}
+
+' Liên kết Actor với các Use Case
+Guest --> UC_Register
+Guest --> UC_Login
+
+AuthUser --> UC_GetProfile
+AuthUser --> UC_GuardRoute
+AuthUser --> UC_Logout
+
+' Quan hệ Include
+UC_Register ..> UC_ValidateInput : <<include>>
+UC_Register ..> UC_HashPassword : <<include>>
+UC_Register ..> UC_IssueJWT : <<include>>
+
+UC_Login ..> UC_ComparePassword : <<include>>
+UC_Login ..> UC_IssueJWT : <<include>>
+
+' Quan hệ Extend
+UC_GuardRoute ..> UC_Login : <<extend>>\n(bật AuthModal khi khách chưa đăng nhập bấm Đặt hàng)
+
+note right of UC_IssueJWT
+  <b>Chuẩn bảo mật (NFR-SEC-01 & NFR-SEC-02):</b>
+  - Mật khẩu băm bằng <b>bcrypt</b> (10 salt rounds).
+  - Không trả trường <i>passwordHash</i> về Client.
+  - JWT ký bằng <b>JWT_SECRET</b> (hiệu lực 7 ngày).
+  - Tự động điều hướng <i>/orders</i> nếu role = BARISTA.
+end note
+
+@enduml
