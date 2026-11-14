@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 840" width="1080" height="840" style="background:#ffffff; font-family:Arial, Helvetica, sans-serif;">
+  <defs>
+    <marker id="dep-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#1e293b"/>
+    </marker>
+    <marker id="dep-arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="540" y="28" text-anchor="middle" font-size="18" font-weight="bold" fill="#0f172a">Sơ đồ Triển khai (Deployment Diagram) – Cấu Trúc Lưu Trữ Dữ Liệu Sản Phẩm trong PostgreSQL</text>
+  <text x="540" y="48" text-anchor="middle" font-size="12" fill="#64748b">Kiến trúc Database Server: Container, Bộ đệm Shared Buffer, Schema quan hệ B-Tree Index &amp; Persistent Volume</text>
+
+  <!-- CLIENT DEVICE -->
+  <g transform="translate(40, 80)">
+    <rect x="0" y="0" width="230" height="110" rx="6" fill="#f8fafc" stroke="#1e293b" stroke-width="1.5"/>
+    <rect x="0" y="0" width="230" height="26" fill="#e2e8f0"/>
+    <text x="115" y="18" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">&lt;&lt;device&gt;&gt; Thiết bị Người dùng</text>
+    <rect x="15" y="38" width="200" height="58" rx="4" fill="#ffffff" stroke="#94a3b8" stroke-width="1"/>
+    <text x="115" y="58" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">Next.js Client (PWA)</text>
+    <text x="115" y="74" text-anchor="middle" font-size="10" fill="#475569">ProductDetailModal Component</text>
+    <text x="115" y="88" text-anchor="middle" font-size="9" fill="#2563eb">priceCalculator.ts</text>
+  </g>
+
+  <!-- DOCKER HOST SERVER -->
+  <rect x="320" y="70" width="730" height="740" rx="8" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+  <rect x="320" y="70" width="730" height="30" fill="#f1f5f9"/>
+  <text x="685" y="90" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">&lt;&lt;platform&gt;&gt; Docker Host Server (Linux Ubuntu 22.04 LTS / Virtual Machine)</text>
+
+  <!-- Container: brewlite-web -->
+  <g transform="translate(340, 115)">
+    <rect x="0" y="0" width="330" height="90" rx="5" fill="#f8fafc" stroke="#1e293b" stroke-width="1.3"/>
+    <rect x="0" y="0" width="330" height="24" fill="#e2e8f0"/>
+    <text x="165" y="16" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">&lt;&lt;container&gt;&gt; brewlite-web (Next.js 14 SSR)</text>
+    <text x="15" y="42" font-size="10" fill="#0f172a">• Port: 3000 (Internal Docker Bridge)</text>
+    <text x="15" y="58" font-size="10" fill="#0f172a">• Dynamic Client/Server Hydration</text>
+    <text x="15" y="74" font-size="10" fill="#475569">• Reverse Proxy: Nginx / HTTPS 443 Ingress</text>
+  </g>
+
+  <!-- Container: brewlite-api -->
+  <g transform="translate(700, 115)">
+    <rect x="0" y="0" width="330" height="90" rx="5" fill="#f8fafc" stroke="#1e293b" stroke-width="1.3"/>
+    <rect x="0" y="0" width="330" height="24" fill="#e2e8f0"/>
+    <text x="165" y="16" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">&lt;&lt;container&gt;&gt; brewlite-api (NestJS 10 Runtime)</text>
+    <text x="15" y="42" font-size="10" fill="#0f172a">• ProductsController (GET /products/:id)</text>
+    <text x="15" y="58" font-size="10" fill="#0f172a">• ProductsService (Options &amp; Toppings Format)</text>
+    <text x="15" y="74" font-size="10" fill="#2563eb">• Prisma Client (Connection Pool max: 10)</text>
+  </g>
+
+  <!-- Container: brewlite-db (PostgreSQL 16 Alpine) -->
+  <g transform="translate(340, 225)">
+    <rect x="0" y="0" width="690" height="445" rx="6" fill="#f8fafc" stroke="#2563eb" stroke-width="1.8"/>
+    <rect x="0" y="0" width="690" height="28" fill="#dbeafe"/>
+    <text x="345" y="19" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e40af">&lt;&lt;container&gt;&gt; brewlite-db: PostgreSQL 16 Alpine RDBMS Engine [Port 5432]</text>
+
+    <!-- PostgreSQL Internal Processes -->
+    <!-- Connection & Buffers -->
+    <g transform="translate(15, 38)">
+      <rect x="0" y="0" width="205" height="75" rx="4" fill="#ffffff" stroke="#94a3b8" stroke-width="1"/>
+      <text x="10" y="18" font-size="10" font-weight="bold" fill="#0f172a">PostgreSQL Core Process:</text>
+      <text x="10" y="34" font-size="9" fill="#475569">• TCP Port 5432 Listener</text>
+      <text x="10" y="48" font-size="9" fill="#475569">• Query Parser &amp; Planner</text>
+      <text x="10" y="62" font-size="9" fill="#475569">• Connection Pool Worker</text>
+    </g>
+
+    <g transform="translate(235, 38)">
+      <rect x="0" y="0" width="205" height="75" rx="4" fill="#eff6ff" stroke="#3b82f6" stroke-width="1"/>
+      <text x="10" y="18" font-size="10" font-weight="bold" fill="#1d4ed8">Shared Buffer Cache (256MB):</text>
+      <text x="10" y="34" font-size="9" fill="#1e40af">• Product &amp; Option Table Pages</text>
+      <text x="10" y="48" font-size="9" fill="#1e40af">• B-Tree Index Pages in RAM</text>
+      <text x="10" y="62" font-size="9" fill="#1e40af">• Fast Read Latency &lt; 2ms</text>
+    </g>
+
+    <g transform="translate(455, 38)">
+      <rect x="0" y="0" width="220" height="75" rx="4" fill="#ffffff" stroke="#94a3b8" stroke-width="1"/>
+      <text x="10" y="18" font-size="10" font-weight="bold" fill="#0f172a">Write-Ahead Logging (WAL):</text>
+      <text x="10" y="34" font-size="9" fill="#475569">• Transaction Durability (ACID)</text>
+      <text x="10" y="48" font-size="9" fill="#475569">• Checkpoint Background Worker</text>
+      <text x="10" y="62" font-size="9" fill="#475569">• Crash Recovery Mechanism</text>
+    </g>
+
+    <!-- SCHEMA & TABLES SECTION -->
+    <g transform="translate(15, 125)">
+      <rect x="0" y="0" width="660" height="305" rx="5" fill="#ffffff" stroke="#64748b" stroke-width="1.2"/>
+      <rect x="0" y="0" width="660" height="24" fill="#f1f5f9"/>
+      <text x="330" y="16" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">Database: brewlite_db | Schema: public (Product Customization Data Structures)</text>
+
+      <!-- Table 1: categories -->
+      <g transform="translate(15, 35)">
+        <rect x="0" y="0" width="180" height="110" rx="3" fill="#ffffff" stroke="#1e293b" stroke-width="1.2"/>
+        <rect x="0" y="0" width="180" height="20" fill="#f8fafc"/>
+        <text x="90" y="14" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">categories</text>
+        <line x1="0" y1="20" x2="180" y2="20" stroke="#1e293b" stroke-width="1"/>
+        <text x="8" y="35" font-size="9" font-weight="bold" fill="#1d4ed8">PK: id (UUID)</text>
+        <text x="8" y="50" font-size="9" fill="#0f172a">name VARCHAR(100)</text>
+        <text x="8" y="65" font-size="9" fill="#0f172a">slug VARCHAR(100) UNIQUE</text>
+        <text x="8" y="80" font-size="9" fill="#0f172a">display_order INT</text>
+        <text x="8" y="95" font-size="9" fill="#0f172a">is_active BOOLEAN</text>
+      </g>
+
+      <!-- Table 2: products -->
+      <g transform="translate(210, 35)">
+        <rect x="0" y="0" width="220" height="150" rx="3" fill="#ffffff" stroke="#1e293b" stroke-width="1.2"/>
+        <rect x="0" y="0" width="220" height="20" fill="#f8fafc"/>
+        <text x="110" y="14" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">products</text>
+        <line x1="0" y1="20" x2="220" y2="20" stroke="#1e293b" stroke-width="1"/>
+        <text x="8" y="35" font-size="9" font-weight="bold" fill="#1d4ed8">PK: id (UUID)</text>
+        <text x="8" y="50" font-size="9" font-weight="bold" fill="#d97706">FK: category_id (UUID)</text>
+        <text x="8" y="65" font-size="9" fill="#0f172a">name VARCHAR(150)</text>
+        <text x="8" y="80" font-size="9" fill="#0f172a">base_price NUMERIC(12,2)</text>
+        <text x="8" y="95" font-size="9" fill="#0f172a">description TEXT</text>
+        <text x="8" y="110" font-size="9" fill="#0f172a">image_url VARCHAR(255)</text>
+        <text x="8" y="125" font-size="9" fill="#0f172a">stock INTEGER</text>
+        <text x="8" y="140" font-size="9" fill="#0f172a">is_active BOOLEAN</text>
+      </g>
+
+      <!-- Table 3: product_sizes -->
+      <g transform="translate(445, 35)">
+        <rect x="0" y="0" width="200" height="125" rx="3" fill="#ffffff" stroke="#1e293b" stroke-width="1.2"/>
+        <rect x="0" y="0" width="200" height="20" fill="#f8fafc"/>
+        <text x="100" y="14" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">product_sizes</text>
+        <line x1="0" y1="20" x2="200" y2="20" stroke="#1e293b" stroke-width="1"/>
+        <text x="8" y="35" font-size="9" font-weight="bold" fill="#1d4ed8">PK: id (UUID)</text>
+        <text x="8" y="50" font-size="9" font-weight="bold" fill="#d97706">FK: product_id (UUID)</text>
+        <text x="8" y="65" font-size="9" fill="#0f172a">size_code VARCHAR(10) [S,M,L]</text>
+        <text x="8" y="80" font-size="9" fill="#0f172a">extra_price NUMERIC(10,2)</text>
+        <text x="8" y="95" font-size="9" fill="#0f172a">is_default BOOLEAN</text>
+        <text x="8" y="110" font-size="9" fill="#0f172a">is_available BOOLEAN</text>
+      </g>
+
+      <!-- Table 4: toppings -->
+      <g transform="translate(15, 170)">
+        <rect x="0" y="0" width="180" height="110" rx="3" fill="#ffffff" stroke="#1e293b" stroke-width="1.2"/>
+        <rect x="0" y="0" width="180" height="20" fill="#f8fafc"/>
+        <text x="90" y="14" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">toppings</text>
+        <line x1="0" y1="20" x2="180" y2="20" stroke="#1e293b" stroke-width="1"/>
+        <text x="8" y="35" font-size="9" font-weight="bold" fill="#1d4ed8">PK: id (UUID)</text>
+        <text x="8" y="50" font-size="9" fill="#0f172a">name VARCHAR(100)</text>
+        <text x="8" y="65" font-size="9" fill="#0f172a">price NUMERIC(10,2)</text>
+        <text x="8" y="80" font-size="9" fill="#0f172a">stock INTEGER</text>
+        <text x="8" y="95" font-size="9" fill="#0f172a">is_active BOOLEAN</text>
+      </g>
+
+      <!-- Table 5: product_toppings (N:N Association) -->
+      <g transform="translate(210, 195)">
+        <rect x="0" y="0" width="220" height="90" rx="3" fill="#ffffff" stroke="#1e293b" stroke-width="1.2"/>
+        <rect x="0" y="0" width="220" height="20" fill="#f8fafc"/>
+        <text x="110" y="14" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">product_toppings (Liên kết N:N)</text>
+        <line x1="0" y1="20" x2="220" y2="20" stroke="#1e293b" stroke-width="1"/>
+        <text x="8" y="35" font-size="9" font-weight="bold" fill="#d97706">PK, FK: product_id (UUID)</text>
+        <text x="8" y="50" font-size="9" font-weight="bold" fill="#d97706">PK, FK: topping_id (UUID)</text>
+        <text x="8" y="65" font-size="9" fill="#0f172a">is_default BOOLEAN = false</text>
+        <text x="8" y="80" font-size="9" fill="#475569">UNIQUE(product_id, topping_id)</text>
+      </g>
+
+      <!-- Table 6: B-Tree Indexes Box -->
+      <g transform="translate(445, 175)">
+        <rect x="0" y="0" width="200" height="110" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+        <rect x="0" y="0" width="200" height="20" fill="#dbeafe"/>
+        <text x="100" y="14" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e40af">Chỉ mục B-Tree (Indexes)</text>
+        <line x1="0" y1="20" x2="200" y2="20" stroke="#2563eb" stroke-width="1"/>
+        <text x="8" y="34" font-size="8.5" fill="#1e40af">• idx_products_category (category_id)</text>
+        <text x="8" y="48" font-size="8.5" fill="#1e40af">• idx_products_active (is_active)</text>
+        <text x="8" y="62" font-size="8.5" fill="#1e40af">• idx_sizes_prod (product_id)</text>
+        <text x="8" y="76" font-size="8.5" fill="#1e40af">• idx_toppings_active (is_active)</text>
+        <text x="8" y="90" font-size="8.5" fill="#1e40af">• idx_prod_toppings_pid (product_id)</text>
+      </g>
+
+      <!-- Foreign Key Arrows inside Database -->
+      <!-- category_id to categories -->
+      <path d="M 210 85 L 195 85" fill="none" stroke="#d97706" stroke-width="1.2" marker-end="url(#dep-arrow)"/>
+      <!-- product_sizes to products -->
+      <path d="M 445 85 L 430 85" fill="none" stroke="#d97706" stroke-width="1.2" marker-end="url(#dep-arrow)"/>
+      <!-- product_toppings to products -->
+      <path d="M 320 195 L 320 185" fill="none" stroke="#d97706" stroke-width="1.2" marker-end="url(#dep-arrow)"/>
+      <!-- product_toppings to toppings -->
+      <path d="M 210 240 L 195 240" fill="none" stroke="#d97706" stroke-width="1.2" marker-end="url(#dep-arrow)"/>
+    </g>
+  </g>
+
+  <!-- PERSISTENT STORAGE (Docker Volume) -->
+  <g transform="translate(340, 690)">
+    <rect x="0" y="0" width="690" height="95" rx="6" fill="#f8fafc" stroke="#475569" stroke-width="1.4"/>
+    <rect x="0" y="0" width="690" height="24" fill="#e2e8f0"/>
+    <text x="345" y="16" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">&lt;&lt;storage: Docker Named Volume&gt;&gt; brewlite_pgdata (Gắn kết: /var/lib/postgresql/data)</text>
+    <text x="20" y="44" font-size="10" fill="#0f172a">• /var/lib/postgresql/data/base/ (Chứa toàn bộ khối dữ liệu phân mảnh của các bảng products, sizes, toppings)</text>
+    <text x="20" y="60" font-size="10" fill="#0f172a">• /var/lib/postgresql/data/pg_wal/ (Các tập tin nhật ký giao dịch ghi trước bảo toàn trạng thái dữ liệu)</text>
+    <text x="20" y="76" font-size="10" fill="#15803d">• Lưu trữ bền vững trên SSD Host: Không mất dữ liệu khi restart hoặc recreate Docker container</text>
+  </g>
+
+  <!-- EXTERNAL CONNECTIONS -->
+  <!-- Client to Next.js Web -->
+  <line x1="270" y1="135" x2="340" y2="135" stroke="#1e293b" stroke-width="1.4" marker-end="url(#dep-arrow)"/>
+  <text x="280" y="125" font-size="9" fill="#475569">HTTPS 443</text>
+
+  <!-- Next.js Web to NestJS API -->
+  <line x1="670" y1="150" x2="700" y2="150" stroke="#1e293b" stroke-width="1.4" marker-end="url(#dep-arrow)"/>
+  <text x="675" y="142" font-size="9" fill="#475569">Port 4000</text>
+
+  <!-- NestJS API to PostgreSQL -->
+  <path d="M 865 205 L 865 240 L 705 240" fill="none" stroke="#2563eb" stroke-width="1.5" marker-end="url(#dep-arrow-blue)"/>
+  <text x="780" y="232" font-size="10" font-weight="bold" fill="#2563eb">Prisma TCP: Port 5432</text>
+
+  <!-- DB to Volume Sync -->
+  <line x1="685" y1="670" x2="685" y2="690" stroke="#475569" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#dep-arrow)"/>
+  <text x="695" y="682" font-size="9" fill="#475569">Synchronous I/O</text>
+</svg>

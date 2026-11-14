@@ -1,0 +1,188 @@
+@startuml class-product-option
+' Đồ án: Công nghệ Phần mềm - ĐH Sài Gòn (SGU)
+' Thành viên 2: Màn hình & Luồng "Chi tiết sản phẩm"
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam roundcorner 6
+
+title Sơ đồ Lớp Lĩnh vực (Domain Class Diagram) – Phân hệ Chi tiết & Tùy chọn Sản phẩm
+
+enum SizeCode {
+  S
+  M
+  L
+}
+
+enum SweetnessLevel {
+  SWEET_100
+  SWEET_70
+  SWEET_50
+  SWEET_30
+  SWEET_0
+}
+
+enum IceLevel {
+  ICE_100
+  ICE_70
+  ICE_50
+  ICE_SEPARATE
+  ICE_NO
+}
+
+enum OptionType {
+  SIZE
+  TOPPING
+  SWEETNESS
+  ICE
+}
+
+class Product {
+  - id: UUID
+  - categoryId: UUID
+  - name: String
+  - description: String
+  - basePrice: Decimal
+  - imageUrl: String
+  - stock: Integer
+  - isActive: Boolean
+  - createdAt: DateTime
+  - updatedAt: DateTime
+  --
+  + getId(): UUID
+  + getName(): String
+  + getBasePrice(): Decimal
+  + isAvailable(): Boolean
+  + getAvailableSizes(): List<SizeOption>
+  + getAvailableToppings(): List<Topping>
+  + calculateUnitPrice(size: SizeOption, toppings: List<Topping>): Decimal
+  + calculateTotal(size: SizeOption, toppings: List<Topping>, quantity: Integer): Decimal
+}
+
+class SizeOption {
+  - id: UUID
+  - productId: UUID
+  - sizeCode: SizeCode
+  - name: String
+  - extraPrice: Decimal
+  - isDefault: Boolean
+  - isAvailable: Boolean
+  --
+  + getId(): UUID
+  + getSizeCode(): SizeCode
+  + getExtraPrice(): Decimal
+  + isAvailable(): Boolean
+  + getFormattedExtraPrice(): String
+}
+
+class Topping {
+  - id: UUID
+  - name: String
+  - price: Decimal
+  - stock: Integer
+  - isAvailable: Boolean
+  - maxQuantity: Integer
+  --
+  + getId(): UUID
+  + getName(): String
+  + getPrice(): Decimal
+  + getStock(): Integer
+  + isAvailable(): Boolean
+  + hasSufficientStock(requestedQty: Integer): Boolean
+  + reduceStock(qty: Integer): Boolean
+}
+
+class ProductTopping {
+  - id: UUID
+  - productId: UUID
+  - toppingId: UUID
+  - isDefault: Boolean
+  --
+  + getProductId(): UUID
+  + getToppingId(): UUID
+}
+
+class ProductCustomization {
+  - product: Product
+  - selectedSize: SizeOption
+  - selectedToppings: List<Topping>
+  - sweetness: SweetnessLevel
+  - ice: IceLevel
+  - quantity: Integer
+  - unitPrice: Decimal
+  - totalPrice: Decimal
+  --
+  + calculate(): Decimal
+  + addQuantity(qty: Integer): void
+  + removeQuantity(qty: Integer): void
+  + toggleTopping(topping: Topping): void
+  + changeSize(size: SizeOption): void
+  + toCartItemPayload(): Object
+}
+
+class ProductDetailResponseDto {
+  + id: String
+  + name: String
+  + description: String
+  + basePrice: Number
+  + imageUrl: String
+  + stock: Number
+  + categoryName: String
+  + sizes: List<SizeOptionDto>
+  + toppings: List<ToppingDto>
+}
+
+class SizeOptionDto {
+  + id: String
+  + code: String
+  + name: String
+  + extraPrice: Number
+  + isDefault: Boolean
+}
+
+class ToppingDto {
+  + id: String
+  + name: String
+  + price: Number
+  + isAvailable: Boolean
+  + stock: Number
+}
+
+class PriceCalculationRequestDto {
+  + productId: String
+  + sizeCode: SizeCode
+  + toppingIds: List<String>
+  + quantity: Integer
+}
+
+class PriceCalculationResultDto {
+  + basePrice: Number
+  + sizeExtraPrice: Number
+  + toppingTotal: Number
+  + unitPrice: Number
+  + quantity: Number
+  + totalPrice: Number
+  + formulaDescription: String
+}
+
+' Mối quan hệ giữa các lớp
+Product "1" *-- "1..*" SizeOption : has sizes >
+Product "1" *-- "0..*" ProductTopping : configures >
+ProductTopping "*" --> "1" Topping : references >
+
+ProductCustomization "1" --> "1" Product : customizes >
+ProductCustomization "1" --> "1" SizeOption : selects >
+ProductCustomization "1" o-- "0..*" Topping : contains >
+ProductCustomization ..> SweetnessLevel : uses
+ProductCustomization ..> IceLevel : uses
+
+' Quan hệ chuyển đổi DTO
+SizeOption ..> SizeCode : uses
+Product ..> ProductDetailResponseDto : transforms to
+SizeOption ..> SizeOptionDto : transforms to
+Topping ..> ToppingDto : transforms to
+ProductCustomization ..> PriceCalculationResultDto : outputs to
+PriceCalculationRequestDto ..> ProductCustomization : parses to
+
+@enduml
