@@ -1,0 +1,70 @@
+@startuml deployment-auth
+' Đồ án: Công nghệ Phần mềm - ĐH Sài Gòn (SGU)
+' Tác giả: Nguyễn Hữu Chí Công - MSSV: 3124720010 (Thành viên 5)
+!theme plain
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam roundcorner 6
+
+title Sơ đồ Triển khai (UML Deployment Diagram) – Nút CI/CD Pipeline, Cấu hình SSL/HTTPS & Environment Secrets / JWT Keys
+
+node "<<device>> Thiết bị Người dùng\n(Mobile / Desktop Client)" as ClientDevice {
+    node "<<execution environment>> Web Browser (PWA)" as Browser {
+        artifact "Next.js AuthModal & Navbar\n(React 18 / TailwindCSS)" as AuthUI
+        artifact "Zustand Persist Storage\n(localStorage: user, accessToken)" as TokenStore
+    }
+}
+
+node "<<CI/CD platform>> Nút Đường ống Tích hợp Liên tục\n(GitHub Actions CI/CD Pipeline)" as CICDNode {
+    artifact "GitHub Repository\n(Branch: main & Pull Requests)" as GitRepo
+    node "<<runner>> GitHub Actions Runner (ubuntu-latest)" as GHARunner {
+        component "Job 1: Backend CI (.github/workflows/ci.yml)\n[npm install -> npx prisma generate -> npm run build -> jest]" as BackendCI
+        component "Job 2: Frontend CI (.github/workflows/ci.yml)\n[npm install -> next build -> Type-check]" as FrontendCI
+    }
+    storage "<<vault>> Environment Secrets Vault\n- JWT_SECRET (HS256 Signing Key)\n- DATABASE_URL (PostgreSQL Credentials)\n- NEXT_PUBLIC_API_URL" as SecretsVault
+}
+
+cloud "<<edge network>> Lớp Bảo mật Mạng & SSL/HTTPS\n(Cloudflare / Reverse Proxy Ingress)" as SSLIngress {
+    component "SSL / TLS 1.3 Termination\n(HTTPS Port 443 -> HTTP Internal)" as TLSTermination
+    component "Bearer Token Header Forwarding\n(Authorization: Bearer <JWT>)" as HeaderProxy
+}
+
+node "<<docker host>> Máy chủ Production Runtime\n(Docker Compose Engine)" as DockerHost {
+    node "<<container>> brewlite_frontend\n(Next.js 14 Container - Port 3000)" as FrontendContainer {
+        component "Next.js App Router Server\n(SSR / CSR Auth Flow)" as NextApp
+    }
+
+    node "<<container>> brewlite_backend\n(NestJS 10 Container - Port 4000)" as BackendContainer {
+        component "AuthModule (AuthController & AuthService)\n[POST /auth/register, POST /auth/login, GET /auth/me]" as AuthComp
+        component "Passport JwtStrategy & JwtAuthGuard\n[getJwtSecret() & Role RBAC Verification]" as GuardComp
+        component "Bcrypt Crypto Engine\n[Salt Rounds = 10]" as BcryptComp
+    }
+
+    node "<<container>> brewlite_postgres\n(PostgreSQL 16 Alpine - Port 5432)" as PostgresContainer {
+        database "Database: brewlite\n[Table: users (email @unique, passwordHash, role, loyaltyPoints)]" as UsersDB
+        storage "<<volume>> postgres_data\n(Persistent Volume)" as PgVolume
+    }
+}
+
+' Luồng giao tiếp & triển khai
+GitRepo --> GHARunner : Push / Pull Request Trigger
+GHARunner --> DockerHost : Build & Deploy Docker Images\n(docker compose up -d --build)
+SecretsVault ..> BackendContainer : Inject Runtime Secrets\n(JWT_SECRET, DATABASE_URL)
+
+ClientDevice --> SSLIngress : HTTPS (TLS 1.3 - Port 443)\n[Encrypted Credentials & JWT]
+SSLIngress --> FrontendContainer : Proxy Web Traffic (:3000)
+SSLIngress --> BackendContainer : Proxy API Requests (:4000)\n[Authorization: Bearer <JWT>]
+
+AuthComp --> BcryptComp : Hash / Compare Password
+AuthComp --> GuardComp : Sign & Verify JWT (HS256)
+AuthComp --> UsersDB : Prisma TCP Connection Pool (:5432)
+UsersDB ..> PgVolume : Mount /var/lib/postgresql/data
+
+note bottom of SecretsVault
+  <b>Quản lý Khóa Bí mật (NFR-DEP-05):</b>
+  - Khóa <i>JWT_SECRET</i> tuyệt đối không hard-code trong Git.
+  - Hàm <i>getJwtSecret()</i> kiểm tra biến môi trường ngay khi khởi động;
+    nếu thiếu sẽ dừng tiến trình ngay lập tức (Fail-fast).
+end note
+
+@enduml

@@ -1,0 +1,109 @@
+@startuml sequence-auth
+' Đồ án: Công nghệ Phần mềm - ĐH Sài Gòn (SGU)
+' Tác giả: Nguyễn Hữu Chí Công - MSSV: 3124720010 (Thành viên 5)
+!theme plain
+autonumber "<b>[00]</b>"
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam roundcorner 6
+
+title Sơ đồ Tuần tự (Sequence Diagram) – Xác thực Tài khoản (POST /auth/register, POST /auth/login) & Guard Bảo vệ Route
+
+actor "Người dùng\n(User)" as User
+boundary "Next.js UI\n(AuthModal & cartStore)" as UI
+control "AuthController /\nJwtAuthGuard" as Controller
+participant "AuthService /\nJwtService" as Service
+database "Prisma ORM /\nPostgreSQL" as DB
+
+== Luồng 1: Đăng ký Tài khoản Mới (POST /auth/register) ==
+
+User -> UI: Nhập Họ tên, SĐT (10 chữ số), Email, Mật khẩu\n& bấm "Tạo tài khoản"
+activate UI
+
+UI -> UI: Validate SĐT đúng 10 chữ số\n(handlePhoneKeyDown / handlePhoneChange)
+UI -> Controller: HTTP POST /auth/register\n{ email, password, fullName, phone }
+activate Controller
+
+Controller -> Controller: ValidationPipe kiểm tra RegisterDto\n(@IsEmail, @MinLength(6))
+Controller -> Service: register(dto)
+activate Service
+
+Service -> Service: normalizedEmail = dto.email.trim().toLowerCase()
+Service -> DB: prisma.user.findUnique({ where: { email: normalizedEmail } })
+activate DB
+
+alt Email đã tồn tại trong CSDL (Duplicate Email)
+    DB --> Service: Trả về bản ghi existingUser
+    Service --> Controller: Ném 409 ConflictException("Email is already registered")
+    Controller --> UI: HTTP 409 Conflict { statusCode: 409, message: "Email is already registered" }
+    UI --> User: Hiển thị cảnh báo đỏ trên AuthModal
+else Email hợp lệ (New Account)
+    DB --> Service: Trả về null
+    Service -> Service: passwordHash = await bcrypt.hash(dto.password, 10)
+    Service -> DB: prisma.user.create({\n  data: { email: normalizedEmail, passwordHash, fullName, phone }\n})
+    DB --> Service: Bản ghi User mới (role = CUSTOMER, loyaltyPoints = 0)
+    deactivate DB
+
+    Service -> Service: payload = { sub: user.id, email: user.email, role: user.role }\naccess_token = await jwtService.signAsync(payload)
+    Service --> Controller: { access_token, user (đã loại bỏ passwordHash) }
+    deactivate Service
+
+    Controller --> UI: HTTP 201 Created { access_token, user }
+    deactivate Controller
+
+    UI -> UI: setAuth(user, access_token)\nLưu vào Zustand Persist (localStorage)
+    UI --> User: Đóng AuthModal & hiển thị thông báo Đăng ký thành công
+end
+
+== Luồng 2: Đăng nhập Tài khoản (POST /auth/login) ==
+
+User -> UI: Nhập Email, Mật khẩu & bấm "Đăng nhập"
+UI -> Controller: HTTP POST /auth/login { email, password }
+activate Controller
+
+Controller -> Service: login(dto)
+activate Service
+
+Service -> DB: prisma.user.findUnique({ where: { email: normalizedEmail } })
+activate DB
+DB --> Service: Bản ghi User (kèm passwordHash)
+deactivate DB
+
+Service -> Service: isPasswordValid = await bcrypt.compare(dto.password, user.passwordHash)
+
+alt Không tìm thấy User hoặc Mật khẩu không khớp
+    Service --> Controller: Ném 401 UnauthorizedException("Invalid email or password")
+    Controller --> UI: HTTP 401 Unauthorized { statusCode: 401, message: "Invalid email or password" }
+    UI --> User: Hiển thị lỗi xác thực trên AuthModal
+else Mật khẩu hợp lệ (Valid Credentials)
+    Service -> Service: access_token = await jwtService.signAsync({ sub: user.id, email, role })
+    Service --> Controller: { access_token, user (không chứa passwordHash) }
+    deactivate Service
+
+    Controller --> UI: HTTP 200 OK { access_token, user }
+    deactivate Controller
+
+    UI -> UI: setAuth(user, access_token)\nNếu user.role === 'BARISTA' -> router.push('/orders')
+    UI --> User: Cập nhật Navbar (Tên + Loyalty Points) & mở khóa Đặt hàng
+end
+
+== Luồng 3: JwtAuthGuard & JwtStrategy Bảo vệ Route Đặt đơn (POST /orders) ==
+
+User -> UI: Bấm nút "Xác nhận đặt đơn" từ Giỏ hàng
+UI -> Controller: HTTP POST /orders\n[Header: Authorization: Bearer <access_token>]
+activate Controller
+
+Controller -> Service: JwtStrategy.validate(payload) (Verify HS256 Signature & Exp)
+activate Service
+Service -> DB: prisma.user.findUnique({ where: { id: payload.sub } })
+activate DB
+DB --> Service: User hợp lệ
+deactivate DB
+Service --> Controller: Gắn req.user = { id, sub, email, role, loyaltyPoints }
+deactivate Service
+
+Controller --> UI: Cho phép truy cập OrdersController.create() -> HTTP 201 Created
+deactivate Controller
+deactivate UI
+
+@enduml

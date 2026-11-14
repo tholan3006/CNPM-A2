@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1050 740" width="1050" height="740" style="background:#ffffff; font-family:Arial, Helvetica, sans-serif;">
+  <defs>
+    <marker id="dep-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#1e293b"/>
+    </marker>
+    <marker id="dep-secret" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d97706"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="525" y="28" text-anchor="middle" font-size="17" font-weight="bold" fill="#0f172a">Sơ đồ Triển khai (UML Deployment Diagram) – Nút CI/CD Pipeline, SSL/HTTPS &amp; Environment Secrets</text>
+  <text x="525" y="46" text-anchor="middle" font-size="11" fill="#64748b">Kiến trúc triển khai GitHub Actions CI, quản lý khóa JWT_SECRET, mã hóa HTTPS/TLS 1.3 và Docker Compose</text>
+
+  <!-- Node 1: CI/CD Pipeline (Top Left) -->
+  <g transform="translate(30, 75)">
+    <rect x="0" y="0" width="465" height="310" rx="5" fill="#fafafa" stroke="#1e293b" stroke-width="1.6"/>
+    <rect x="0" y="0" width="465" height="30" fill="#1e293b"/>
+    <text x="232" y="20" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">&lt;&lt;CI/CD platform&gt;&gt; Nút Đường ống Tích hợp Liên tục (GitHub Actions)</text>
+
+    <!-- GitHub Repo -->
+    <rect x="18" y="46" width="200" height="80" rx="4" fill="#ffffff" stroke="#334155" stroke-width="1.3"/>
+    <text x="118" y="66" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">&lt;&lt;repository&gt;&gt; GitHub Repo</text>
+    <text x="118" y="84" text-anchor="middle" font-size="10" fill="#334155">Branch: main &amp; Pull Requests</text>
+    <text x="118" y="102" text-anchor="middle" font-size="9" fill="#64748b">.github/workflows/ci.yml</text>
+    <text x="118" y="116" text-anchor="middle" font-size="9" fill="#64748b">docker-compose.yml</text>
+
+    <!-- GitHub Actions Runner -->
+    <rect x="242" y="46" width="205" height="125" rx="4" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.4"/>
+    <text x="344" y="66" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e3a8a">&lt;&lt;runner&gt;&gt; ubuntu-latest</text>
+    <text x="254" y="86" font-size="9.5" fill="#1e40af">• Setup Node.js v20</text>
+    <text x="254" y="104" font-size="9.5" fill="#1e40af">• Backend: npx prisma generate</text>
+    <text x="254" y="122" font-size="9.5" fill="#1e40af">• Build NestJS &amp; Next.js</text>
+    <text x="254" y="140" font-size="9.5" fill="#1e40af">• Jest Unit &amp; E2E Auth Tests</text>
+    <text x="254" y="158" font-size="9.5" font-weight="bold" fill="#166534">• Status: Build &amp; Test Passed</text>
+
+    <line x1="218" y1="86" x2="242" y2="86" stroke="#1e293b" stroke-width="1.4" marker-end="url(#dep-arrow)"/>
+
+    <!-- Environment Secrets Vault -->
+    <rect x="18" y="185" width="429" height="110" rx="4" fill="#fffbeb" stroke="#d97706" stroke-width="1.6"/>
+    <rect x="18" y="185" width="429" height="26" fill="#d97706"/>
+    <text x="232" y="203" text-anchor="middle" font-size="11" font-weight="bold" fill="#ffffff">&lt;&lt;secret vault&gt;&gt; Environment Secrets &amp; JWT Keys</text>
+
+    <text x="32" y="230" font-size="10" font-weight="bold" fill="#92400e">• JWT_SECRET = brewlite_jwt_secret_key_sgu_2026_super_secure (HS256 Key)</text>
+    <text x="32" y="248" font-size="10" font-weight="bold" fill="#92400e">• DATABASE_URL = postgresql://postgres:***@postgres:5432/brewlite</text>
+    <text x="32" y="266" font-size="10" fill="#78350f">• NEXT_PUBLIC_API_URL = https://api.brewlite.shop (hoặc http://localhost:4000)</text>
+    <text x="32" y="284" font-size="9.5" fill="#78350f">• Kiểm tra nghiêm ngặt qua hàm getJwtSecret() (Fail-fast nếu thiếu khóa)</text>
+  </g>
+
+  <!-- Node 2: Client Device (Bottom Left) -->
+  <g transform="translate(30, 425)">
+    <rect x="0" y="0" width="235" height="275" rx="5" fill="#fafafa" stroke="#1e293b" stroke-width="1.6"/>
+    <rect x="0" y="0" width="235" height="28" fill="#f1f5f9"/>
+    <text x="117" y="19" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">&lt;&lt;device&gt;&gt; Thiết bị Người dùng</text>
+
+    <rect x="15" y="45" width="205" height="215" rx="4" fill="#ffffff" stroke="#334155" stroke-width="1.2"/>
+    <text x="117" y="65" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">&lt;&lt;browser&gt;&gt; Web Browser / PWA</text>
+
+    <rect x="25" y="80" width="185" height="75" rx="3" fill="#f8fafc" stroke="#64748b" stroke-width="1"/>
+    <text x="117" y="98" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">&lt;&lt;artifact&gt;&gt; AuthModal.tsx</text>
+    <text x="117" y="115" text-anchor="middle" font-size="9.5" fill="#334155">Form Đăng nhập / Đăng ký</text>
+    <text x="117" y="131" text-anchor="middle" font-size="9" fill="#475569">Real-time 10-digit Phone Validation</text>
+    <text x="117" y="146" text-anchor="middle" font-size="9" fill="#475569">Navbar Loyalty Points Badge</text>
+
+    <rect x="25" y="168" width="185" height="78" rx="3" fill="#f0fdf4" stroke="#166534" stroke-width="1.2"/>
+    <text x="117" y="186" text-anchor="middle" font-size="10" font-weight="bold" fill="#14532d">&lt;&lt;storage&gt;&gt; Zustand Persist</text>
+    <text x="117" y="203" text-anchor="middle" font-size="9.5" fill="#166534">localStorage['brewlite-storage']</text>
+    <text x="117" y="219" text-anchor="middle" font-size="9" fill="#15803d">Lưu: accessToken &amp; user profile</text>
+    <text x="117" y="235" text-anchor="middle" font-size="9" fill="#15803d">Tự đính kèm Bearer Token</text>
+  </g>
+
+  <!-- Node 3: SSL / HTTPS Ingress (Bottom Middle) -->
+  <g transform="translate(305, 425)">
+    <rect x="0" y="0" width="190" height="275" rx="5" fill="#fafafa" stroke="#1e293b" stroke-width="1.6"/>
+    <rect x="0" y="0" width="190" height="28" fill="#f1f5f9"/>
+    <text x="95" y="19" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">&lt;&lt;ingress&gt;&gt; SSL / HTTPS Proxy</text>
+
+    <rect x="15" y="50" width="160" height="95" rx="4" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.3"/>
+    <text x="95" y="72" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e3a8a">SSL / TLS 1.3 Termination</text>
+    <text x="95" y="90" text-anchor="middle" font-size="9.5" fill="#1d4ed8">HTTPS (Port 443)</text>
+    <text x="95" y="108" text-anchor="middle" font-size="9" fill="#1e40af">Mã hóa đường truyền mật khẩu</text>
+    <text x="95" y="124" text-anchor="middle" font-size="9" fill="#1e40af">&amp; chống nghe lén JWT Token</text>
+
+    <rect x="15" y="165" width="160" height="90" rx="4" fill="#ffffff" stroke="#334155" stroke-width="1.2"/>
+    <text x="95" y="187" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">CORS &amp; Auth Header Proxy</text>
+    <text x="95" y="205" text-anchor="middle" font-size="9" fill="#475569">Chuyển tiếp Header:</text>
+    <text x="95" y="221" text-anchor="middle" font-size="9" font-weight="bold" fill="#0f172a">Authorization: Bearer &lt;JWT&gt;</text>
+    <text x="95" y="237" text-anchor="middle" font-size="9" fill="#475569">Chặn Origin trái phép</text>
+  </g>
+
+  <!-- Node 4: Docker Compose Production Runtime (Right Column) -->
+  <g transform="translate(545, 75)">
+    <rect x="0" y="0" width="475" height="625" rx="5" fill="#fafafa" stroke="#0f172a" stroke-width="1.8"/>
+    <rect x="0" y="0" width="475" height="32" fill="#0f172a"/>
+    <text x="237" y="21" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">&lt;&lt;docker host&gt;&gt; Production Host (docker-compose.yml)</text>
+
+    <!-- Container 1: Frontend -->
+    <g transform="translate(20, 48)">
+      <rect x="0" y="0" width="435" height="125" rx="4" fill="#ffffff" stroke="#334155" stroke-width="1.4"/>
+      <rect x="0" y="0" width="435" height="25" fill="#f1f5f9"/>
+      <text x="217" y="17" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">&lt;&lt;container&gt;&gt; brewlite_frontend (Next.js 14 - Port 3000)</text>
+      <text x="20" y="48" font-size="10" fill="#0f172a">• Multi-stage Dockerfile (node:20-alpine)</text>
+      <text x="20" y="68" font-size="10" fill="#0f172a">• Render giao diện Menu, AuthModal, CartDrawer, Checkout, Orders</text>
+      <text x="20" y="88" font-size="10" fill="#0f172a">• Tự động điều hướng /orders khi đăng nhập tài khoản BARISTA</text>
+      <text x="20" y="108" font-size="10" fill="#475569">• Env: NEXT_PUBLIC_API_URL=http://localhost:4000</text>
+    </g>
+
+    <!-- Container 2: Backend (Auth & JWT Focus) -->
+    <g transform="translate(20, 195)">
+      <rect x="0" y="0" width="435" height="230" rx="4" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.6"/>
+      <rect x="0" y="0" width="435" height="26" fill="#1d4ed8"/>
+      <text x="217" y="18" text-anchor="middle" font-size="11" font-weight="bold" fill="#ffffff">&lt;&lt;container&gt;&gt; brewlite_backend (NestJS 10 API - Port 4000)</text>
+
+      <rect x="15" y="38" width="405" height="78" rx="3" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.1"/>
+      <text x="217" y="56" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e3a8a">&lt;&lt;module&gt;&gt; AuthModule (AuthController &amp; AuthService)</text>
+      <text x="28" y="75" font-size="9.5" fill="#1e40af">• POST /auth/register (Băm mật khẩu bcrypt.hash(password, 10))</text>
+      <text x="28" y="92" font-size="9.5" fill="#1e40af">• POST /auth/login (Đối chiếu bcrypt.compare &amp; ký JWT HS256)</text>
+      <text x="28" y="108" font-size="9.5" fill="#1e40af">• GET /auth/me (Trả về hồ sơ cá nhân &amp; điểm thưởng loyaltyPoints)</text>
+
+      <rect x="15" y="128" width="405" height="86" rx="3" fill="#fffbeb" stroke="#d97706" stroke-width="1.1"/>
+      <text x="217" y="146" text-anchor="middle" font-size="10" font-weight="bold" fill="#92400e">&lt;&lt;security&gt;&gt; Passport JwtStrategy, JwtAuthGuard &amp; RolesGuard</text>
+      <text x="28" y="165" font-size="9.5" fill="#78350f">• Xác thực chữ ký JWT bằng biến môi trường JWT_SECRET (exp: 7d)</text>
+      <text x="28" y="182" font-size="9.5" fill="#78350f">• Chặn truy cập trái phép vào POST /orders &amp; POST /payments (401)</text>
+      <text x="28" y="199" font-size="9.5" fill="#78350f">• Phân quyền RBAC: CUSTOMER | BARISTA | ADMIN</text>
+    </g>
+
+    <!-- Container 3: PostgreSQL -->
+    <g transform="translate(20, 448)">
+      <rect x="0" y="0" width="435" height="155" rx="4" fill="#ffffff" stroke="#166534" stroke-width="1.5"/>
+      <rect x="0" y="0" width="435" height="26" fill="#166534"/>
+      <text x="217" y="18" text-anchor="middle" font-size="11" font-weight="bold" fill="#ffffff">&lt;&lt;container&gt;&gt; brewlite_postgres (PostgreSQL 16 Alpine - Port 5432)</text>
+
+      <rect x="15" y="38" width="255" height="102" rx="3" fill="#f0fdf4" stroke="#166534" stroke-width="1"/>
+      <text x="142" y="56" text-anchor="middle" font-size="10" font-weight="bold" fill="#14532d">&lt;&lt;table&gt;&gt; users (Prisma Schema)</text>
+      <text x="25" y="74" font-size="9.5" fill="#166534">• id (UUID PK), email (@unique)</text>
+      <text x="25" y="90" font-size="9.5" font-weight="bold" fill="#991b1b">• passwordHash ($2b$10$...)</text>
+      <text x="25" y="106" font-size="9.5" fill="#166534">• role (Role), loyaltyPoints (Int)</text>
+      <text x="25" y="122" font-size="9" fill="#15803d">• Healthcheck: pg_isready -U postgres</text>
+
+      <rect x="282" y="38" width="138" height="102" rx="3" fill="#f8fafc" stroke="#475569" stroke-width="1"/>
+      <text x="351" y="62" text-anchor="middle" font-size="10" font-weight="bold" fill="#0f172a">&lt;&lt;volume&gt;&gt;</text>
+      <text x="351" y="80" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#334155">postgres_data</text>
+      <text x="351" y="98" text-anchor="middle" font-size="8.5" fill="#475569">/var/lib/postgresql/data</text>
+      <text x="351" y="114" text-anchor="middle" font-size="8.5" fill="#475569">(Lưu trữ bền vững)</text>
+    </g>
+  </g>
+
+  <!-- Connections between Major Nodes -->
+  <!-- CI/CD -> Docker Host -->
+  <line x1="495" y1="150" x2="545" y2="150" stroke="#1e293b" stroke-width="1.6" marker-end="url(#dep-arrow)"/>
+  <text x="520" y="142" text-anchor="middle" font-size="9" font-weight="bold" fill="#0f172a">Deploy</text>
+
+  <!-- Secrets Vault -> Backend Container -->
+  <line x1="495" y1="315" x2="565" y2="315" stroke="#d97706" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#dep-secret)"/>
+  <text x="525" y="305" text-anchor="middle" font-size="9" font-weight="bold" fill="#92400e">Inject Keys</text>
+
+  <!-- Client -> SSL Ingress -->
+  <line x1="265" y1="540" x2="305" y2="540" stroke="#1e293b" stroke-width="1.6" marker-end="url(#dep-arrow)"/>
+  <text x="285" y="532" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#1e3a8a">HTTPS</text>
+
+  <!-- SSL Ingress -> Frontend & Backend -->
+  <line x1="495" y1="490" x2="565" y2="180" stroke="#1e293b" stroke-width="1.4" marker-end="url(#dep-arrow)"/>
+  <line x1="495" y1="550" x2="565" y2="360" stroke="#1d4ed8" stroke-width="1.6" marker-end="url(#dep-arrow)"/>
+  <text x="526" y="472" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#1e3a8a">Bearer JWT</text>
+
+  <!-- Backend -> Postgres -->
+  <line x1="782" y1="500" x2="782" y2="523" stroke="#166534" stroke-width="1.8" marker-end="url(#dep-arrow)"/>
+  <text x="840" y="515" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#14532d">TCP :5432 (Prisma)</text>
+</svg>
