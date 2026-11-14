@@ -1,0 +1,142 @@
+@startuml class-cart-order
+skinparam classAttributeIconSize 0
+
+package "Frontend State (Zustand & Client Domain)" {
+  class CartStore {
+    + items: CartItem[]
+    + isOpen: Boolean
+    + couponCode: String
+    + notes: String
+    + addToCart(item: CartItem): void
+    + removeFromCart(cartItemId: String): void
+    + updateQuantity(cartItemId: String, delta: Number): void
+    + clearCart(): void
+    + getTotalItems(): Number
+    + getTotalAmount(): Number
+    + applyCoupon(code: String): void
+  }
+
+  class CartItem {
+    + cartItemId: String
+    + productId: String
+    + name: String
+    + imageUrl: String
+    + size: ProductSize
+    + sizePriceOffset: Number
+    + selectedToppings: CartTopping[]
+    + quantity: Number
+    + unitPrice: Number
+    + totalPrice: Number
+  }
+
+  class CartTopping {
+    + id: String
+    + name: String
+    + price: Number
+  }
+}
+
+package "Backend Orders Domain (NestJS & Prisma ORM)" {
+  enum ProductSize {
+    S
+    M
+    L
+  }
+
+  enum OrderStatus {
+    PENDING
+    PAID
+    PREPARING
+    READY
+    COMPLETED
+    CANCELLED
+    PAYMENT_FAILED
+  }
+
+  class OrdersController {
+    - ordersService: OrdersService
+    + create(userId: String, dto: CreateOrderDto): Promise<Order>
+    + getMyOrders(userId: String): Promise<Order[]>
+    + getOrderById(id: String, userId: String): Promise<Order>
+  }
+
+  class OrdersService {
+    - prisma: PrismaService
+    + create(userId: String, dto: CreateOrderDto): Promise<Order>
+    - createOnce(userId: String, dto: CreateOrderDto): Promise<Order>
+    + getMyOrders(userId: String): Promise<Order[]>
+  }
+
+  class CreateOrderDto {
+    + items: CreateOrderItemDto[]
+    + couponCode: String [Optional]
+    + notes: String [Optional]
+  }
+
+  class CreateOrderItemDto {
+    + productId: String
+    + size: ProductSize
+    + qty: Number [1..20]
+    + toppingIds: String[] [Optional]
+  }
+
+  class Order {
+    + id: String [PK]
+    + orderNumber: String [Unique]
+    + userId: String [FK]
+    + status: OrderStatus
+    + subtotal: Decimal
+    + discountAmount: Decimal
+    + total: Decimal
+    + couponId: String [FK, Nullable]
+    + notes: String [Nullable]
+    + createdAt: DateTime
+    + updatedAt: DateTime
+  }
+
+  class OrderItem {
+    + id: String [PK]
+    + orderId: String [FK]
+    + productId: String [FK]
+    + size: ProductSize
+    + basePrice: Decimal
+    + qty: Int
+    + lineTotal: Decimal
+  }
+
+  class OrderItemTopping {
+    + id: String [PK]
+    + orderItemId: String [FK]
+    + toppingId: String [FK]
+    + price: Decimal
+  }
+
+  class Coupon {
+    + id: String [PK]
+    + code: String [Unique]
+    + discountPercent: Decimal
+    + discountAmount: Decimal
+    + minOrderValue: Decimal
+    + maxDiscount: Decimal
+    + usageLimit: Int
+    + usedCount: Int
+    + expiresAt: DateTime
+    + isActive: Boolean
+  }
+}
+
+CartStore "1" *-- "0..*" CartItem : manages
+CartItem "1" *-- "0..*" CartTopping : contains
+
+OrdersController ..> OrdersService : calls
+OrdersController ..> CreateOrderDto : consumes
+CreateOrderDto "1" *-- "1..*" CreateOrderItemDto : items
+
+OrdersService ..> Order : creates
+Order "1" *-- "1..*" OrderItem : orderItems
+OrderItem "1" *-- "0..*" OrderItemTopping : toppings
+Order "0..*" --> "0..1" Coupon : coupon
+Order --> OrderStatus : has
+OrderItem --> ProductSize : size
+
+@enduml

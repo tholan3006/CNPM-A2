@@ -1,0 +1,52 @@
+@startuml activity-cart
+skinparam ConditionEndStyle hline
+
+start
+
+:Khách hàng mở Giỏ hàng\n(CartDrawer hoặc /cart);
+:Zustand Store nạp danh sách món\ntừ localStorage;
+
+repeat
+  :Khách hàng tương tác với giỏ hàng;
+  if (Thao tác thực hiện?) then (Tăng / Giảm số lượng)
+    :Cập nhật quantity của CartItem;
+  elseif (Xóa món) then (Xóa)
+    :Xóa CartItem khỏi danh sách;
+  elseif (Nhập mã giảm giá) then (Áp dụng Coupon)
+    :Kiểm tra format mã giảm giá;\nLưu couponCode vào State;
+  else (Không thay đổi)
+  endif
+
+  :Zustand tự động tính toán lại:\n- subtotal = Sum(unitPrice * qty)\n- discountAmount (nếu có coupon)\n- totalAmount = subtotal - discountAmount;
+  :Cập nhật Badge số lượng trên Navbar;
+repeat while (Tiếp tục chỉnh sửa giỏ hàng?) is (Có) not (Không)
+
+if (Giỏ hàng có rỗng không?) then (Rỗng (0 món))
+  :Hiển thị trạng thái Empty Cart;\nNút "Tiếp tục mua hàng";
+  stop
+else (Có món)
+  :Khách hàng bấm "Tiến hành đặt hàng";
+endif
+
+if (Khách hàng đã đăng nhập (JWT)?) then (Chưa đăng nhập)
+  :Hiển thị Modal Đăng nhập / Đăng ký (AuthModal);
+  :Khách đăng nhập thành công;\nLưu Access Token vào State;
+else (Đã đăng nhập)
+endif
+
+:Client đóng gói CreateOrderDto\nvà gửi POST /orders;
+
+:NestJS Backend kiểm tra DTO;\nMở CSDL Transaction;
+
+if (Kiểm tra tồn kho & Giá hợp lệ?) then (Hợp lệ)
+  :Trừ tồn kho món đồ uống (Optimistic Lock);\nÁp dụng mã Coupon (nếu có);\nTạo đơn hàng với trạng thái PENDING;
+  :Commit Transaction;\nTrả về mã đơn #ORD-XXXXXX (HTTP 201);
+  :Điều hướng sang Màn hình Checkout để thanh toán;
+else (Không hợp lệ / Hết hàng)
+  :Rollback Transaction;\nTrả về lỗi 400 Bad Request / 409 Conflict;
+  :Hiển thị thông báo lỗi trên UI giỏ hàng;
+endif
+
+stop
+
+@enduml

@@ -1,0 +1,43 @@
+@startuml deployment-cart
+skinparam node {
+  backgroundColor LightYellow
+  borderColor DarkSlateGray
+}
+skinparam component {
+  backgroundColor White
+  borderColor Black
+}
+
+node "Client Device\n<<device: Smartphone / Desktop>>" as client_dev {
+  artifact "Web Browser / PWA\n<<Next.js 14 Client App>>" as web_app {
+    component "Cart Page & CartDrawer\n[/cart]" as comp_cart
+    component "Zustand State Store\n[cartStore & localStorage]" as comp_store
+  }
+}
+
+node "Production Host / VPS\n<<platform: Docker Engine>>" as docker_host {
+  node "Container: brewlite-web\n<<Next.js Standalone>>" as cont_web {
+    component "Frontend Node.js Server\n[Port: 3000]" as srv_web
+  }
+
+  node "Container: brewlite-api\n<<NestJS 10 Runtime>>" as cont_api {
+    component "ValidationPipe (class-validator)\n[CreateOrderDto validation]" as val_pipe
+    component "OrdersController\n[POST /orders, GET /orders/me]" as ctrl_order
+    component "OrdersService\n[Optimistic Lock & Transaction Engine]" as srv_order
+  }
+
+  node "Container: brewlite-db\n<<PostgreSQL 16>>" as cont_db {
+    database "BrewLite Database\n[Tables: orders, order_items, toppings, coupons]" as db_data
+    storage "Named Volume\n[brewlite_pgdata]" as vol_db
+  }
+}
+
+comp_cart --> comp_store : Local State Read/Write
+comp_cart --> srv_web : HTTPS (Port 443)
+srv_web --> val_pipe : Internal Proxy / Fetch (Port 4000)
+val_pipe --> ctrl_order : Validated DTO
+ctrl_order --> srv_order : Calls business logic
+srv_order --> db_data : Prisma Atomic $transaction (Port 5432)
+db_data ..> vol_db : Persistent Disk Storage
+
+@enduml

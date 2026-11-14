@@ -1,0 +1,133 @@
+@startuml class-auth
+' Đồ án: Công nghệ Phần mềm - ĐH Sài Gòn (SGU)
+' Tác giả: Nguyễn Hữu Chí Công - MSSV: 3124720010 (Thành viên 5)
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam roundcorner 6
+
+title Sơ đồ Lớp Lĩnh vực (Domain Class Diagram) – Lớp User, AuthToken & Phân hệ Xác thực JWT
+
+enum Role {
+  CUSTOMER
+  BARISTA
+  ADMIN
+}
+
+class User {
+  - id: UUID [PK]
+  - email: String [Unique]
+  - passwordHash: String
+  - fullName: String?
+  - phone: String?
+  - role: Role = CUSTOMER
+  - loyaltyPoints: Integer = 0
+  - createdAt: DateTime
+  - updatedAt: DateTime
+  --
+  + getId(): UUID
+  + getEmail(): String
+  + getRole(): Role
+  + getLoyaltyPoints(): Integer
+  + verifyPassword(plainText: String): Promise<Boolean>
+  + addLoyaltyPoints(points: Integer): void
+  + toPublicProfile(): PublicUserDto
+}
+
+class AuthToken {
+  - accessToken: String
+  - tokenType: String = "Bearer"
+  - sub: UUID
+  - email: String
+  - role: Role
+  - iat: Integer
+  - exp: Integer
+  --
+  + getSub(): UUID
+  + getRole(): Role
+  + isExpired(): Boolean
+  + toAuthorizationHeader(): String
+}
+
+class RegisterDto {
+  + email: String [@IsEmail]
+  + password: String [@MinLength(6)]
+  + fullName?: String [@IsOptional]
+  + phone?: String [@IsOptional]
+}
+
+class LoginDto {
+  + email: String [@IsEmail]
+  + password: String [@MinLength(6)]
+}
+
+class AuthController {
+  - authService: AuthService
+  --
+  + register(dto: RegisterDto): Promise<AuthResponse>
+  + login(dto: LoginDto): Promise<AuthResponse>
+  + getProfile(user: AuthToken): Promise<PublicUserDto>
+}
+
+class AuthService {
+  - prisma: PrismaService
+  - jwtService: JwtService
+  --
+  + register(dto: RegisterDto): Promise<AuthResponse>
+  + login(dto: LoginDto): Promise<AuthResponse>
+  + getProfile(userId: String): Promise<PublicUserDto>
+  - hashPassword(password: String): Promise<String>
+  - signToken(user: User): Promise<AuthToken>
+}
+
+class JwtStrategy {
+  - prisma: PrismaService
+  --
+  + validate(payload: AuthToken): Promise<PublicUserDto>
+}
+
+class JwtAuthGuard {
+  + canActivate(context: ExecutionContext): Boolean | Promise<Boolean>
+}
+
+class RolesGuard {
+  - reflector: Reflector
+  --
+  + canActivate(context: ExecutionContext): Boolean
+}
+
+' Mối quan hệ giữa các lớp
+User --> Role : has role >
+User "1" ..> "0..*" AuthToken : issues >
+AuthToken --> Role : embeds role >
+
+AuthController --> AuthService : delegates >
+AuthController ..> RegisterDto : validates >
+AuthController ..> LoginDto : validates >
+AuthController ..> JwtAuthGuard : protected by >
+
+AuthService --> User : persists via Prisma >
+AuthService ..> AuthToken : signs (HS256) >
+
+JwtAuthGuard --> JwtStrategy : invokes Passport-JWT >
+JwtStrategy ..> AuthToken : verifies signature & exp >
+JwtStrategy --> User : checks existence in DB >
+RolesGuard ..> Role : enforces RBAC >
+
+note right of User
+  <b>Ràng buộc Bảo mật (Invariants):</b>
+  - <i>email</i> được chuẩn hóa lowercase và đánh chỉ mục @unique.
+  - <i>passwordHash</i> lưu chuỗi băm Bcrypt (Salt Rounds = 10).
+  - Tuyệt đối không lộ <i>passwordHash</i> trong PublicUserDto.
+  - <i>loyaltyPoints</i> >= 0 (tích lũy 1 điểm / 10.000đ).
+end note
+
+note bottom of AuthToken
+  <b>Cấu hình JWT:</b>
+  - Thuật toán ký: HMAC-SHA256 (HS256)
+  - Khóa ký: process.env.JWT_SECRET
+  - Thời hạn (expiresIn): 7 ngày (7d)
+end note
+
+@enduml
