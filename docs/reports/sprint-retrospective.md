@@ -29,6 +29,7 @@ Sprint 2 hoàn thành toàn bộ các mảnh ghép nghiệp vụ còn lại, k�
 * **Cổng thanh toán mô phỏng & Idempotency (Thành viên 3):** Tích hợp phương thức thanh toán thẻ và ví điện tử, áp dụng cơ chế khóa chống trùng lặp (`idempotencyKey`) để bảo đảm hệ thống không bao giờ bị trừ tiền lặp lại khi người dùng bấm nhiều lần do lag mạng.
 * **Xác thực và Bảo mật (Thành viên 4):** Xây dựng luồng đăng ký, đăng nhập xác thực JWT Bearer, băm mật khẩu một chiều với thuật toán `bcrypt` (Salt = 10) và thiết lập tầng bảo vệ `JwtAuthGuard`.
 * **Đóng gói Docker & Kiểm thử E2E (Thành viên 1):** Cung cấp cấu hình `docker-compose.yml` khởi chạy trọn gói Web + API + PostgreSQL, xây dựng endpoint giám sát sức khỏe `GET /health` và kịch bản E2E Test tự động 7 bước từ lúc duyệt menu đến khi xác nhận đơn.
+* **Video Demo Luồng End-to-End (Task 5.4):** Trực quan hóa toàn bộ trải nghiệm từ duyệt Menu -> Tùy chọn -> Giỏ hàng -> Đặt đơn -> Thanh toán: [Xem trên YouTube Shorts](https://youtube.com/shorts/3twEhgP6Ggo?si=rSEn9NMpOBLGeavt).
 
 ### 2.2. Kiểm thử và Chất lượng Mã nguồn
 * Tầng Unit Test kiểm tra độc lập các service tính giá và nghiệp vụ quan trọng.

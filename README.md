@@ -7,6 +7,7 @@
 > **Phiên bản:** Assignment 2 (Requirements to Deployment – Ver 1.0)
 
 [![CI Pipeline](https://github.com/tholan3006/CNPM-A2/actions/workflows/ci.yml/badge.svg)](https://github.com/tholan3006/CNPM-A2/actions/workflows/ci.yml)
+[![Demo Video](https://img.shields.io/badge/Demo_Video-YouTube-FF0000?logo=youtube&logoColor=white)](https://youtube.com/shorts/3twEhgP6Ggo?si=rSEn9NMpOBLGeavt)
 [![Docker Support](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](docker-compose.yml)
 [![Node.js](https://img.shields.io/badge/Node.js-v20_LTS-339933?logo=node.js&logoColor=white)](package.json)
 [![Next.js](https://img.shields.io/badge/Next.js-14_App_Router-black?logo=next.js&logoColor=white)](apps/web)
@@ -21,8 +22,8 @@
 |:---:|:---|:---:|:---|:---|
 | **1** | <span style="white-space:nowrap">**Trần&nbsp;Vĩnh&nbsp;Thọ&nbsp;Lân**</span> | `3124560049` | **Thành viên 1:** Màn hình & Luồng "Menu sản phẩm", Thiết lập Monorepo, Cấu hình CI/CD Pipeline, Traceability Matrix | `feature/tho_lan-menu-docs` |
 | **2** | <span style="white-space:nowrap">**Nguyễn&nbsp;Tuấn&nbsp;Khôi**</span> | `3124410190` | **Thành viên 2:** Màn hình & Luồng "Chi tiết món, Tùy chọn Size (S/M/L) và Topping", Tính giá tự động | `tuankhoi-detail-docs` |
-| **3** | <span style="white-space:nowrap">**Phan&nbsp;Vũ&nbsp;Việt&nbsp;Quang**</span> | `3124410385` | **Thành viên 3:** Màn hình & Luồng "Giỏ hàng, Khởi tạo đơn hàng & Thanh toán không tiền mặt", Idempotency Key | `feature/viet_quang-payment-docs` / `viet_quang_giohang` |
-| **4** | <span style="white-space:nowrap">**Nguyễn&nbsp;Hữu&nbsp;Chí&nbsp;Công**</span> | `3124410044` | **Thành viên 4:** Luồng "Xác thực JWT, Đăng ký/Đăng nhập, Băm mật khẩu Bcrypt", Đóng gói Docker & Phục vụ API | `feature/chi_cong-auth-jwt-docs` |
+| **3** | <span style="white-space:nowrap">**Phan&nbsp;Vũ&nbsp;Việt&nbsp;Quang**</span> | `3124560072` | **Thành viên 3 & 4:** Màn hình & Luồng "Giỏ hàng, Khởi tạo đơn hàng & Thanh toán không tiền mặt", Cơ chế Idempotency Key | `feature/viet_quang-payment-docs` / `viet_quang_giohang` |
+| **4** | <span style="white-space:nowrap">**Nguyễn&nbsp;Hữu&nbsp;Chí&nbsp;Công**</span> | `3124410044` | **Thành viên 5:** Luồng "Xác thực JWT, Đăng ký/Đăng nhập, Băm mật khẩu Bcrypt", Đóng gói Docker & Phục vụ API | `feature/chi_cong-auth-jwt-docs` |
 
 ---
 
@@ -149,7 +150,7 @@ npm run test:e2e
 
 ## 7. Quy trình CI/CD & Cơ chế Phục hồi Sự cố (Rollback)
 
-### 6.1. Quy trình CI/CD Pipeline
+### 7.1. Quy trình CI/CD Pipeline
 
 ```mermaid
 flowchart LR
@@ -168,7 +169,7 @@ Push / PR ──> Lint & Test ──> Build Image ──> Deploy Host ──> Sm
 * **Gắn nhãn Docker Image:** Mọi image đều được gán thẻ bằng mã commit SHA rút gọn (`SHA_SHORT`) giúp dễ dàng truy vết và khôi phục.
 * **Smoke Test tự động:** Sau khi deploy, pipeline tự động ping `GET /health`. Nếu phản hồi `status: "ok"`, đợt release được xác nhận thành công.
 
-### 6.2. Cơ chế Phục hồi Sự cố (Rollback)
+### 7.2. Cơ chế Phục hồi Sự cố (Rollback)
 Nếu đợt deploy mới phát sinh lỗi nghiêm trọng:
 1. **Rollback Container qua Docker Tag:**
    ```bash
@@ -183,10 +184,21 @@ Nếu đợt deploy mới phát sinh lỗi nghiêm trọng:
 
 ---
 
-## 8. Liên kết Tài liệu Quan trọng (Documentation Index)
+## 8. Video Demo Trực quan Toàn trình (Task 5.4 - End-to-End Demo)
+
+Trình diễn kịch bản hoàn chỉnh của hệ thống BrewLite theo đúng yêu cầu nghiệm thu của giảng viên: **Xem Menu → Tùy chọn Size & Topping → Giỏ hàng → Đặt đơn → Thanh toán mô phỏng → Xác nhận đơn hàng (#ORD-XXXXXX)**:
+
+* 🎬 **Link Video Demo (YouTube Shorts):** [https://youtube.com/shorts/3twEhgP6Ggo](https://youtube.com/shorts/3twEhgP6Ggo?si=rSEn9NMpOBLGeavt)
+* 📺 **Xem trực tiếp:** [![YouTube Video Demo](https://img.shields.io/badge/YouTube-Xem_Video_Demo_BrewLite-FF0000?logo=youtube&logoColor=white)](https://youtube.com/shorts/3twEhgP6Ggo?si=rSEn9NMpOBLGeavt)
+
+---
+
+## 9. Liên kết Tài liệu Quan trọng (Documentation Index)
 
 * [Đặc tả Bối cảnh, 6 Stakeholders & Phạm vi (Task 1.1)](docs/requirements/context-and-scope.md)
 * [Đặc tả Yêu cầu Phần mềm Toàn diện SRS (Task 1.2)](docs/requirements/srs.md)
+* [Đặc tả Use-case Trọng tâm Đặt & Thanh toán Đơn hàng (Task 1.3)](docs/requirements/use-case-checkout.md)
+* [Đặc tả Luồng Nghiệp vụ Giỏ hàng & Khởi tạo Đơn hàng (FR-04)](docs/requirements/order-creation-flow.md)
 * [Báo cáo Thiết kế Kiến trúc Hệ thống (Task 3.1)](docs/architecture/system-architecture.md)
 * [Bản ghi Quyết định Kiến trúc 6 ADR (Task 3.1)](docs/architecture/adr/)
 * [Hướng dẫn Kiến trúc Triển khai & Ranh giới Mạng (Task 3.2)](docs/deployment.md)
@@ -194,3 +206,19 @@ Nếu đợt deploy mới phát sinh lỗi nghiêm trọng:
 * [Thư mục Sơ đồ UML Nguồn .puml & Vector .svg (Task 2)](docs/diagrams/)
 * [Kịch bản Kiểm thử E2E Đầu-cuối (Task 5.2)](tests/e2e-order-flow.spec.ts)
 * [Báo cáo Sprint Review & Retrospective (Task 5.4)](docs/reports/sprint-retrospective.md)
+* [Video Demo Trực quan Luồng End-to-End (Task 5.4)](https://youtube.com/shorts/3twEhgP6Ggo?si=rSEn9NMpOBLGeavt)
+
+---
+
+## 10. Bảng Checklist Nghiệm thu Đồ án (Mục 9.1 Checklist Nộp bài)
+
+- [x] Link repository và quyền truy cập cho giảng viên.
+- [x] SRS, đặc tả use-case và ma trận truy vết (`docs/requirements/`, `docs/traceability-matrix.md`).
+- [x] Activity, sequence, class và deployment diagram (`docs/diagrams/`).
+- [x] Source code frontend, backend và migration (`apps/web`, `apps/api`, `prisma`).
+- [x] Unit, integration và end-to-end test (`apps/api`, `tests/e2e-order-flow.spec.ts`).
+- [x] Pipeline CI/CD chạy thành công (`.github/workflows/ci.yml`, `cd.yml`).
+- [x] URL production, API và health check (`/health`).
+- [x] Release notes, README và hướng dẫn rollback (`README.md`, `tags/v1.0.0`).
+- [x] Video/demo trực tiếp luồng end-to-end: [Xem trên YouTube Shorts](https://youtube.com/shorts/3twEhgP6Ggo?si=rSEn9NMpOBLGeavt).
+- [x] Sprint Review và Sprint Retrospective (`docs/reports/sprint-retrospective.md`).
