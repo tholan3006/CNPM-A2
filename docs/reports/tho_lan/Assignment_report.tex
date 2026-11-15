@@ -10,7 +10,9 @@
 \usepackage{color}
 \usepackage{graphicx}
 \usepackage{array}
-\usepackage{tabularx, caption}
+\usepackage{tabularx}
+\usepackage[justification=centering, font=small, labelfont=bf]{caption}
+\captionsetup{justification=centering}
 \usepackage{multirow}
 \usepackage[framemethod=tikz]{mdframed}
 \usepackage{multicol}
@@ -157,7 +159,7 @@
 \section{Tổng quan Bối cảnh, Phân công Nhiệm vụ và Phạm vi Hệ thống}
 
 \subsection{Bối cảnh Phân hệ Menu sản phẩm trong Đồ án BrewLite}
-Trong chuỗi cung ứng dịch vụ ăn uống (F\&B) hiện đại, màn hình và luồng \textbf{"Menu sản phẩm"} là điểm chạm kỹ thuật số đầu tiên (\textit{Digital First Touchpoint}) mang tính quyết định đến toàn bộ phễu chuyển đổi của khách hàng. Phân hệ do \textbf{Trần Vĩnh Thọ Lân} phụ trách giải quyết các thách thức vận hành và kỹ thuật then chốt:
+Trong chuỗi cung ứng dịch vụ ăn uống (F\&B) hiện đại, màn hình và luồng \textbf{"Menu sản phẩm"} là điểm chạm kỹ thuật số đầu tiên (\textit{Digital First Touchpoint}) mang tính quyết định đến toàn bộ phễu chuyển đổi của khách hàng. Phân hệ phụ trách giải quyết các thách thức vận hành và kỹ thuật then chốt:
 \begin{itemize}
     \item \textbf{Khắc phục ùn tắc quầy thu ngân giờ cao điểm:} Khách hàng không phải xếp hàng chờ nhân viên đưa menu giấy hay trao đổi bằng miệng, mà có thể quét mã QR tại bàn/quầy để mở ngay Web PWA tải thực đơn tức thì trong dưới 1 giây.
     \item \textbf{Trải nghiệm duyệt thực đơn phân cấp (Mobile-First):} Phân loại rõ ràng các nhóm đồ uống (Cà phê pha phin, Espresso, Trà hoa quả \& Matcha, Cold Brew giải nhiệt); hỗ trợ thanh trượt danh mục tiện dụng và thanh tìm kiếm tức thời theo từ khóa.
@@ -166,25 +168,23 @@ Trong chuỗi cung ứng dịch vụ ăn uống (F\&B) hiện đại, màn hình
 \end{itemize}
 
 \subsection{Bảng Phân công Nhiệm vụ Nhóm và Trách nhiệm Cốt lõi}
-Bảng phân công trách nhiệm 5 thành viên trong đồ án Assignment 2 môn Công nghệ Phần mềm:
 
 \begin{table}[H]
 \centering
 \small
-\begin{tabularx}{\textwidth}{|c|p{3.8cm}|p{3.5cm}|X|}
+\begin{tabularx}{\textwidth}{|c|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}p{3.5cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{STT} & \textbf{Thành viên} & \textbf{Luồng / Màn hình} & \textbf{Trách nhiệm chính} \\ \hline
-\textbf{1} & \textbf{Trần Vĩnh Thọ Lân} & \textbf{Menu sản phẩm} & \textbf{Task 1.1 Context \& Scope, 5 sơ đồ UML Menu, Code Web \& API Menu} \\ \hline
-2 & Thành viên 2 & Chi tiết sản phẩm & Đặc tả SRS, Size/Topping, API \texttt{GET /products/:id} \\ \hline
-3 & Thành viên 3 & Giỏ hàng \& Đặt đơn & Luồng tạo đơn hàng, API \texttt{POST /orders}, DB Transaction \\ \hline
-4 & Phan Vũ Việt Quang & Thanh toán \& Xác nhận & Đặc tả Use-Case, Idempotency, API \texttt{POST /payments} \\ \hline
-5 & Thành viên 5 & Đăng ký \& Đăng nhập & NFR Bảo mật, mã hóa bcrypt, API JWT Auth, Docker \\ \hline
+\textbf{1} & \textbf{Trần Vĩnh Thọ Lân} & \textbf{Menu sản phẩm} & \textbf{Task 1.1 Context \& Scope, 5 sơ đồ UML Menu, Code Web \& API Menu, Monorepo, CI/CD, E2E Test} \\ \hline
+2 & Nguyễn Tuấn Khôi & Chi tiết món \& Tùy chọn & Đặc tả SRS, Size/Topping, Tính giá tự động, API \texttt{GET /products/:id} \\ \hline
+3 & Phan Vũ Việt Quang & Giỏ hàng, Đặt đơn \& Thanh toán & Quản lý giỏ hàng Zustand, API \texttt{POST /orders}, Cổng thanh toán mô phỏng, Idempotency Key \\ \hline
+4 & Nguyễn Hữu Chí Công & Xác thực \& Hạ tầng Docker & NFR Bảo mật, băm mật khẩu Bcrypt, API JWT Auth Guard, Đóng gói Docker Compose \\ \hline
 \end{tabularx}
-\caption{Bảng phân công trách nhiệm 5 thành viên trong đồ án BrewLite}
+\caption{Bảng phân công trách nhiệm 4 thành viên trong đồ án BrewLite Assignment 2}
 \label{tab:team_roles}
 \end{table}
 
-Danh sách các đầu mục công việc cụ thể do \textbf{Trần Vĩnh Thọ Lân} trực tiếp thực hiện:
+Danh sách các đầu mục công việc cụ thể:
 \begin{enumerate}
     \item \textbf{Task 1.1 (Yêu cầu \& Phạm vi):} Soạn thảo tài liệu đặc tả Bối cảnh bài toán, Bảng phân tích 6 bên liên quan, Phạm vi hệ thống (In-Scope, Extended, Out-of-Scope) và Bảng đánh giá rủi ro (lưu tại tài liệu \nolinkurl{docs/requirements/context-and-scope.md}).
     \item \textbf{Task 2 (Bộ 5 Sơ đồ UML):}
@@ -201,6 +201,8 @@ Danh sách các đầu mục công việc cụ thể do \textbf{Trần Vĩnh Th�
         \item Xây dựng Backend API: \nolinkurl{apps/api/src/products/} với endpoint \texttt{GET /products}, \texttt{GET /products/:id} và \texttt{GET /health}.
         \item Viết bộ kiểm thử đơn vị tự động (Unit Test) cho Service và Controller đạt 9/9 test cases passed (100\%).
     \end{itemize}
+    \item \textbf{Task 4.1 \& Task 4.4 (Hạ tầng Monorepo \& CI/CD Pipeline):} Thiết lập cấu trúc kho mã nguồn monorepo chuẩn mục 9 đề bài (\nolinkurl{apps/web}, \nolinkurl{apps/api}, \nolinkurl{docs/}, \nolinkurl{tests/}) và cấu hình pipeline CI tự động (\nolinkurl{.github/workflows/ci.yml}) với Quality Gate chặn lỗi trước khi merge vào \texttt{main}.
+    \item \textbf{Task 5.2 (Kiểm thử Đầu-Cuối E2E):} Xây dựng kịch bản kiểm thử End-to-End tự động 8 bước liên hoàn từ duyệt Menu đến xác nhận đơn hàng thành công tại \nolinkurl{tests/e2e-order-flow.spec.ts} (\texttt{npm run test:e2e}).
     \item \textbf{Ma trận Truy vết Yêu cầu (Traceability Matrix):} Thiết lập mối liên kết chặt chẽ từ yêu cầu \texttt{FR-01}, \texttt{FR-02}, \texttt{NFR-01} đến sơ đồ UML, mã nguồn và kết quả kiểm thử tại \nolinkurl{docs/traceability-matrix.md}.
 \end{enumerate}
 
@@ -210,14 +212,14 @@ Theo chuẩn kỹ thuật phần mềm, 6 nhóm đối tượng liên quan trự
 \begin{table}[H]
 \centering
 \small
-\begin{tabularx}{\textwidth}{|c|p{3.0cm}|p{4.2cm}|X|}
+\begin{tabularx}{\textwidth}{|c|>{\raggedright\arraybackslash}p{3.2cm}|>{\raggedright\arraybackslash}p{4.2cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{STT} & \textbf{Stakeholder} & \textbf{Mục tiêu chính (Goals)} & \textbf{Kỳ vọng \& Tiêu chí chấp nhận} \\ \hline
 \textbf{1} & \textbf{Khách hàng (Customer)} & Đặt đồ uống nhanh chóng, không phải xếp hàng chờ, xem rõ giá cả minh bạch. & Giao diện tải nhanh ($<1.5$s), tự tính giá khi đổi size/topping, thanh toán điện tử an toàn, nhận mã lấy đồ rõ ràng. \\ \hline
 \textbf{2} & \textbf{Nhân viên quầy (Barista)} & Tiếp nhận danh sách order chuẩn xác, hạn chế trao đổi miệng gây sai lệch. & Thông tin size, topping hiển thị chuẩn xác; trạng thái đơn chuyển đổi đúng quy trình: \texttt{PAID} $\rightarrow$ \texttt{PREPARING} $\rightarrow$ \texttt{READY} $\rightarrow$ \texttt{COMPLETED}. \\ \hline
 \textbf{3} & \textbf{Quản lý / PO} & Tối ưu hóa năng suất phục vụ, giảm thất thoát doanh thu, kiểm soát tồn kho. & Hệ thống ổn định, không overselling khi nhiều khách đặt cùng lúc; bàn giao sản phẩm theo Sprint đúng cam kết (DoD). \\ \hline
 \textbf{4} & \textbf{Giảng viên nghiệm thu} & Đánh giá năng lực kỹ thuật phần mềm, quy trình Agile Scrum, UML, CI/CD. & Tuân thủ quy tắc tuần tự 5 Task; sơ đồ UML chuẩn xác; source code monorepo có automated test; có URL Production qua HTTPS. \\ \hline
-\textbf{5} & \textbf{Nhóm sinh viên phát triển} & Hiện thực trọn vẹn đồ án theo chuẩn SE, đạt điểm tối đa đồ án. & Phân chia công việc rõ ràng theo 5 luồng module; kiến trúc tách bạch; có ma trận truy vết đầy đủ từ yêu cầu đến test. \\ \hline
+\textbf{5} & \textbf{Nhóm sinh viên phát triển} & Hiện thực trọn vẹn đồ án theo chuẩn SE, đạt điểm tối đa đồ án. & Phân chia công việc rõ ràng theo các luồng module cốt lõi; kiến trúc tách bạch; có ma trận truy vết đầy đủ từ yêu cầu đến test. \\ \hline
 \textbf{6} & \textbf{Đơn vị thanh toán (Mock)} & Bảo đảm tính toàn vẹn và an toàn của các giao dịch điện tử. & Xử lý giao dịch Idempotent qua \texttt{Idempotency-Key}, chống trừ tiền trùng lặp, trả về mã giao dịch tức thời. \\ \hline
 \end{tabularx}
 \caption{Bảng phân tích 6 nhóm bên liên quan (Stakeholders) trong đồ án BrewLite}
@@ -247,7 +249,7 @@ Theo chuẩn kỹ thuật phần mềm, 6 nhóm đối tượng liên quan trự
 \begin{table}[H]
 \centering
 \small
-\begin{tabularx}{\textwidth}{|c|p{4.0cm}|c|c|X|}
+\begin{tabularx}{\textwidth}{|c|>{\raggedright\arraybackslash}p{4.2cm}|c|c|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Mã RR} & \textbf{Mô tả rủi ro (Risk Description)} & \textbf{Mức độ} & \textbf{Khả năng} & \textbf{Phương án phòng ngừa \& Xử lý} \\ \hline
 \textbf{RSK-01} & Nhiều khách đặt cùng lúc vượt tồn kho (Race Condition). & Cao & Trung bình & Áp dụng Database Transaction với cơ chế \textbf{Optimistic Locking} (\texttt{version} field). \\ \hline
@@ -269,61 +271,60 @@ Sơ đồ mô tả bức tranh tổng thể tương tác giữa 4 tác nhân ch�
 
 \begin{figure}[H]
 \centering
-\resizebox{0.86\linewidth}{!}{
+\resizebox{0.88\linewidth}{!}{
 \begin{tikzpicture}[
-    actor/.style={circle, draw=black!85, fill=gray!8, thick, minimum size=1.0cm, font=\bfseries\scriptsize, align=center},
-    uc/.style={ellipse, draw=black!85, fill=white, thick, minimum height=0.8cm, minimum width=3.2cm, align=center, font=\scriptsize\bfseries},
+    actor/.style={circle, draw=black!85, fill=gray!8, thick, minimum size=1.1cm, font=\bfseries\scriptsize, align=center},
+    uc/.style={ellipse, draw=black!85, fill=white, thick, minimum height=0.85cm, text width=3.3cm, align=center, font=\scriptsize\bfseries},
     arrow/.style={thick, draw=black!85},
     darrow/.style={thick, dashed, ->, >=stealth, draw=black!75}
 ]
     % Primary Actor (Left)
-    \node[actor] (cust) at (-1.0, 1.4) {Khách hàng\\(Customer)};
+    \node[actor] (cust) at (-1.2, 1.0) {Khách hàng\\(Customer)};
 
     % System Boundary Box
-    \draw[thick, dashed, gray!60] (1.0, -4.8) rectangle (12.2, 6.2);
-    \node[font=\small\bfseries, text=black!90, anchor=north west] at (1.2, 6.0) {Hệ thống BrewLite (BrewLite Subsystems)};
+    \draw[thick, dashed, gray!60] (0.8, -5.0) rectangle (14.0, 5.8);
+    \node[font=\small\bfseries, text=black!90, anchor=north west] at (1.0, 5.6) {Hệ thống BrewLite (BrewLite Subsystems)};
     
     % Column 1: Primary Use Cases accessed directly by Customer
-    \node[uc] (uc1) at (3.5, 4.8) {UC01: Xem thực đơn đồ uống};
-    \node[uc] (uc3) at (3.5, 3.1) {UC03: Xem chi tiết món};
-    \node[uc] (uc4) at (3.5, 1.4) {UC04: Quản lý giỏ hàng};
-    \node[uc] (uc6) at (3.5, -0.3) {UC06: Đăng ký / Đăng nhập};
-    \node[uc] (uc9) at (3.5, -2.0) {UC09: Tra cứu lịch sử đơn};
-    \node[uc] (uc11) at (3.5, -3.8) {UC11: Quản lý danh mục \& kho};
+    \node[uc] (uc1) at (3.6, 4.6) {UC01: Xem thực đơn\\đồ uống};
+    \node[uc] (uc3) at (3.6, 2.8) {UC03: Xem chi tiết món\\\& tùy chọn};
+    \node[uc] (uc4) at (3.6, 1.0) {UC04: Quản lý\\giỏ hàng};
+    \node[uc] (uc6) at (3.6, -0.8) {UC06: Đăng ký /\\Đăng nhập};
+    \node[uc] (uc9) at (3.6, -2.6) {UC09: Tra cứu\\lịch sử đơn};
+    \node[uc] (uc11) at (3.6, -4.2) {UC11: Quản lý\\danh mục \& kho};
     
-    % Column 2: Sub Use Cases & Secondary processing
-    \node[uc] (uc2) at (9.2, 4.8) {UC02: Lọc \& Tìm kiếm món};
-    \node[uc] (uc10) at (9.2, 3.1) {UC10: Tiếp nhận pha chế};
-    \node[uc] (uc5) at (9.2, 1.4) {UC05: Khởi tạo đơn hàng};
-    \node[uc] (uc7) at (9.2, -0.3) {UC07: Thanh toán điện tử};
-    \node[uc] (uc8) at (9.2, -2.0) {UC08: Xem mã đơn \& Biên lai};
+    % Column 2: Sub Use Cases & Secondary processing (Generous horizontal gap)
+    \node[uc] (uc2) at (10.8, 4.6) {UC02: Lọc \& Tìm kiếm\\đồ uống};
+    \node[uc] (uc10) at (10.8, 2.8) {UC10: Tiếp nhận\\pha chế đơn};
+    \node[uc] (uc5) at (10.8, 1.0) {UC05: Khởi tạo\\đơn hàng};
+    \node[uc] (uc7) at (10.8, -0.8) {UC07: Thanh toán\\điện tử};
+    \node[uc] (uc8) at (10.8, -2.6) {UC08: Xem mã đơn\\\& Biên lai};
 
     % Secondary Actors (Right)
-    \node[actor] (barista) at (14.2, 3.1) {Barista};
-    \node[actor] (pay) at (14.2, -0.3) {Cổng\\Thanh toán};
-    \node[actor] (mgr) at (14.2, -3.8) {Quản lý\\(PO)};
+    \node[actor] (barista) at (15.8, 2.8) {Barista};
+    \node[actor] (pay) at (15.8, -0.8) {Cổng\\Thanh toán};
+    \node[actor] (mgr) at (15.8, -4.2) {Quản lý\\(PO)};
 
-    % Customer Direct Associations (Parallel, ZERO CROSSINGS)
+    % Customer Direct Associations (Clean, zero overlap)
     \draw[arrow] (cust) -- (uc1);
     \draw[arrow] (cust) -- (uc3);
     \draw[arrow] (cust) -- (uc4);
     \draw[arrow] (cust) -- (uc6);
     \draw[arrow] (cust) -- (uc9);
 
-    % Include / Extend Relationships (Horizontal & Clean)
-    \draw[darrow] (uc2) -- node[above, font=\tiny\bfseries] {$\langle\langle extend \rangle\rangle$} (uc1);
-    \draw[darrow] (uc5) -- node[above, font=\tiny\bfseries] {$\langle\langle include \rangle\rangle$} (uc4);
-    \draw[darrow] (uc7) -- node[above, font=\tiny\bfseries] {$\langle\langle include \rangle\rangle$} (uc6);
-    \draw[darrow] (uc5) -- node[right, font=\tiny\bfseries] {$\langle\langle include \rangle\rangle$} (uc7);
-    \draw[darrow] (uc7) -- node[right, font=\tiny\bfseries] {$\langle\langle include \rangle\rangle$} (uc8);
+    % Include / Extend Relationships (Horizontal gap > 3.5cm, no cramped text)
+    \draw[darrow] (uc2) -- node[above=2pt, font=\tiny\bfseries] {$\langle\langle extend \rangle\rangle$} (uc1);
+    \draw[darrow] (uc4) -- node[above=2pt, font=\tiny\bfseries] {$\langle\langle include \rangle\rangle$} (uc5);
+    \draw[darrow] (uc5) -- node[right=3pt, font=\tiny\bfseries] {$\langle\langle include \rangle\rangle$} (uc7);
+    \draw[darrow] (uc7) -- node[right=3pt, font=\tiny\bfseries] {$\langle\langle include \rangle\rangle$} (uc8);
 
     % Secondary Actors Associations (Straight horizontal lines)
     \draw[arrow] (barista) -- (uc10);
-    \draw[thick, dashed, draw=black!85] (pay) -- node[above, font=\tiny\bfseries] {Tích hợp} (uc7);
+    \draw[thick, dashed, draw=black!85] (pay) -- node[above=2pt, font=\tiny\bfseries] {Tích hợp} (uc7);
     \draw[arrow] (mgr) -- (uc11);
 \end{tikzpicture}
 }
-\caption{Sơ đồ Use Case tổng quan toàn bộ hệ thống BrewLite (Mã nguồn: \nolinkurl{docs/diagrams/usecase-system.puml})}
+\caption{Sơ đồ Use Case tổng quan toàn bộ hệ thống BrewLite\\(Mã nguồn: \texttt{docs/diagrams/usecase-system.puml})}
 \label{fig:usecase_system}
 \end{figure}
 
@@ -355,18 +356,18 @@ Sơ đồ chi tiết phân rã sâu luồng xem thực đơn, lấy danh mục, 
     % Actor association
     \draw[thick, draw=black!85] (cust) -- (uc_menu);
 
-    % Includes (Main -> Sub)
-    \draw[thick, dashed, ->, >=stealth, draw=black!75] (uc_menu) -- node[above, sloped, font=\tiny\bfseries] {$\langle\langle include \rangle\rangle$} (uc_cat);
-    \draw[thick, dashed, ->, >=stealth, draw=black!75] (uc_menu) -- node[above, sloped, font=\tiny\bfseries] {$\langle\langle include \rangle\rangle$} (uc_stock);
-    \draw[thick, dashed, ->, >=stealth, draw=black!75] (uc_menu) -- node[above, sloped, font=\tiny\bfseries] {$\langle\langle include \rangle\rangle$} (uc_card);
+    % Includes (Main -> Sub) with clear white backdrop badge
+    \draw[thick, dashed, ->, >=stealth, draw=black!75] (uc_menu) -- node[fill=white, inner sep=1.5pt, above=1pt, sloped, font=\tiny\bfseries] {$\langle\langle include \rangle\rangle$} (uc_cat);
+    \draw[thick, dashed, ->, >=stealth, draw=black!75] (uc_menu) -- node[fill=white, inner sep=1.5pt, above=1pt, sloped, font=\tiny\bfseries] {$\langle\langle include \rangle\rangle$} (uc_stock);
+    \draw[thick, dashed, ->, >=stealth, draw=black!75] (uc_menu) -- node[fill=white, inner sep=1.5pt, above=1pt, sloped, font=\tiny\bfseries] {$\langle\langle include \rangle\rangle$} (uc_card);
 
-    % Extends (Sub -> Main)
-    \draw[thick, dashed, ->, >=stealth, draw=black!75] (uc_filter) -- node[below, sloped, font=\tiny\bfseries] {$\langle\langle extend \rangle\rangle$} (uc_menu);
-    \draw[thick, dashed, ->, >=stealth, draw=black!75] (uc_search) -- node[below, sloped, font=\tiny\bfseries] {$\langle\langle extend \rangle\rangle$} (uc_menu);
-    \draw[thick, dashed, ->, >=stealth, draw=black!75] (uc_detail) -- node[right, font=\tiny\bfseries] {$\langle\langle extend \rangle\rangle$} (uc_menu);
+    % Extends (Sub -> Main) with clear white backdrop badge
+    \draw[thick, dashed, ->, >=stealth, draw=black!75] (uc_filter) -- node[fill=white, inner sep=1.5pt, below=1pt, sloped, font=\tiny\bfseries] {$\langle\langle extend \rangle\rangle$} (uc_menu);
+    \draw[thick, dashed, ->, >=stealth, draw=black!75] (uc_search) -- node[fill=white, inner sep=1.5pt, below=1pt, sloped, font=\tiny\bfseries] {$\langle\langle extend \rangle\rangle$} (uc_menu);
+    \draw[thick, dashed, ->, >=stealth, draw=black!75] (uc_detail) -- node[fill=white, inner sep=1.5pt, right=3pt, font=\tiny\bfseries] {$\langle\langle extend \rangle\rangle$} (uc_menu);
 \end{tikzpicture}
 }
-\caption{Sơ đồ Use Case chi tiết phân hệ Xem Menu đồ uống (Mã nguồn: \nolinkurl{docs/diagrams/usecase-menu.puml})}
+\caption{Sơ đồ Use Case chi tiết phân hệ Xem Menu đồ uống\\(Mã nguồn: \texttt{docs/diagrams/usecase-menu.puml})}
 \label{fig:usecase_menu}
 \end{figure}
 
@@ -444,7 +445,7 @@ Sơ đồ hoạt động được thiết kế chuẩn mực với \textbf{4 Swi
     \draw[arrow] (to_modal) -- (end);
 \end{tikzpicture}
 }
-\caption{Sơ đồ Hoạt động luồng Xem và Lọc menu (Mã nguồn: \nolinkurl{docs/diagrams/activity-menu.puml})}
+\caption{Sơ đồ Hoạt động luồng Xem và Lọc menu\\(Mã nguồn: \texttt{docs/diagrams/activity-menu.puml})}
 \label{fig:activity_menu}
 \end{figure}
 
@@ -464,7 +465,7 @@ Sơ đồ tuần tự mô tả chi tiết tương tác giao thức HTTP REST gi�
 \centering
 \resizebox{0.92\linewidth}{!}{
 \begin{tikzpicture}[
-    lifeline/.style={rectangle, draw=black!85, fill=gray!8, rounded corners=2pt, minimum height=0.8cm, text width=2.5cm, font=\scriptsize\bfseries, align=center},
+    lifeline/.style={rectangle, draw=black!85, fill=gray!8, rounded corners=2pt, minimum height=0.85cm, text width=2.8cm, font=\scriptsize\bfseries, align=center},
     msg/.style={thick, ->, >=stealth, draw=black!85},
     ret/.style={thick, dashed, ->, >=stealth, draw=black!85}
 ]
@@ -476,23 +477,23 @@ Sơ đồ tuần tự mô tả chi tiết tương tác giao thức HTTP REST gi�
     \node[lifeline] (db)   at (15.2, 0) {PostgreSQL\\(Prisma ORM)};
 
     % Dashed Lifeline tracks
-    \draw[dashed, gray!70] (cust) -- (0, -10.5);
-    \draw[dashed, gray!70] (ui)   -- (3.8, -10.5);
-    \draw[dashed, gray!70] (ctrl) -- (7.6, -10.5);
-    \draw[dashed, gray!70] (srv)  -- (11.4, -10.5);
-    \draw[dashed, gray!70] (db)   -- (15.2, -10.5);
+    \draw[dashed, gray!70] (cust) -- (0, -11.5);
+    \draw[dashed, gray!70] (ui)   -- (3.8, -11.5);
+    \draw[dashed, gray!70] (ctrl) -- (7.6, -11.5);
+    \draw[dashed, gray!70] (srv)  -- (11.4, -11.5);
+    \draw[dashed, gray!70] (db)   -- (15.2, -11.5);
 
     % Activation Bars (Aligned precisely with calls)
-    \draw[fill=gray!15, draw=black!85] (3.68, -0.8) rectangle (3.92, -9.8);
-    \draw[fill=gray!15, draw=black!85] (7.48, -1.8) rectangle (7.72, -6.6);
-    \draw[fill=gray!15, draw=black!85] (11.28, -2.6) rectangle (11.52, -5.7);
-    \draw[fill=gray!15, draw=black!85] (15.08, -3.3) rectangle (15.32, -4.5);
+    \draw[fill=gray!15, draw=black!85] (3.68, -0.8) rectangle (3.92, -10.9);
+    \draw[fill=gray!15, draw=black!85] (7.48, -1.8) rectangle (7.72, -8.3);
+    \draw[fill=gray!15, draw=black!85] (11.28, -2.6) rectangle (11.52, -5.9);
+    \draw[fill=gray!15, draw=black!85] (15.08, -3.3) rectangle (15.32, -4.7);
 
     % Step 1: Open Menu Page
     \draw[msg] (0, -0.9) -- node[above, font=\scriptsize] {[1] Mở trang thực đơn (/)} (3.68, -0.9);
 
     % Step 2: UI Self-call loading
-    \draw[msg] (3.92, -1.2) to[out=0, in=0, looseness=2.2] node[right, font=\tiny] {Hiện Loading Skeleton} (3.92, -1.6);
+    \draw[msg] (3.92, -1.2) to[out=0, in=0, looseness=2.2] node[right=4pt, font=\tiny] {Hiện Loading Skeleton} (3.92, -1.6);
 
     % Step 3: GET /products
     \draw[msg] (3.92, -2.0) -- node[above, font=\scriptsize] {[2] HTTP GET /products} (7.48, -2.0);
@@ -504,32 +505,32 @@ Sơ đồ tuần tự mô tả chi tiết tương tác giao thức HTTP REST gi�
     \draw[msg] (11.52, -3.4) -- node[above, font=\scriptsize] {[4] prisma.product.findMany()} (15.08, -3.4);
 
     % Alt Combined Fragment (with generous vertical clearance)
-    \draw[dashed, thick, gray!80] (3.1, -3.9) rectangle (15.8, -7.5);
-    \node[font=\scriptsize\bfseries, fill=gray!25, inner sep=3pt, anchor=north west] at (3.1, -3.9) {alt};
-    \node[font=\scriptsize\bfseries, text=black!90, anchor=west] at (4.2, -4.2) {[CSDL phản hồi thành công]};
+    \draw[dashed, thick, gray!80] (2.8, -4.0) rectangle (16.0, -8.7);
+    \node[font=\scriptsize\bfseries, fill=gray!25, inner sep=3pt, anchor=north west] at (2.8, -4.0) {alt};
+    \node[font=\scriptsize\bfseries, text=black!90, anchor=west] at (3.8, -4.3) {[CSDL phản hồi thành công]};
 
     % Success path returns
-    \draw[ret] (15.08, -4.7) -- node[above, font=\scriptsize] {[5] Return Product[] records} (11.52, -4.7);
-    \draw[ret] (11.28, -5.4) -- node[above, font=\scriptsize] {[6] ProductResponseDto[]} (7.72, -5.4);
-    \draw[ret] (7.48, -6.1) -- node[above, font=\scriptsize] {[7] HTTP 200 OK (JSON menu)} (3.92, -6.1);
-    \draw[ret] (3.68, -6.5) -- node[above, font=\scriptsize] {[8] Render lưới sản phẩm \& Tabs} (0, -6.5);
+    \draw[ret] (15.08, -4.9) -- node[above, font=\scriptsize] {[5] Return Product[] records} (11.52, -4.9);
+    \draw[ret] (11.28, -5.6) -- node[above, font=\scriptsize] {[6] ProductResponseDto[]} (7.72, -5.6);
+    \draw[ret] (7.48, -6.3) -- node[above, font=\scriptsize] {[7] HTTP 200 OK (JSON menu)} (3.92, -6.3);
+    \draw[ret] (3.68, -6.9) -- node[above, font=\scriptsize] {[8] Render lưới sản phẩm \& Tabs} (0, -6.9);
 
     % Alt divider line
-    \draw[dashed, gray!60] (3.1, -6.8) -- (15.8, -6.8);
-    \node[font=\scriptsize\bfseries, text=black!85, anchor=west] at (4.2, -7.05) {[Lỗi kết nối CSDL / 500 Failure]};
-    \draw[ret, draw=black!85] (7.48, -7.3) -- node[above, font=\scriptsize] {[9] HTTP 500 Internal Server Error} (3.92, -7.3);
+    \draw[dashed, gray!60] (2.8, -7.4) -- (16.0, -7.4);
+    \node[font=\scriptsize\bfseries, text=black!85, anchor=west] at (3.8, -7.7) {[Lỗi kết nối CSDL / Server Error]};
+    \draw[ret, draw=black!85] (7.48, -8.2) -- node[below=2pt, font=\scriptsize] {[9] HTTP 500 Internal Server Error} (3.92, -8.2);
 
-    % Step 9: User clicks tab
-    \draw[msg] (0, -8.1) -- node[above, font=\scriptsize] {[10] Chọn Tab "Trà hoa quả"} (3.68, -8.1);
+    % Step 10: User clicks tab
+    \draw[msg] (0, -9.3) -- node[above, font=\scriptsize] {[10] Chọn Tab "Trà hoa quả"} (3.68, -9.3);
 
-    % Step 10: Local state filter
-    \draw[msg] (3.92, -8.5) to[out=0, in=0, looseness=2.2] node[right, font=\tiny] {Lọc State cục bộ} (3.92, -8.9);
+    % Step 10b: Local state filter
+    \draw[msg] (3.92, -9.7) to[out=0, in=0, looseness=2.2] node[right=4pt, font=\tiny] {Lọc State cục bộ} (3.92, -10.1);
 
     % Step 11: Re-render
-    \draw[ret] (3.68, -9.6) -- node[above, font=\scriptsize] {[11] Re-render danh sách món theo Tab} (0, -9.6);
+    \draw[ret] (3.68, -10.7) -- node[above, font=\scriptsize] {[11] Re-render danh sách món theo Tab} (0, -10.7);
 \end{tikzpicture}
 }
-\caption{Sơ đồ Tuần tự luồng gọi API \texttt{GET /products} (Mã nguồn: \nolinkurl{docs/diagrams/sequence-menu.puml})}
+\caption{Sơ đồ Tuần tự luồng gọi API \texttt{GET /products}\\(Mã nguồn: \texttt{docs/diagrams/sequence-menu.puml})}
 \label{fig:sequence_menu}
 \end{figure}
 
@@ -614,7 +615,7 @@ Sơ đồ lớp ở mức miền dữ liệu (Domain Model) cho 2 thực thể c
     \draw[thick, dashed, ->, >=stealth, draw=black!70] (psize.north) -- (prod.south);
 \end{tikzpicture}
 }
-\caption{Sơ đồ Lớp Product \& Category (Mã nguồn: \nolinkurl{docs/diagrams/class-product-category.puml})}
+\caption{Sơ đồ Lớp Product \& Category\\(Mã nguồn: \texttt{docs/diagrams/class-product-category.puml})}
 \label{fig:class_product_category}
 \end{figure}
 
@@ -661,12 +662,12 @@ Sơ đồ triển khai tập trung chi tiết vào \textbf{Nút Web Frontend} (N
     
     % Connections
     \draw[thick, <->, draw=black!85] (clientNode.east) -- node[above, font=\footnotesize\bfseries] {HTTPS (443)} (serverNode.west);
-    \draw[thick, <->, draw=black!85] (clientNode.south) -- node[right, font=\footnotesize] {Reverse Proxy} (cdnNode.north);
+    \draw[thick, <->, draw=black!85] (cdnNode.north) -- node[left, font=\footnotesize] {SSL Proxy} (clientNode.south);
     \draw[thick, <->, draw=black!85] (serverNode.south) -- node[right, font=\footnotesize\bfseries] {TCP Pool (5432)} (dbNode.north);
-    \draw[thick, <->, draw=black!85] (cdnNode.east) -- node[above, font=\footnotesize] {Origin Request} (dbNode.west);
+    \draw[thick, <->, draw=black!85] (cdnNode.east) -- node[above, font=\footnotesize] {Origin Request} (serverNode.south west);
 \end{tikzpicture}
 }
-\caption{Sơ đồ Triển khai Nút Web Frontend \& Nút API Server (Mã nguồn: \nolinkurl{docs/diagrams/deployment-web-api.puml})}
+\caption{Sơ đồ Triển khai Nút Web Frontend \& Nút API Server\\(Mã nguồn: \texttt{docs/diagrams/deployment-web-api.puml})}
 \label{fig:deployment_diagram}
 \end{figure}
 
@@ -718,7 +719,7 @@ Theo quy định tại Mục 8 của đề bài đồ án Assignment 2 môn Côn
 \begin{table}[H]
 \centering
 \small
-\begin{tabularx}{\textwidth}{|c|p{3.0cm}|p{3.0cm}|p{2.8cm}|X|c|}
+\begin{tabularx}{\textwidth}{|c|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}X|c|}
 \hline
 \textbf{Mã YC} & \textbf{Use Case / Story} & \textbf{Thiết kế / Sơ đồ} & \textbf{Mã nguồn / API} & \textbf{Ca kiểm thử (Test)} & \textbf{Kết quả} \\ \hline
 \textbf{FR-01} & 
@@ -767,12 +768,12 @@ $\bullet$~Benchmark latency qua Swagger UI ($<200$ms) &
 \section{Tổng kết và Đánh giá Mức độ Hoàn thành}
 
 \subsection{Bảng Đối chiếu Tiêu chuẩn Hoàn thành (Definition of Done - DoD)}
-Toàn bộ các yêu cầu kỹ thuật do \textbf{Trần Vĩnh Thọ Lân} đảm nhiệm được đối chiếu với tiêu chuẩn hoàn thành nghiệm thu tại Bảng~\ref{tab:dod_evaluation}:
+Các hạng mục kỹ thuật được phân công đối với phân hệ Menu sản phẩm được đối chiếu chi tiết với tiêu chuẩn hoàn thành nghiệm thu tại Bảng 5:
 
 \begin{table}[H]
 \centering
 \small
-\begin{tabularx}{\textwidth}{|c|p{4.2cm}|X|c|}
+\begin{tabularx}{\textwidth}{|c|>{\raggedright\arraybackslash}p{4.5cm}|>{\raggedright\arraybackslash}X|c|}
 \hline
 \textbf{STT} & \textbf{Hạng mục Cam kết} & \textbf{Hiện thực Kỹ thuật Thực tế} & \textbf{Trạng thái} \\ \hline
 1 & Task 1.1 Context, Scope \& Stakeholders & Hoàn thành tài liệu đặc tả bối cảnh, 6 stakeholders, phạm vi và rủi ro tại \nolinkurl{docs/requirements/context-and-scope.md}. & \textbf{Hoàn thành 100\%} \\ \hline
@@ -787,6 +788,6 @@ Toàn bộ các yêu cầu kỹ thuật do \textbf{Trần Vĩnh Thọ Lân} đ�
 \end{table}
 
 \subsection{Kết luận}
-Báo cáo cá nhân của sinh viên \textbf{Trần Vĩnh Thọ Lân} đã hoàn thành toàn diện, chuẩn xác và đúng tiến độ toàn bộ các cam kết kỹ thuật của đồ án Assignment 2 môn Công nghệ Phần mềm tại Trường Đại học Sài Gòn (SGU). Mã nguồn đã được chuẩn hóa monorepo, sẵn sàng cho quy trình tích hợp liên tục (CI) và bàn giao nghiệm thu.
+Báo cáo cá nhân đã tổng kết chi tiết quá trình phân tích, thiết kế và hiện thực kỹ thuật cho phân hệ Menu sản phẩm trong khuôn khổ đồ án Assignment 2. Các mục tiêu cam kết từ Task 1 đến Task 5 đều đã được sinh viên thực hiện hoàn thành đúng tiến độ; mã nguồn được tổ chức theo cấu trúc monorepo chuẩn hóa, vượt qua toàn bộ các bài kiểm thử tự động và sẵn sàng cho công tác nghiệm thu, bàn giao.
 
 \end{document}
