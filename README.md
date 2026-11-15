@@ -131,14 +131,23 @@ npx jest src/orders/orders.integration.spec.ts
 ```
 
 ### 3. End-to-End (E2E) Test (Kiểm thử đầu-cuối)
-Tự động chạy trọn gói luồng từ: **Xem Menu → Chọn món → Giỏ hàng → Đặt đơn → Thanh toán → Xác nhận đơn**:
+Tự động chạy trọn gói kịch bản kiểm thử 7 bước từ: **Xem Menu → Chọn món → Giỏ hàng → Đặt đơn → Thanh toán → Xác nhận đơn → Health Check**:
 ```powershell
-npx jest tests/e2e-order-flow.spec.ts --verbose
+npm run test:e2e
 ```
+*(Hoặc chạy trực tiếp qua `apps/api`: `cd apps/api && npm run test:e2e`)*
 
 ---
 
-## 6. Quy trình CI/CD & Cơ chế Phục hồi Sự cố (Rollback)
+## 6. Môi trường Triển khai Thực tế (Live Production Links)
+
+* **Ứng dụng Web PWA (Next.js):** [https://cnpm-a2.vercel.app](https://cnpm-a2.vercel.app) *(hoặc [https://brewlite-assignment2.vercel.app](https://brewlite-assignment2.vercel.app))*
+* **Dịch vụ Backend API (NestJS):** [https://cnpm-a2.onrender.com](https://cnpm-a2.onrender.com)
+* **Endpoint Giám sát Sức khỏe (Health Check):** [https://cnpm-a2.onrender.com/health](https://cnpm-a2.onrender.com/health)
+
+---
+
+## 7. Quy trình CI/CD & Cơ chế Phục hồi Sự cố (Rollback)
 
 ### 6.1. Quy trình CI/CD Pipeline
 
@@ -174,11 +183,14 @@ Nếu đợt deploy mới phát sinh lỗi nghiêm trọng:
 
 ---
 
-## 7. Liên kết Tài liệu Quan trọng (Documentation Index)
+## 8. Liên kết Tài liệu Quan trọng (Documentation Index)
 
-* [Báo cáo Thiết kế Kiến trúc Hệ thống](docs/architecture/system-architecture.md)
-* [Bản ghi Quyết định Kiến trúc (ADR)](docs/architecture/adr/)
-* [Hướng dẫn Kiến trúc Triển khai & Ranh giới Mạng](docs/deployment.md)
-* [Ma trận Truy vết Toàn diện Yêu cầu (Traceability Matrix)](docs/traceability-matrix.md)
-* [Thư mục Sơ đồ UML (.puml & .svg)](docs/diagrams/)
-* [Kịch bản Kiểm thử E2E Đầu-cuối](tests/e2e-order-flow.spec.ts)
+* [Đặc tả Bối cảnh, 6 Stakeholders & Phạm vi (Task 1.1)](docs/requirements/context-and-scope.md)
+* [Đặc tả Yêu cầu Phần mềm Toàn diện SRS (Task 1.2)](docs/requirements/srs.md)
+* [Báo cáo Thiết kế Kiến trúc Hệ thống (Task 3.1)](docs/architecture/system-architecture.md)
+* [Bản ghi Quyết định Kiến trúc 6 ADR (Task 3.1)](docs/architecture/adr/)
+* [Hướng dẫn Kiến trúc Triển khai & Ranh giới Mạng (Task 3.2)](docs/deployment.md)
+* [Ma trận Truy vết Toàn diện Yêu cầu (Traceability Matrix - Mục 8)](docs/traceability-matrix.md)
+* [Thư mục Sơ đồ UML Nguồn .puml & Vector .svg (Task 2)](docs/diagrams/)
+* [Kịch bản Kiểm thử E2E Đầu-cuối (Task 5.2)](tests/e2e-order-flow.spec.ts)
+* [Báo cáo Sprint Review & Retrospective (Task 5.4)](docs/reports/sprint-retrospective.md)
