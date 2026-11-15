@@ -133,7 +133,7 @@ Khoa Công Nghệ Thông Tin \\
 \section{Tổng quan bối cảnh, Phân công nhiệm vụ và Đặc tả Use-Case trọng tâm (Task 1.3)}
 
 \subsection{Bối cảnh phân hệ Thanh toán \& Xác nhận đơn trong BrewLite}
-Trong chuỗi giá trị bán lẻ cà phê hiện đại của dự án \textbf{BrewLite}, thanh toán là mắt xích sống còn quyết định tỷ lệ hoàn tất đơn hàng (conversion rate) và sự hài lòng của khách hàng. Phân hệ \textbf{"Thanh toán \& Xác nhận đơn"} do \textbf{Phan Vũ Việt Quang (viet\_quang)} phụ trách giải quyết các bài toán kỹ thuật và nghiệp vụ cốt lõi:
+Trong chuỗi giá trị bán lẻ cà phê hiện đại của đồ án \textbf{BrewLite}, thanh toán là mắt xích sống còn quyết định tỷ lệ hoàn tất đơn hàng (conversion rate) và sự hài lòng của khách hàng. Phân hệ \textbf{"Thanh toán \& Xác nhận đơn"} do \textbf{Phan Vũ Việt Quang (viet\_quang)} phụ trách giải quyết các bài toán kỹ thuật và nghiệp vụ cốt lõi:
 \begin{itemize}
     \item \textbf{Thanh toán không tiền mặt đa dạng:} Hỗ trợ ví điện tử (MoMo, VNPay) và thẻ ngân hàng (Visa, Mastercard, NAPAS), giảm thiểu thời gian xếp hàng tại quầy.
     \item \textbf{Đảm bảo tính toàn vẹn (Idempotency):} Trong môi trường mạng di động không ổn định, khách hàng có thể vô tình bấm nút thanh toán nhiều lần hoặc đường truyền bị ngắt kết nối. Cơ chế Idempotency với khóa \texttt{Idempotency-Key} đảm bảo giao dịch chỉ được trừ tiền và xử lý đúng một lần duy nhất.
@@ -461,8 +461,9 @@ Sơ đồ thể hiện cấu trúc các thực thể dữ liệu và lớp dịc
 ]
     % Payment Class
     \node[classbox] (payment) at (0, 0) {
-        \textbf{\large Payment} \\
-        \hline
+        \centering \textbf{\large Payment} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
+        \raggedright
         + id: String (UUID) \\
         + orderId: String \\
         + idempotencyKey: String [Unique] \\
@@ -470,15 +471,16 @@ Sơ đồ thể hiện cấu trúc các thực thể dữ liệu và lớp dịc
         + method: PaymentMethod \\
         + status: PaymentStatus \\
         + transactionRef: String \\
-        + createdAt: DateTime \\
-        \hline
+        + createdAt: DateTime \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
         + isSuccessful(): Boolean
     };
     
     % Order Class
     \node[classbox] (order) at (7.8, 0) {
-        \textbf{\large Order} \\
-        \hline
+        \centering \textbf{\large Order} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
+        \raggedright
         + id: String (UUID) \\
         + orderNumber: String [Unique] \\
         + userId: String \\
@@ -487,34 +489,37 @@ Sơ đồ thể hiện cấu trúc các thực thể dữ liệu và lớp dịc
         + discountAmount: Decimal \\
         + total: Decimal \\
         + notes: String \\
-        + createdAt: DateTime \\
-        \hline
+        + createdAt: DateTime \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
         + markAsPaid(): void \\
         + markAsFailed(): void
     };
     
     % Enums
     \node[enumbox] (pmethod) at (-2.8, -4.5) {
-        \textbf{\textless\textless enumeration\textgreater\textgreater} \\
-        \textbf{PaymentMethod} \\
-        \hline
+        \centering \textbf{\textless\textless enumeration\textgreater\textgreater} \\
+        \textbf{PaymentMethod} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
+        \raggedright
         E\_WALLET \\
         BANK\_CARD
     };
     
     \node[enumbox] (pstatus) at (1.2, -4.5) {
-        \textbf{\textless\textless enumeration\textgreater\textgreater} \\
-        \textbf{PaymentStatus} \\
-        \hline
+        \centering \textbf{\textless\textless enumeration\textgreater\textgreater} \\
+        \textbf{PaymentStatus} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
+        \raggedright
         PENDING \\
         SUCCESS \\
         FAILED
     };
     
     \node[enumbox] (ostatus) at (7.8, -4.5) {
-        \textbf{\textless\textless enumeration\textgreater\textgreater} \\
-        \textbf{OrderStatus} \\
-        \hline
+        \centering \textbf{\textless\textless enumeration\textgreater\textgreater} \\
+        \textbf{OrderStatus} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
+        \raggedright
         PENDING \\
         PAID \\
         PREPARING \\
