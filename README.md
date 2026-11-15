@@ -142,7 +142,7 @@ npm run test:e2e
 
 ## 6. Môi trường Triển khai Thực tế (Live Production Links)
 
-* **Ứng dụng Web PWA (Next.js):** [https://cnpm-a2.vercel.app](https://cnpm-a2.vercel.app) *(hoặc [https://brewlite-assignment2.vercel.app](https://brewlite-assignment2.vercel.app))*
+* **Ứng dụng Web PWA (Next.js):** [https://brewlite-coffee-a2.vercel.app/](https://brewlite-coffee-a2.vercel.app/)
 * **Dịch vụ Backend API (NestJS):** [https://cnpm-a2.onrender.com](https://cnpm-a2.onrender.com)
 * **Endpoint Giám sát Sức khỏe (Health Check):** [https://cnpm-a2.onrender.com/health](https://cnpm-a2.onrender.com/health)
 
