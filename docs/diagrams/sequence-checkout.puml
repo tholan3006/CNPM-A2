@@ -1,0 +1,57 @@
+@startuml sequence-payment
+autonumber
+actor "Khách hàng\n(Customer)" as Customer
+participant "Next.js UI\n(CheckoutPage)" as Client
+participant "PaymentsController\n(NestJS)" as Controller
+participant "PaymentProcessor\nService" as Processor
+participant "Mock Payment\nGateway" as Gateway
+database "PostgreSQL\nDatabase" as DB
+
+Customer -> Client : 1. Chọn MoMo/Thẻ & bấm "Thanh toán ngay"
+activate Client
+
+Client -> Client : Sinh idempotencyKey = uuidv4()
+Client -> Controller : 2. POST /payments\n[Header: Idempotency-Key, Bearer Token]\n[Body: {orderId, amount, method}]
+activate Controller
+
+Controller -> Controller : Validate JWT Guard & DTO
+Controller -> Processor : 3. pay(input)
+activate Processor
+
+Processor -> DB : 4. findUnique({ where: { idempotencyKey } })
+activate DB
+DB --> Processor : 5. Trả về null (Khóa mới)
+deactivate DB
+
+Processor -> DB : 6. $transaction: insert Payment(status: PENDING)
+activate DB
+DB --> Processor : 7. Lock Idempotency thành công
+deactivate DB
+
+Processor -> Gateway : 8. charge(amount, method)
+activate Gateway
+
+alt Cổng thanh toán thành công
+  Gateway --> Processor : 9. Trả về { success: true, transactionRef: "TXN-9982" }
+  deactivate Gateway
+  Processor -> DB : 10. $transaction: Update Order(PAID) & Payment(SUCCESS)
+  activate DB
+  DB --> Processor : 11. Commit OK
+  deactivate DB
+  Processor --> Controller : 12. Trả về PayResult { payment, order, replayed: false }
+  Controller --> Client : 13. HTTP 201 Created { status: 'SUCCESS', order: { status: 'PAID', orderNumber } }
+  Client -> Client : 14. clearCart() & lưu lastOrder
+  Client -> Customer : 15. Điều hướng sang /order-success (Mã #ORD-..., Badge PAID)
+else Cổng thanh toán thất bại
+  Gateway --> Processor : 9b. Trả về { success: false, reason: "Insufficient balance" }
+  Processor -> DB : 10b. Update Order(PAYMENT_FAILED) & Payment(FAILED)
+  Processor --> Controller : 12b. Ném lỗi BadRequestException
+  Controller --> Client : 13b. HTTP 400 Bad Request { message: "Giao dịch bị từ chối" }
+  Client -> Customer : 14b. Hiển thị thông báo lỗi đỏ, GIỮ NGUYÊN GIỎ HÀNG
+end
+
+deactivate Processor
+deactivate Controller
+deactivate Client
+
+@enduml
