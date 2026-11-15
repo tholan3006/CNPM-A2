@@ -461,8 +461,9 @@ Sơ đồ thể hiện cấu trúc các thực thể dữ liệu và lớp dịc
 ]
     % Payment Class
     \node[classbox] (payment) at (0, 0) {
-        \textbf{\large Payment} \\
-        \hline
+        \centering \textbf{\large Payment} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
+        \raggedright
         + id: String (UUID) \\
         + orderId: String \\
         + idempotencyKey: String [Unique] \\
@@ -470,15 +471,16 @@ Sơ đồ thể hiện cấu trúc các thực thể dữ liệu và lớp dịc
         + method: PaymentMethod \\
         + status: PaymentStatus \\
         + transactionRef: String \\
-        + createdAt: DateTime \\
-        \hline
+        + createdAt: DateTime \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
         + isSuccessful(): Boolean
     };
     
     % Order Class
     \node[classbox] (order) at (7.8, 0) {
-        \textbf{\large Order} \\
-        \hline
+        \centering \textbf{\large Order} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
+        \raggedright
         + id: String (UUID) \\
         + orderNumber: String [Unique] \\
         + userId: String \\
@@ -487,34 +489,37 @@ Sơ đồ thể hiện cấu trúc các thực thể dữ liệu và lớp dịc
         + discountAmount: Decimal \\
         + total: Decimal \\
         + notes: String \\
-        + createdAt: DateTime \\
-        \hline
+        + createdAt: DateTime \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
         + markAsPaid(): void \\
         + markAsFailed(): void
     };
     
     % Enums
     \node[enumbox] (pmethod) at (-2.8, -4.5) {
-        \textbf{\textless\textless enumeration\textgreater\textgreater} \\
-        \textbf{PaymentMethod} \\
-        \hline
+        \centering \textbf{\textless\textless enumeration\textgreater\textgreater} \\
+        \textbf{PaymentMethod} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
+        \raggedright
         E\_WALLET \\
         BANK\_CARD
     };
     
     \node[enumbox] (pstatus) at (1.2, -4.5) {
-        \textbf{\textless\textless enumeration\textgreater\textgreater} \\
-        \textbf{PaymentStatus} \\
-        \hline
+        \centering \textbf{\textless\textless enumeration\textgreater\textgreater} \\
+        \textbf{PaymentStatus} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
+        \raggedright
         PENDING \\
         SUCCESS \\
         FAILED
     };
     
     \node[enumbox] (ostatus) at (7.8, -4.5) {
-        \textbf{\textless\textless enumeration\textgreater\textgreater} \\
-        \textbf{OrderStatus} \\
-        \hline
+        \centering \textbf{\textless\textless enumeration\textgreater\textgreater} \\
+        \textbf{OrderStatus} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
+        \raggedright
         PENDING \\
         PAID \\
         PREPARING \\

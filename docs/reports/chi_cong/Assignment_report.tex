@@ -458,8 +458,8 @@ Sơ đồ lớp mô tả cấu trúc thực thể \texttt{User}, đối tượng
 ]
     % User Class
     \node[classbox] (user) at (0, 2.5) {
-        \textbf{\centerline{User \textless\textless Entity: users\textgreater\textgreater}} \hline
-        \vspace{0.05cm}
+        \textbf{\centerline{User \textless\textless Entity: users\textgreater\textgreater}} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
         \texttt{- id: UUID [PK]}\\
         \texttt{- email: String [@unique]}\\
         \texttt{- passwordHash: String [Bcrypt]}\\
@@ -467,23 +467,23 @@ Sơ đồ lớp mô tả cấu trúc thực thể \texttt{User}, đối tượng
         \texttt{- phone: String? [10 digits]}\\
         \texttt{- role: Role = CUSTOMER}\\
         \texttt{- loyaltyPoints: Int = 0}\\
-        \texttt{- createdAt / updatedAt: DateTime} \hline
-        \vspace{0.05cm}
+        \texttt{- createdAt / updatedAt: DateTime} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
         \texttt{+ verifyPassword(plain): Bool}\\
         \texttt{+ toPublicProfile(): PublicUser}
     };
 
     % AuthToken Class
     \node[classbox, fill=blue!5] (token) at (5.8, 2.5) {
-        \textbf{\centerline{AuthToken \textless\textless JWT Payload\textgreater\textgreater}} \hline
-        \vspace{0.05cm}
+        \textbf{\centerline{AuthToken \textless\textless JWT Payload\textgreater\textgreater}} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
         \texttt{- accessToken: String [HS256]}\\
         \texttt{- tokenType: String = "Bearer"}\\
         \texttt{- sub: UUID [User ID]}\\
         \texttt{- email: String}\\
         \texttt{- role: Role}\\
-        \texttt{- iat / exp: Integer (7d)} \hline
-        \vspace{0.05cm}
+        \texttt{- iat / exp: Integer (7d)} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
         \texttt{+ getSub(): UUID}\\
         \texttt{+ isExpired(): Boolean}\\
         \texttt{+ toAuthorizationHeader(): String}
@@ -491,8 +491,8 @@ Sơ đồ lớp mô tả cấu trúc thực thể \texttt{User}, đối tượng
 
     % Role Enum
     \node[enumbox] (role) at (11.0, 2.5) {
-        \textbf{\centerline{\textless\textless enum\textgreater\textgreater~Role}} \hline
-        \vspace{0.05cm}
+        \textbf{\centerline{\textless\textless enum\textgreater\textgreater~Role}} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
         \texttt{CUSTOMER}\\
         \texttt{BARISTA}\\
         \texttt{ADMIN}
@@ -500,11 +500,11 @@ Sơ đồ lớp mô tả cấu trúc thực thể \texttt{User}, đối tượng
 
     % AuthService Class
     \node[classbox] (service) at (0, -2.0) {
-        \textbf{\centerline{AuthService}} \hline
-        \vspace{0.05cm}
+        \textbf{\centerline{AuthService}} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
         \texttt{- prisma: PrismaService}\\
-        \texttt{- jwtService: JwtService} \hline
-        \vspace{0.05cm}
+        \texttt{- jwtService: JwtService} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
         \texttt{+ register(dto: RegisterDto)}\\
         \texttt{+ login(dto: LoginDto)}\\
         \texttt{+ getProfile(userId: String)}
@@ -512,10 +512,10 @@ Sơ đồ lớp mô tả cấu trúc thực thể \texttt{User}, đối tượng
 
     % AuthController Class
     \node[classbox] (ctrl) at (5.8, -2.0) {
-        \textbf{\centerline{AuthController (\texttt{/auth})}} \hline
-        \vspace{0.05cm}
-        \texttt{- authService: AuthService} \hline
-        \vspace{0.05cm}
+        \textbf{\centerline{AuthController (\texttt{/auth})}} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
+        \texttt{- authService: AuthService} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
         \texttt{+ register(dto: RegisterDto)}\\
         \texttt{+ login(dto: LoginDto)}\\
         \texttt{+ getProfile(@CurrentUser())}
@@ -523,8 +523,8 @@ Sơ đồ lớp mô tả cấu trúc thực thể \texttt{User}, đối tượng
 
     % JwtStrategy & Guards
     \node[classbox, fill=yellow!8, text width=3.8cm] (guard) at (11.0, -2.0) {
-        \textbf{\centerline{JwtStrategy \& Guards}} \hline
-        \vspace{0.05cm}
+        \textbf{\centerline{JwtStrategy \& Guards}} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
         \texttt{+ getJwtSecret(): String}\\
         \texttt{+ validate(payload): User}\\
         \texttt{+ canActivate(context): Bool}

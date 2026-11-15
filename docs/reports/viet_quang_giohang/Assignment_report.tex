@@ -372,8 +372,9 @@ Sơ đồ lớp thể hiện mối quan hệ giữa trạng thái Client và c�
 ]
     % CartItem
     \node[classbox] (cartitem) at (0, 0) {
-        \textbf{\large CartItem} \\
-        \hline
+        \centering \textbf{\large CartItem} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
+        \raggedright
         + cartItemId: String \\
         + productId: String \\
         + name: String \\
@@ -381,15 +382,16 @@ Sơ đồ lớp thể hiện mối quan hệ giữa trạng thái Client và c�
         + sizePriceOffset: Number \\
         + quantity: Number \\
         + unitPrice: Number \\
-        + totalPrice: Number \\
-        \hline
+        + totalPrice: Number \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
         + calculateTotal(): Number
     };
     
     % Order
     \node[classbox] (order) at (7.5, 0) {
-        \textbf{\large Order} \\
-        \hline
+        \centering \textbf{\large Order} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
+        \raggedright
         + id: String (UUID) \\
         + orderNumber: String [Unique] \\
         + userId: String \\
@@ -398,39 +400,41 @@ Sơ đồ lớp thể hiện mối quan hệ giữa trạng thái Client và c�
         + discountAmount: Decimal \\
         + total: Decimal \\
         + notes: String \\
-        + createdAt: DateTime \\
-        \hline
+        + createdAt: DateTime \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
         + isPending(): Boolean
     };
     
     % OrderItem
     \node[classbox] (orderitem) at (7.5, -4.5) {
-        \textbf{\large OrderItem} \\
-        \hline
+        \centering \textbf{\large OrderItem} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
+        \raggedright
         + id: String \\
         + orderId: String \\
         + productId: String \\
         + size: ProductSize \\
         + basePrice: Decimal \\
         + qty: Int \\
-        + lineTotal: Decimal \\
-        \hline
+        + lineTotal: Decimal
     };
     
     % Enums
     \node[enumbox] (psize) at (-2.5, -4.5) {
-        \textbf{\textless\textless enumeration\textgreater\textgreater} \\
-        \textbf{ProductSize} \\
-        \hline
+        \centering \textbf{\textless\textless enumeration\textgreater\textgreater} \\
+        \textbf{ProductSize} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
+        \raggedright
         S (Offset: 0đ) \\
         M (Offset: 5.000đ) \\
         L (Offset: 10.000đ)
     };
     
     \node[enumbox] (ostatus) at (1.5, -4.5) {
-        \textbf{\textless\textless enumeration\textgreater\textgreater} \\
-        \textbf{OrderStatus} \\
-        \hline
+        \centering \textbf{\textless\textless enumeration\textgreater\textgreater} \\
+        \textbf{OrderStatus} \\[1.5mm]
+        \rule{\linewidth}{0.5pt} \\[1.5mm]
+        \raggedright
         PENDING \\
         PAID \\
         PREPARING \\
