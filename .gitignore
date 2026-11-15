@@ -47,3 +47,6 @@ next-env.d.ts
 # Local personal reference (TV2)
 TV2/
 TV2.zip
+
+*.zip
+
